@@ -171,12 +171,14 @@ body header {
   }
 }
 
-main {
+main.main-wrapper {
   .page-left-wrapper {
-    padding: 40px 15px 0px 15px;
+    padding: 40px 15px 0px 0px;
     flex: 0 0 250px;
     .main-menu {
       background-color: #eeeeee;
+      transition: 0.5s;
+      width: 100%;
       li {
         cursor: pointer;
         a {
@@ -192,16 +194,37 @@ main {
           display: flex;
           align-items: center;
           svg {
-            width: 25px;
-            height: 25px;
+            font-size: 25px;
+            width: 1em;
+            height: 1em;
+            transition: 0.5s;
           }
         }
         .main-menu-text-wrapper {
           padding-left: 10px;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
         }
         &.active {
           a {
             background-color: #cacaca;
+          }
+        }
+        &:first-child {
+          a {
+            justify-content: flex-end;
+          }
+          .main-menu-logo-wrapper {
+            padding: 7px;
+            border-radius: 100%;
+            transition: 0.5s;
+            svg {
+              font-size: 15px;
+            }
+            &:hover {
+              background-color: #cacaca;
+            }
           }
         }
       }
@@ -210,5 +233,26 @@ main {
   .page-right-wrapper {
     flex: 1;
     padding: 40px 15px 0px 15px;
+  }
+  &.left-menu-icon-mode-active {
+    .page-left-wrapper {
+      .main-menu {
+        width: 60px;
+        .main-menu-logo-wrapper {
+          svg {
+            font-size: 35px;
+          }
+        }
+        li {
+          &:first-child {
+            .main-menu-logo-wrapper {
+              svg {
+                transform: rotate(180deg);
+              }
+            }
+          }
+        }
+      }
+    }
   }
 }

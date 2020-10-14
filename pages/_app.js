@@ -11,11 +11,22 @@ import "swiper/components/scrollbar/scrollbar.scss";
 import Header from "../components/Header";
 import LeftMenu from "../components/LeftMenu";
 
+import clsx from "clsx";
+import { wrapper } from "../store";
+
+import { Provider, useSelector } from "react-redux";
+
 function MyApp({ Component, pageProps }) {
+  const { iconMode } = useSelector((state) => state);
   return (
     <>
       <Header />
-      <main className="main-wrapper">
+      <main
+        className={clsx({
+          "main-wrapper": true,
+          "left-menu-icon-mode-active": iconMode,
+        })}
+      >
         <div className="row">
           <div className="page-left-wrapper">
             <LeftMenu />
@@ -29,4 +40,4 @@ function MyApp({ Component, pageProps }) {
   );
 }
 
-export default MyApp;
+export default wrapper.withRedux(MyApp);
