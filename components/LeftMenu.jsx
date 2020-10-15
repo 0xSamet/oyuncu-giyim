@@ -20,10 +20,10 @@ export default function LeftMenu() {
     });
   return (
     <ul className="main-menu">
-      <li onClick={handleIconMode}>
+      <li>
         <Link href="/">
           <a>
-            <span className="main-menu-logo-wrapper">
+            <span className="main-menu-logo-wrapper" onClick={handleIconMode}>
               <ArrowIcon />
             </span>
             <span className="main-menu-text-wrapper"></span>
