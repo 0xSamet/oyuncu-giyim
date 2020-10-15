@@ -135,6 +135,7 @@ body header {
   display: flex;
   padding: 15px;
   background-color: #fff;
+  box-shadow: 0px 2px 23px 0px rgba(227, 227, 227, 1);
   .logo-wrapper {
     cursor: pointer;
     flex: 0 0 250px;
@@ -155,7 +156,7 @@ body header {
       justify-content: center;
       align-items: center;
       .ui.input {
-        width: 100%;
+        width: 50%;
       }
     }
     .header-right-right {
@@ -165,11 +166,15 @@ body header {
       align-items: center;
       .header-right-icon-wrapper {
         svg {
-          font-size: 30px;
+          font-size: 28px;
           width: 1em;
           height: 1em;
+          fill: #616161;
           cursor: pointer;
           &.profile-icon {
+            margin-right: 15px;
+          }
+          &.notification-icon {
             margin-right: 15px;
           }
         }
@@ -180,7 +185,6 @@ body header {
 
 main.main-wrapper {
   .page-left-wrapper {
-    padding: 0 15px 0px 0px;
     flex: 0 0 250px;
     transition: flex 0.5s, width 0.5s;
     position: relative;
@@ -191,6 +195,7 @@ main.main-wrapper {
       position: absolute;
       top: 0;
       left: 0;
+      border-bottom-right-radius: 5px;
       li {
         cursor: pointer;
         a {
@@ -199,43 +204,51 @@ main.main-wrapper {
           display: flex;
           align-items: center;
           padding: 10px 0px 10px 15px;
-          color: #000;
           transition: 0.5s;
-        }
-        .main-menu-logo-wrapper {
-          display: flex;
-          align-items: center;
-          svg {
-            font-size: 25px;
-            width: 1em;
-            height: 1em;
-            transition: 0.5s;
+          .main-menu-logo-wrapper {
+            display: flex;
+            align-items: center;
+            svg {
+              font-size: 25px;
+              width: 1em;
+              height: 1em;
+              transition: 0.5s;
+              fill: #616161;
+            }
           }
-        }
-        .main-menu-text-wrapper {
-          padding-left: 10px;
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
+          .main-menu-text-wrapper {
+            padding-left: 10px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            color: #3e3e3e;
+          }
+          &:hover {
+            .main-menu-logo-wrapper {
+              svg {
+                fill: #3e3e3e;
+              }
+            }
+          }
         }
         &.active {
           a {
-            background-color: #eeeeee;
+            background-color: #f5f5f5;
           }
         }
         &:first-child {
           a {
             justify-content: flex-end;
-          }
-          .main-menu-logo-wrapper {
-            padding: 7px;
-            border-radius: 100%;
-            transition: 0.5s;
-            svg {
-              font-size: 15px;
-            }
-            &:hover {
-              background-color: #cacaca;
+            .main-menu-logo-wrapper {
+              padding: 7px;
+              border-radius: 100%;
+              transition: 0.5s;
+              svg {
+                font-size: 15px;
+              }
+              &:hover {
+                background-color: #cacaca;
+              }
             }
           }
         }
