@@ -21,14 +21,12 @@ export default function LeftMenu() {
   return (
     <ul className="main-menu">
       <li>
-        <Link href="/">
-          <a>
-            <span className="main-menu-logo-wrapper" onClick={handleIconMode}>
-              <ArrowIcon />
-            </span>
-            <span className="main-menu-text-wrapper"></span>
-          </a>
-        </Link>
+        <a>
+          <span className="main-menu-logo-wrapper" onClick={handleIconMode}>
+            <ArrowIcon />
+          </span>
+          <span className="main-menu-text-wrapper"></span>
+        </a>
       </li>
       <li
         className={clsx({

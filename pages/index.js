@@ -10,7 +10,7 @@ SwiperCore.use([Navigation, Pagination, Scrollbar, A11y]);
 export default function Home() {
   return (
     <>
-      <section class="homepage">
+      <section className="homepage">
         <Swiper
           className="homepage-slider"
           spaceBetween={0}

@@ -1,6 +1,8 @@
 import { Input } from "semantic-ui-react";
 import { useState } from "react";
+
 import CartIcon from "../public/icons/cart.svg";
+import ProfileIcon from "../public/icons/profile.svg";
 
 export default function Header() {
   const [searchWord, setSearchWord] = useState("");
@@ -20,7 +22,8 @@ export default function Header() {
           />
         </div>
         <div className="header-right-right col-md-6">
-          <div className="cart-icon-wrapper">
+          <div className="header-right-icon-wrapper">
+            <ProfileIcon className="profile-icon" />
             <CartIcon />
           </div>
         </div>

@@ -163,11 +163,16 @@ body header {
       display: flex;
       justify-content: flex-end;
       align-items: center;
-      .cart-icon-wrapper {
-        font-size: 30px;
-        width: 1em;
-        height: 1em;
-        cursor: pointer;
+      .header-right-icon-wrapper {
+        svg {
+          font-size: 30px;
+          width: 1em;
+          height: 1em;
+          cursor: pointer;
+          &.profile-icon {
+            margin-right: 15px;
+          }
+        }
       }
     }
   }
@@ -175,16 +180,16 @@ body header {
 
 main.main-wrapper {
   .page-left-wrapper {
-    padding: 40px 15px 0px 0px;
+    padding: 0 15px 0px 0px;
     flex: 0 0 250px;
-    transition: 0.5s;
+    transition: flex 0.5s, width 0.5s;
     position: relative;
     .main-menu {
-      background-color: #eeeeee;
-      transition: 0.5s;
+      background-color: #fff;
+      transition: width 0.5s;
       width: 100%;
       position: absolute;
-      top: 40px;
+      top: 0;
       left: 0;
       li {
         cursor: pointer;
@@ -215,7 +220,7 @@ main.main-wrapper {
         }
         &.active {
           a {
-            background-color: #cacaca;
+            background-color: #eeeeee;
           }
         }
         &:first-child {
@@ -240,7 +245,7 @@ main.main-wrapper {
   .page-right-wrapper {
     flex: 1;
     padding: 40px 15px 0px 15px;
-    transition: 0.5s;
+    transition: max-width 0.5s;
     max-width: calc(100% - 250px);
   }
   &.left-menu-icon-mode-active {
