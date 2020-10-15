@@ -1,7 +1,7 @@
+import "semantic-ui-css/semantic.min.css";
 import "../styles/globals.css";
 import "../styles/bootstrap-grid.css";
 import "../styles/index.scss";
-import "semantic-ui-css/semantic.min.css";
 
 import "swiper/swiper.scss";
 import "swiper/components/navigation/navigation.scss";
