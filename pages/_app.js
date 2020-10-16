@@ -10,6 +10,7 @@ import "swiper/components/scrollbar/scrollbar.scss";
 
 import Header from "../components/Header";
 import LeftMenu from "../components/LeftMenu";
+import Footer from "../components/Footer";
 
 import clsx from "clsx";
 import { wrapper } from "../store";
@@ -36,6 +37,7 @@ function MyApp({ Component, pageProps }) {
           </div>
         </div>
       </main>
+      <Footer />
     </>
   );
 }
