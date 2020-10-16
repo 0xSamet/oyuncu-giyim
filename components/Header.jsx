@@ -7,9 +7,18 @@ import ProfileIcon from "../public/icons/profile.svg";
 import NotificationIcon from "../public/icons/notification.svg";
 
 import { Button, Divider, Input, Segment, Checkbox } from "semantic-ui-react";
+import clsx from "clsx";
+
+import { Provider, useSelector, useDispatch } from "react-redux";
 
 export default function Header() {
   const [searchWord, setSearchWord] = useState("");
+  const [loginFormOpened, setLoginFormOpened] = useState(false);
+  const {
+    header: { loginFormVisible },
+    modalCloserOpened,
+  } = useSelector((state) => state);
+  const dispatch = useDispatch();
   return (
     <header>
       <div className="logo-wrapper">
@@ -34,17 +43,23 @@ export default function Header() {
             <span className="notification-icon-wrapper">
               <NotificationIcon className="notification-icon" />
             </span>
-            <span className="login-icon-wrapper">
+            <span
+              className={clsx({
+                "login-icon-wrapper": true,
+                "login-form-active": loginFormVisible,
+              })}
+              onMouseEnter={() => {
+                if (loginFormVisible) {
+                  return;
+                } else {
+                  dispatch({
+                    type: "TOGGLE_LOGIN_FORM",
+                  });
+                }
+              }}
+            >
               <ProfileIcon className="login-icon" />
               <span className="login-options-wrapper">
-                {/* <ul>
-                  <li>
-                    <a>Giriş Yap</a>
-                  </li>
-                  <li>
-                    <a>Kayıt Ol</a>
-                  </li>
-                </ul> */}
                 <form
                   onSubmit={(e) => {
                     e.preventDefault();

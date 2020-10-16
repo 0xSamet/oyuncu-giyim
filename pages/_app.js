@@ -15,10 +15,11 @@ import Footer from "../components/Footer";
 import clsx from "clsx";
 import { wrapper } from "../store";
 
-import { Provider, useSelector } from "react-redux";
+import { Provider, useSelector, useDispatch } from "react-redux";
 
 function MyApp({ Component, pageProps }) {
-  const { iconMode } = useSelector((state) => state);
+  const { iconMode, modalCloserOpened } = useSelector((state) => state);
+  const dispatch = useDispatch();
   return (
     <>
       <Header />
@@ -36,6 +37,17 @@ function MyApp({ Component, pageProps }) {
             <Component {...pageProps} />
           </div>
         </div>
+        <div
+          className={clsx({
+            "modal-closer": true,
+            open: modalCloserOpened,
+          })}
+          onClick={() => {
+            dispatch({
+              type: "TOGGLE_LOGIN_FORM",
+            });
+          }}
+        ></div>
       </main>
       <Footer />
     </>
