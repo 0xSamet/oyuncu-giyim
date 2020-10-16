@@ -209,6 +209,7 @@ main.main-wrapper {
           align-items: center;
           padding: 10px 0px 10px 15px;
           transition: 0.5s;
+          overflow: hidden;
           .main-menu-logo-wrapper {
             display: flex;
             align-items: center;
@@ -223,7 +224,6 @@ main.main-wrapper {
           .main-menu-text-wrapper {
             padding-left: 10px;
             white-space: nowrap;
-            overflow: hidden;
             text-overflow: ellipsis;
             color: #3e3e3e;
           }
@@ -239,6 +239,12 @@ main.main-wrapper {
           a {
             background-color: #f5f5f5;
           }
+        }
+        &.divider {
+          background: #616161;
+          height: 1px;
+          opacity: 0.5;
+          margin: 5px 0px;
         }
         &:first-child {
           a {

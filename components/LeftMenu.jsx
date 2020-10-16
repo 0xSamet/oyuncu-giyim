@@ -9,6 +9,8 @@ import ShirtIcon from "../public/icons/tshirt.svg";
 import ArrowIcon from "../public/icons/arrow.svg";
 import ClockIcon from "../public/icons/clock.svg";
 import PaperPlaneIcon from "../public/icons/paper-plane.svg";
+import InstagramIcon from "../public/icons/instagram.svg";
+import WPIcon from "../public/icons/whatsapp.svg";
 
 export default function LeftMenu() {
   const [menuIndex, setMenuIndex] = useState(-1);
@@ -73,7 +75,7 @@ export default function LeftMenu() {
           </a>
         </Link>
       </li>
-      <li
+      {/* {      <li
         className={clsx({
           active: menuIndex === 3,
         })}
@@ -87,7 +89,7 @@ export default function LeftMenu() {
             <span className="main-menu-text-wrapper">T-Shirtler</span>
           </a>
         </Link>
-      </li>
+      </li>} */}
       <li
         className={clsx({
           active: menuIndex === 4,
@@ -100,6 +102,27 @@ export default function LeftMenu() {
               <PaperPlaneIcon />
             </span>
             <span className="main-menu-text-wrapper">İletişim</span>
+          </a>
+        </Link>
+      </li>
+      <li className="divider"></li>
+      <li>
+        <Link href="#">
+          <a>
+            <span className="main-menu-logo-wrapper">
+              <InstagramIcon />
+            </span>
+            <span className="main-menu-text-wrapper">İnstagram</span>
+          </a>
+        </Link>
+      </li>
+      <li>
+        <Link href="#">
+          <a>
+            <span className="main-menu-logo-wrapper">
+              <WPIcon />
+            </span>
+            <span className="main-menu-text-wrapper">Whatsapp</span>
           </a>
         </Link>
       </li>
