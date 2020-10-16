@@ -1,10 +1,12 @@
-import { Input } from "semantic-ui-react";
+//import { Input } from "semantic-ui-react";
 import { useState } from "react";
 import Link from "next/link";
 
 import CartIcon from "../public/icons/cart.svg";
 import ProfileIcon from "../public/icons/profile.svg";
 import NotificationIcon from "../public/icons/notification.svg";
+
+import { Button, Divider, Input, Segment, Checkbox } from "semantic-ui-react";
 
 export default function Header() {
   const [searchWord, setSearchWord] = useState("");
@@ -35,14 +37,46 @@ export default function Header() {
             <span className="login-icon-wrapper">
               <ProfileIcon className="login-icon" />
               <span className="login-options-wrapper">
-                <ul>
+                {/* <ul>
                   <li>
                     <a>Giriş Yap</a>
                   </li>
                   <li>
                     <a>Kayıt Ol</a>
                   </li>
-                </ul>
+                </ul> */}
+                <form
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                  }}
+                >
+                  <Input
+                    placeholder="Mail Adresiniz"
+                    size="small"
+                    loading={searchWord !== ""}
+                    onChange={(e) => {
+                      setSearchWord(e.target.value);
+                    }}
+                  />
+                  <Input
+                    placeholder="Şifre"
+                    size="small"
+                    loading={searchWord !== ""}
+                    onChange={(e) => {
+                      setSearchWord(e.target.value);
+                    }}
+                  />
+                  <div className="submit-row">
+                    <Checkbox label="Beni Hatırla" />
+                    <Button primary>Giriş Yap</Button>
+                  </div>
+                  <Divider horizontal>Veya</Divider>
+                  <div className="register-row">
+                    <Button primary fluid>
+                      Kayıt Ol
+                    </Button>
+                  </div>
+                </form>
               </span>
             </span>
             <span className="cart-icon-wrapper">
