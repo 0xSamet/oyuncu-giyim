@@ -24,9 +24,25 @@ export default function Header() {
         </div>
         <div className="header-right-right col-md-2">
           <div className="header-right-icon-wrapper">
-            <NotificationIcon className="notification-icon" />
-            <ProfileIcon className="profile-icon" />
-            <CartIcon />
+            <span className="notification-icon-wrapper">
+              <NotificationIcon className="notification-icon" />
+            </span>
+            <span className="login-icon-wrapper">
+              <ProfileIcon className="login-icon" />
+              <span className="login-options-wrapper">
+                <ul>
+                  <li>
+                    <a>Giriş Yap</a>
+                  </li>
+                  <li>
+                    <a>Kayıt Ol</a>
+                  </li>
+                </ul>
+              </span>
+            </span>
+            <span className="cart-icon-wrapper">
+              <CartIcon />
+            </span>
           </div>
         </div>
       </div>
