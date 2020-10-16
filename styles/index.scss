@@ -188,6 +188,11 @@ body footer {
   padding: 20px 20px;
   display: flex;
   align-items: center;
+  .footer-left {
+    .copyright {
+      font-size: 13px;
+    }
+  }
   .footer-right {
     flex: 1;
     display: flex;
@@ -209,6 +214,7 @@ body footer {
       padding: 0px 10px;
       span {
         padding: 0px 5px;
+        font-size: 12px;
       }
     }
   }

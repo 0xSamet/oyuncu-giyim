@@ -12,7 +12,9 @@ export default function Header() {
   return (
     <footer>
       <div className="footer-left">
-        <p>Copyright © 2019, Oyuncu Giyim, Tüm Hakları Saklıdır.</p>
+        <p className="copyright">
+          Copyright © 2019, Oyuncu Giyim, Tüm Hakları Saklıdır.
+        </p>
       </div>
       <div className="footer-right">
         <div className="informations-wrapper">
