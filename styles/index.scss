@@ -183,7 +183,7 @@ body header {
 }
 
 body footer {
-  background-color: #fff;
+  background-color: #dedede;
   padding: 100px 0px;
 }
 
@@ -199,7 +199,7 @@ main.main-wrapper {
       position: absolute;
       top: 0;
       left: 0;
-      border-bottom-right-radius: 5px;
+      height: 100%;
       li {
         cursor: pointer;
         a {
