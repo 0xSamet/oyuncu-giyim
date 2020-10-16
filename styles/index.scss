@@ -264,6 +264,7 @@ main.main-wrapper {
     padding: 40px 15px 0px 15px;
     transition: max-width 0.5s;
     max-width: calc(100% - 250px);
+    min-height: 100vh;
   }
   &.left-menu-icon-mode-active {
     .page-left-wrapper {
