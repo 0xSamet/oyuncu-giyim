@@ -41,6 +41,7 @@ export default function Home() {
             onSlideChange={() => console.log("slide change")}
             onSwiper={(swiper) => console.log(swiper)}
             loop
+            centeredSlides
             navigation={{
               prevEl: ".homepage-showcase-controller-prev",
               nextEl: ".homepage-showcase-controller-next",
