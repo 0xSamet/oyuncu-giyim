@@ -131,6 +131,15 @@ body {
   color: #616161;
 }
 
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+::-webkit-scrollbar-thumb {
+  width: 100%;
+  background: #616161;
+}
+
 body header {
   display: flex;
   padding: 15px;
@@ -191,7 +200,7 @@ body header {
             right: 0;
             width: 150px;
             z-index: 2;
-            padding: 15px 15px 0px 0px;
+            padding: 15px 0px 0px 0px;
             opacity: 0;
             transition: opacity 0.3s ease-in-out;
             pointer-events: none;

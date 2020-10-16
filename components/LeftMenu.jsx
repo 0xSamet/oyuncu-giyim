@@ -36,7 +36,7 @@ export default function LeftMenu() {
         })}
         onClick={() => setMenuIndex(0)}
       >
-        <Link href="/">
+        <Link href="/" as="/">
           <a>
             <span className="main-menu-logo-wrapper">
               <HomeIcon />
@@ -51,7 +51,7 @@ export default function LeftMenu() {
         })}
         onClick={() => setMenuIndex(1)}
       >
-        <Link href="/on-siparis">
+        <Link href="/on-siparis" as="/on-siparis">
           <a>
             <span className="main-menu-logo-wrapper">
               <ClockIcon />
@@ -66,7 +66,7 @@ export default function LeftMenu() {
         })}
         onClick={() => setMenuIndex(2)}
       >
-        <Link href="/sweatler">
+        <Link href="/sweatler" as="/sweatler">
           <a>
             <span className="main-menu-logo-wrapper">
               <SweatIcon />
@@ -96,7 +96,7 @@ export default function LeftMenu() {
         })}
         onClick={() => setMenuIndex(4)}
       >
-        <Link href="/iletisim">
+        <Link href="/iletisim" as="/iletisim">
           <a>
             <span className="main-menu-logo-wrapper">
               <PaperPlaneIcon />

@@ -1,5 +1,6 @@
 import { Input } from "semantic-ui-react";
 import { useState } from "react";
+import Link from "next/link";
 
 import CartIcon from "../public/icons/cart.svg";
 import ProfileIcon from "../public/icons/profile.svg";
@@ -10,7 +11,11 @@ export default function Header() {
   return (
     <header>
       <div className="logo-wrapper">
-        <img className="logo" src="/oyuncu-giyim-logo.png" />
+        <Link href="/" as="/">
+          <a>
+            <img className="logo" src="/oyuncu-giyim-logo.png" />
+          </a>
+        </Link>
       </div>
       <div className="header-right row">
         <div className="header-right-left col-md-10">
