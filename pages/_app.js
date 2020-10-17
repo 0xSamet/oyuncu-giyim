@@ -44,7 +44,7 @@ function MyApp({ Component, pageProps }) {
           })}
           onClick={() => {
             dispatch({
-              type: "TOGGLE_LOGIN_FORM",
+              type: "CLEAN_MODALS",
             });
           }}
         ></div>

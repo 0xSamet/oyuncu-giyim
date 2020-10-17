@@ -6,6 +6,7 @@ const initialState = {
   modalCloserOpened: false,
   header: {
     loginFormVisible: false,
+    notificationsVisible: false,
   },
 };
 
@@ -15,8 +16,19 @@ const reducer = (state = initialState, action) => {
     case HYDRATE:
       console.log("hyd");
       return { ...state, ...action.payload };
+
     case "TOGGLE_ICONMODE":
       return { ...state, iconMode: !state.iconMode };
+    case "CLEAN_MODALS":
+      return {
+        ...state,
+        modalCloserOpened: false,
+        header: {
+          ...state.header,
+          loginFormVisible: false,
+          notificationsVisible: false,
+        },
+      };
     case "TOGGLE_LOGIN_FORM":
       return {
         ...state,
@@ -24,6 +36,15 @@ const reducer = (state = initialState, action) => {
         header: {
           ...state.header,
           loginFormVisible: !state.header.loginFormVisible,
+        },
+      };
+    case "TOGGLE_NOTIFICATIONS":
+      return {
+        ...state,
+        modalCloserOpened: !state.modalCloserOpened,
+        header: {
+          ...state.header,
+          notificationsVisible: !state.header.notificationsVisible,
         },
       };
     default:

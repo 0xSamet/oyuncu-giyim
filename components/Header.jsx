@@ -5,6 +5,9 @@ import Link from "next/link";
 import CartIcon from "../public/icons/cart.svg";
 import ProfileIcon from "../public/icons/profile.svg";
 import NotificationIcon from "../public/icons/notification.svg";
+import DeliveryTruckIcon from "../public/icons/delivery-truck.svg";
+import CheckedIcon from "../public/icons/checked.svg";
+import CancelIcon from "../public/icons/cancel.svg";
 
 import { Button, Divider, Input, Segment, Checkbox } from "semantic-ui-react";
 import clsx from "clsx";
@@ -15,7 +18,7 @@ export default function Header() {
   const [searchWord, setSearchWord] = useState("");
   const [loginFormOpened, setLoginFormOpened] = useState(false);
   const {
-    header: { loginFormVisible },
+    header: { loginFormVisible, notificationsVisible },
     modalCloserOpened,
   } = useSelector((state) => state);
   const dispatch = useDispatch();
@@ -40,15 +43,85 @@ export default function Header() {
         </div>
         <div className="header-right-right col-md-2">
           <div className="header-right-icon-wrapper">
-            <span className="notification-icon-wrapper">
+            <span
+              className={clsx({
+                "notification-icon-wrapper": true,
+                "notifications-active": notificationsVisible,
+              })}
+              onClick={() => {
+                if (notificationsVisible) {
+                  return;
+                } else {
+                  dispatch({
+                    type: "TOGGLE_NOTIFICATIONS",
+                  });
+                }
+              }}
+            >
               <NotificationIcon className="notification-icon" />
+              <span className="notifications-wrapper">
+                <h4 className="notifications-title">Bildirimler</h4>
+                <ul>
+                  <li>
+                    <a>
+                      <span className="notification-icon">
+                        <DeliveryTruckIcon className="delivery-truck-icon" />
+                      </span>
+                      <div className="notification-right">
+                        <h5 className="notification-title">
+                          Siparişiniz Kargoya Verildi
+                        </h5>
+                        <p className="notification-description">
+                          Lorem ipsum dolor sit amet consectetur adipisicing
+                          elit. Distinctio, nostrum ipsa aperiam consequuntur
+                          deserunt rem tempor
+                        </p>
+                      </div>
+                    </a>
+                  </li>
+                  <li>
+                    <a>
+                      <span className="notification-icon">
+                        <CheckedIcon className="checked-icon" />
+                      </span>
+                      <div className="notification-right">
+                        <h5 className="notification-title">
+                          Siparişiniz Onaylandı
+                        </h5>
+                        <p className="notification-description">
+                          Lorem ipsum dolor sit amet consectetur adipisicing
+                          elit. Distinctio, nostrum ipsa aperiam consequuntur
+                          deserunt rem tempor
+                        </p>
+                      </div>
+                    </a>
+                  </li>
+                  <li>
+                    <a>
+                      <span className="notification-icon">
+                        <CancelIcon className="cancel-icon" />
+                      </span>
+                      <div className="notification-right">
+                        <h5 className="notification-title">
+                          Siparişiniz Onaylanamadı
+                        </h5>
+                        <p className="notification-description">
+                          Lorem ipsum dolor sit amet consectetur adipisicing
+                          elit. Distinctio, nostrum ipsa aperiam consequuntur
+                          deserunt rem tempor
+                        </p>
+                      </div>
+                    </a>
+                  </li>
+                </ul>
+              </span>
             </span>
             <span
               className={clsx({
                 "login-icon-wrapper": true,
                 "login-form-active": loginFormVisible,
               })}
-              onMouseEnter={() => {
+              onClick={() => {
                 if (loginFormVisible) {
                   return;
                 } else {
