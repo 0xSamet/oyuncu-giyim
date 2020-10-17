@@ -19,7 +19,8 @@ export default function Header() {
   const [loginFormOpened, setLoginFormOpened] = useState(false);
   const {
     header: { loginFormVisible, notificationsVisible },
-    modalCloserOpened,
+    modalCloser: { opened: modalCloserOpened },
+    body: { cartReviewVisible },
   } = useSelector((state) => state);
   const dispatch = useDispatch();
   return (
@@ -167,7 +168,20 @@ export default function Header() {
                 </form>
               </span>
             </span>
-            <span className="cart-icon-wrapper">
+            <span
+              className="cart-icon-wrapper"
+              onClick={() => {
+                if (cartReviewVisible) {
+                  console.log("actşve");
+                  return;
+                } else {
+                  console.log("dispatched");
+                  dispatch({
+                    type: "TOGGLE_CART_REVIEW",
+                  });
+                }
+              }}
+            >
               <CartIcon />
             </span>
           </div>

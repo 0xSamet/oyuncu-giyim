@@ -3,10 +3,16 @@ import { createWrapper, HYDRATE } from "next-redux-wrapper";
 
 const initialState = {
   iconMode: false,
-  modalCloserOpened: false,
+  modalCloser: {
+    opened: false,
+    withBackGround: false,
+  },
   header: {
     loginFormVisible: false,
     notificationsVisible: false,
+  },
+  body: {
+    cartReviewVisible: false,
   },
 };
 
@@ -22,17 +28,29 @@ const reducer = (state = initialState, action) => {
     case "CLEAN_MODALS":
       return {
         ...state,
-        modalCloserOpened: false,
+        modalCloser: {
+          ...state.modalCloser,
+          opened: false,
+          withBackGround: false,
+        },
         header: {
           ...state.header,
           loginFormVisible: false,
           notificationsVisible: false,
         },
+        body: {
+          ...state.body,
+          cartReviewVisible: false,
+        },
       };
     case "TOGGLE_LOGIN_FORM":
       return {
         ...state,
-        modalCloserOpened: !state.modalCloserOpened,
+        modalCloser: {
+          ...state.modalCloser,
+          opened: true,
+          withBackGround: false,
+        },
         header: {
           ...state.header,
           loginFormVisible: !state.header.loginFormVisible,
@@ -41,10 +59,27 @@ const reducer = (state = initialState, action) => {
     case "TOGGLE_NOTIFICATIONS":
       return {
         ...state,
-        modalCloserOpened: !state.modalCloserOpened,
+        modalCloser: {
+          ...state.modalCloser,
+          opened: true,
+          withBackGround: false,
+        },
         header: {
           ...state.header,
           notificationsVisible: !state.header.notificationsVisible,
+        },
+      };
+    case "TOGGLE_CART_REVIEW":
+      return {
+        ...state,
+        modalCloser: {
+          ...state.modalCloser,
+          opened: true,
+          withBackGround: true,
+        },
+        body: {
+          ...state.body,
+          cartReviewVisible: !state.body.cartReviewVisible,
         },
       };
     default:

@@ -48,13 +48,22 @@ export default function Home() {
             }}
           >
             <SwiperSlide>
-              <img src="https://cdn.pixabay.com/photo/2019/11/02/21/45/maple-leaf-4597501_960_720.jpg" />
+              <img src="/products/valorant-sweat-1.jpg" />
             </SwiperSlide>
             <SwiperSlide>
-              <img src="https://cdn.pixabay.com/photo/2020/10/10/17/53/sunrise-5643811_960_720.jpg" />
+              <img src="/products/valorant-sweat-2.jpg" />
             </SwiperSlide>
             <SwiperSlide>
-              <img src="https://cdn.pixabay.com/photo/2020/10/03/17/44/mountain-5624148_960_720.jpg" />
+              <img src="/products/valorant-sweat-3.jpg" />
+            </SwiperSlide>
+            <SwiperSlide>
+              <img src="/products/valorant-sweat-4.jpg" />
+            </SwiperSlide>
+            <SwiperSlide>
+              <img src="/products/valorant-sweat-5.jpg" />
+            </SwiperSlide>
+            <SwiperSlide>
+              <img src="/products/valorant-sweat-6.jpg" />
             </SwiperSlide>
           </Swiper>
           <div className="homepage-showcase-controller">
