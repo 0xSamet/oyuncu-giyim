@@ -237,13 +237,14 @@ body {
           display: flex;
           justify-content: center;
           cursor: pointer;
-          background: #fff;
+          background: #5b925e;
           border-radius: 5px;
           padding: 5px;
           svg {
             font-size: 15px;
             width: 1em;
             height: 1em;
+            fill: #fff;
           }
         }
         .product-piece-up {
@@ -343,7 +344,7 @@ body {
     }
   }
   .cart-review-checkout {
-    background: #004400;
+    background: #5b925e;
     color: #fff;
     svg {
       fill: #fff;
