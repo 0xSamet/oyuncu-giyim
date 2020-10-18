@@ -1,5 +1,7 @@
 import CancelIcon from "../public/icons/cancel.svg";
 import ArrowIcon from "../public/icons/arrow.svg";
+import PlusIcon from "../public/icons/plus.svg";
+import MinusIcon from "../public/icons/minus.svg";
 
 export default function CartReviewListItem({ productId }) {
   return (
@@ -15,13 +17,13 @@ export default function CartReviewListItem({ productId }) {
       </div>
       <div className="product-piece-wrapper">
         <span className="product-piece-up">
-          <ArrowIcon />
+          <PlusIcon />
         </span>
         <span className="product-piece">
           <input type="text" defaultValue={1} />
         </span>
         <span className="product-piece-down">
-          <ArrowIcon />
+          <MinusIcon />
         </span>
       </div>
       <div className="product-remove-btn">
