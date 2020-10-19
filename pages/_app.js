@@ -100,7 +100,7 @@ function MyApp({ Component, pageProps }) {
             </span>
             Alışverişe Devam Et
           </span>
-          <div class="cart-review-price-wrapper">
+          <div className="cart-review-price-wrapper">
             <span className="cart-review-price-text">Toplam Fiyat</span>
             <span className="cart-review-price">100&#8378;</span>
           </div>
