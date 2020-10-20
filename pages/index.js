@@ -50,6 +50,22 @@ export default function Home() {
               prevEl: ".homepage-showcase-controller-prev",
               nextEl: ".homepage-showcase-controller-next",
             }}
+            breakpoints={
+              {
+                0: {
+                  slidesPerView: 1,
+                  centeredSlides: false
+                },
+                768: {       
+                  slidesPerView: 2,
+                  centeredSlides: false
+                },
+                1001: {
+                                    slidesPerView: 3,
+                  centeredSlides: true
+                }
+              }
+            }
           >
             <SwiperSlide>
               <ShowCaseProduct productId={1} />

@@ -591,6 +591,8 @@ main.main-wrapper {
       width: 350px;
       z-index: 3;
       height: 300px;
+      transition: none;
+      pointer-events: none;
     }
     .left-menu-tablet-opener {
       width: 100px;
@@ -605,6 +607,7 @@ main.main-wrapper {
         transform: translateY(-50%);
         border-top-right-radius: 20px;
         border-bottom-right-radius: 20px;
+        pointer-events: auto;
       }
       .hamburger-wrapper {
         width: 100%;
@@ -738,6 +741,12 @@ main.main-wrapper {
     transition: max-width 0.5s;
     max-width: calc(100% - 250px);
     min-height: 100vh;
+    @media #{$tablet} {
+      max-width: none;
+      padding: 40px 15px 15px 15px;
+      max-width: 100%;
+      transition: none;
+    }
   }
   &.left-menu-icon-mode-active {
     .page-left-wrapper {
@@ -825,11 +834,19 @@ section.homepage {
       }
     }
     .homepage-showcase {
-      width: 1165px;
+      max-width: 1165px;
+      @media #{$tablet} {
+        max-width: 100%;
+      }
       .swiper-wrapper {
         .swiper-slide {
           transform: scale(0.85);
           transition: transform 0.5s;
+          @media #{$tablet} {
+            transform: none;
+            display: flex;
+            justify-content: center;
+          }
           &.swiper-slide-active {
             transform: scale(1);
             .showcase-product-wrapper {
@@ -847,6 +864,9 @@ section.homepage {
             }
           }
           .showcase-product-wrapper {
+            @media #{$tablet} {
+              max-width: 85%;
+            }
             &.selecting-size {
               .showcase-product-image {
                 .showcase-sizes-wrapper {
@@ -898,6 +918,9 @@ section.homepage {
                 display: flex;
                 align-items: center;
                 overflow: hidden;
+                @media #{$tablet} {
+                  display: none;
+                }
                 ul {
                   display: flex;
                   flex-direction: column;
@@ -941,6 +964,9 @@ section.homepage {
               flex-wrap: wrap;
               opacity: 0;
               transition: opacity 0.3s ease-in;
+              @media #{$tablet} {
+                opacity: 1;
+              }
               .showcase-product-name-wrapper {
                 flex-basis: 100%;
                 .showcase-product-name {
@@ -957,6 +983,9 @@ section.homepage {
                 flex-basis: 100%;
                 display: flex;
                 padding: 15px 0px;
+                @media #{$tablet} {
+                  display: none;
+                }
                 .showcase-product-options-left {
                   flex-basis: 50%;
                   display: flex;
@@ -1026,6 +1055,9 @@ section.homepage {
                 background: #ddd;
                 cursor: pointer;
                 font-weight: 600;
+                @media #{$tablet} {
+                  display: none;
+                }
               }
             }
           }
