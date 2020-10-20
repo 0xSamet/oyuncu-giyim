@@ -1,5 +1,6 @@
 @import url("https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap");
 
+/*  RESET CSS START */
 html,
 body,
 div,
@@ -124,6 +125,10 @@ table {
   border-collapse: collapse;
   border-spacing: 0;
 }
+/* RESET CSS END */
+
+$tablet: "(max-width: 1199px)";
+$mob: "(max-width: 767px)";
 
 body {
   font-family: "Lato", sans-serif;
@@ -348,7 +353,13 @@ body header {
   box-shadow: 0px 2px 23px 0px rgba(227, 227, 227, 1);
   .logo-wrapper {
     cursor: pointer;
-    flex: 0 0 250px;
+    flex: 0 0 225px;
+    @media #{$tablet} {
+      flex: 0 0 200px;
+    }
+    @media #{$mob} {
+      flex: 0 0 175px;
+    }
     .logo {
       width: 100%;
       height: 100%;
@@ -382,6 +393,9 @@ body header {
           height: 1em;
           fill: #616161;
           cursor: pointer;
+          @media #{$tablet} {
+            font-size: 25px;
+          }
         }
         .login-icon-wrapper,
         .notification-icon-wrapper {
@@ -569,6 +583,74 @@ main.main-wrapper {
     flex: 0 0 250px;
     transition: flex 0.5s, width 0.5s;
     position: relative;
+    @media #{$tablet} {
+      position: fixed;
+      top: 50%;
+      transform: translateY(-50%);
+      left: 0;
+      width: 350px;
+      z-index: 3;
+      height: 300px;
+    }
+    .left-menu-tablet-opener {
+      width: 100px;
+      height: 100px;
+      background-color: #fff;
+      display: none;
+      @media #{$tablet} {
+        display: block;
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        border-top-right-radius: 20px;
+        border-bottom-right-radius: 20px;
+      }
+      .hamburger-wrapper {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        &.opened {
+          #icon {
+            path {
+              &#top,
+              &#bottom {
+                stroke-dashoffset: -650px;
+                stroke-dashoffset: -650px;
+              }
+              &#middle {
+                stroke-dashoffset: -115px;
+                stroke-dasharray: 1px 220px;
+              }
+            }
+          }
+        }
+        #icon {
+          width: 100px;
+          height: 75px;
+          cursor: pointer;
+          transform: translate3d(0, 0, 0);
+          path {
+            fill: none;
+            transition: stroke-dashoffset 0.3s
+                cubic-bezier(0.25, -0.25, 0.75, 1.25),
+              stroke-dasharray 0.3s cubic-bezier(0.25, -0.25, 0.75, 1.25);
+            stroke-width: 40px;
+            stroke-linecap: round;
+            stroke: #484848;
+            stroke-dashoffset: 0px;
+            &#top,
+            &#bottom {
+              stroke-dasharray: 240px 950px;
+            }
+            &#middle {
+              stroke-dasharray: 240px 240px;
+            }
+          }
+        }
+      }
+    }
     .main-menu {
       background-color: #fff;
       transition: width 0.5s;
@@ -577,6 +659,11 @@ main.main-wrapper {
       top: 0;
       left: 0;
       height: 100%;
+      @media #{$tablet} {
+        padding-left: 100px;
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+      }
       li {
         cursor: pointer;
         a {
@@ -624,6 +711,9 @@ main.main-wrapper {
           margin: 5px 0px;
         }
         &:first-child {
+          @media #{$tablet} {
+            display: none;
+          }
           a {
             justify-content: flex-end;
             .main-menu-logo-wrapper {
@@ -674,12 +764,19 @@ main.main-wrapper {
       max-width: calc(100% - 60px);
     }
   }
+  &.left-menu-show-tablet {
+    .page-left-wrapper {
+      .main-menu {
+        transform: translateX(0);
+      }
+    }
+  }
 }
 
 section.homepage {
   .homepage-slider {
-    width: 1165px;
-    height: 550px;
+    max-width: 1165px;
+    max-height: 550px;
     .swiper-wrapper {
       .swiper-slide {
         img {
