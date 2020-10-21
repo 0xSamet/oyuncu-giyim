@@ -400,6 +400,9 @@ body header {
       display: flex;
       justify-content: flex-end;
       align-items: center;
+      @media #{$mob} {
+        display: none;
+      }
       .header-right-icon-wrapper {
         display: flex;
         svg {
