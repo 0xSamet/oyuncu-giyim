@@ -266,6 +266,7 @@ body {
             background: none;
             border: none;
             outline: none;
+            border-radius: none;
             border-bottom: 1px solid #484848;
             width: 35px;
             text-align: center;
@@ -919,7 +920,7 @@ section.homepage {
               max-width: 60%;
             }
             @media #{$br560} {
-              max-width: 90%;
+              max-width: 75%;
             }
             &.selecting-size {
               .showcase-product-image {
@@ -1066,6 +1067,7 @@ section.homepage {
                       border: none;
                       outline: none;
                       background: none;
+                      border-radius: none;
                       text-align: center;
                       border-bottom: 1px solid #484848;
                     }
