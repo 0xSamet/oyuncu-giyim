@@ -128,8 +128,10 @@ table {
 /* RESET CSS END */
 
 $desktop: "(max-width: 1350px)";
+$br1: "(max-width: 1000px)";
 $tablet: "(max-width: 1199px)";
 $mob: "(max-width: 767px)";
+$br560: "(max-width: 560px)";
 
 body {
   font-family: "Lato", sans-serif;
@@ -385,6 +387,12 @@ body header {
       align-items: center;
       .ui.input {
         width: 50%;
+        @media #{$tablet} {
+          width: 70%;
+        }
+        @media #{$br1} {
+          width: 85%;
+        }
       }
     }
     .header-right-right {
@@ -819,13 +827,14 @@ section.homepage {
     .homepage-showcase-controller {
       position: absolute;
       top: calc(50% + 55px);
-      transform: translateY(calc(-50% - 27.5px));
+      left: 50%;
+      transform: translate(-50%, calc(-50% - 27.5px));
       width: 100%;
       display: flex;
       justify-content: space-between;
-      padding: 0px 60px;
       z-index: 1;
       pointer-events: none;
+      max-width: 1165px;
       .homepage-showcase-controller-btn {
         pointer-events: auto;
         cursor: pointer;
@@ -889,7 +898,10 @@ section.homepage {
               max-width: 85%;
             }
             @media #{$mob} {
-              max-width: 50%;
+              max-width: 60%;
+            }
+            @media #{$br560} {
+              max-width: 90%;
             }
             &.selecting-size {
               .showcase-product-image {
