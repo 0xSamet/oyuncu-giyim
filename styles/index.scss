@@ -887,7 +887,7 @@ section.homepage {
         .swiper-slide {
           transform: scale(0.85);
           transition: transform 0.5s;
-          @media #{$br1000} {
+          @media #{$br677} {
             transform: none;
             display: flex;
             justify-content: center;
@@ -895,7 +895,7 @@ section.homepage {
           &.swiper-slide-duplicate {
             transform: scale(0.85);
             transition: transform 0.5s;
-            @media #{$br1000} {
+            @media #{$br677} {
               transform: none;
               display: flex;
               justify-content: center;
@@ -923,7 +923,7 @@ section.homepage {
           }
           .showcase-product-wrapper {
             transition: background-color 0.5s, opacity 0.5s;
-            opacity: 0.75;
+            opacity: 0.5;
             max-width: 100%;
             @media #{$br677} {
               max-width: 70%;

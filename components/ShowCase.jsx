@@ -34,7 +34,9 @@ export default function ShowCase({showCaseId}) {
               prevEl: `.homepage-showcase-${showCaseId} .homepage-showcase-controller-prev`,
               nextEl: `.homepage-showcase-${showCaseId} .homepage-showcase-controller-next`,
             }}
-            
+        shortSwipes={false}
+        longSwipesRatio={0.2}
+        longSwipesMs={0}
             breakpoints={
               {
                 0: {
