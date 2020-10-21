@@ -137,6 +137,8 @@ body {
   font-family: "Lato", sans-serif;
   background: #f5f5f5;
   color: #616161;
+  * {
+  }
 }
 
 ::-webkit-scrollbar {
@@ -267,6 +269,7 @@ body {
             border: none;
             outline: none;
             border-radius: none;
+            -webkit-appearance: none;
             border-bottom: 1px solid #484848;
             width: 35px;
             text-align: center;
@@ -899,6 +902,7 @@ section.homepage {
           &.swiper-slide-active {
             transform: scale(1);
             .showcase-product-wrapper {
+              background-color: #fff;
               .showcase-product-info {
                 opacity: 1;
               }
@@ -907,14 +911,17 @@ section.homepage {
           &.swiper-slide-duplicate-active {
             transform: scale(1);
             .showcase-product-wrapper {
+              background-color: #fff;
               .showcase-product-info {
                 opacity: 1;
               }
             }
           }
           .showcase-product-wrapper {
+            transition: background-color 0.5s;
             @media #{$tablet} {
               max-width: 85%;
+              background-color: #fff;
             }
             @media #{$mob} {
               max-width: 60%;
@@ -1068,12 +1075,13 @@ section.homepage {
                       outline: none;
                       background: none;
                       border-radius: none;
+                      -webkit-appearance: none;
                       text-align: center;
                       border-bottom: 1px solid #484848;
                     }
                     .minus-btn,
                     .plus-btn {
-                      padding: 10px;
+                      padding: 9px;
                       cursor: pointer;
                       background: #ddd;
                       @media #{$tablet} {
@@ -1098,6 +1106,8 @@ section.homepage {
                     align-items: center;
                     font-weight: 500;
                     padding: 10px 0px;
+                    font-size: 14px;
+                    height: 100%;
                     @media #{$tablet} {
                       padding: 7px 0px;
                       font-size: 13px;
@@ -1111,6 +1121,8 @@ section.homepage {
                     align-items: center;
                     color: #ddd;
                     min-width: 35px;
+                    font-size: 14px;
+                    height: 100%;
                     @media #{$tablet} {
                       padding: 7px;
                       font-size: 13px;

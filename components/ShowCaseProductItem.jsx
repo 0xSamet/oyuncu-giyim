@@ -79,7 +79,12 @@ export default function ShowCaseProductItem({ productId }) {
                         </span>
                       </div>
                     </div>
-                    <div className="showcase-product-options-right" onClick={() => setSelectingSize(true)} >
+          <div className="showcase-product-options-right" onClick={() => {
+            if (selectingSize) {
+              return setSelectingSize(false)
+            }
+            setSelectingSize(true);
+          }} >
                       <span className="select-size-btn" >Beden Seç</span>
                       <span className="selected-size" >{selectedSize === "" ? "..." : selectedSize}</span>
                     </div>
