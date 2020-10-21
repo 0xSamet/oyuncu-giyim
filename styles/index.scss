@@ -131,7 +131,9 @@ $desktop: "(max-width: 1350px)";
 $br1000: "(max-width: 1000px)";
 $tablet: "(max-width: 1199px)";
 $mob: "(max-width: 767px)";
+$br677: "(max-width: 677px)";
 $br560: "(max-width: 560px)";
+$br500: "(max-width: 500px)";
 
 body {
   font-family: "Lato", sans-serif;
@@ -922,18 +924,12 @@ section.homepage {
           .showcase-product-wrapper {
             transition: background-color 0.5s, opacity 0.5s;
             opacity: 0.75;
-            @media #{$tablet} {
-              max-width: 85%;
+            max-width: 100%;
+            @media #{$br677} {
+              max-width: 70%;
             }
-            @media #{$br1000} {
-              background-color: #fff;
-            }
-            @media #{$mob} {
-              max-width: 60%;
-              opacity: 1;
-            }
-            @media #{$br560} {
-              max-width: 75%;
+            @media #{$br500} {
+              max-width: 100%;
             }
             &.selecting-size {
               .showcase-product-image {
@@ -1041,9 +1037,7 @@ section.homepage {
               flex-wrap: wrap;
               opacity: 0;
               transition: opacity 0.3s ease-in;
-              @media #{$br1000} {
-                opacity: 1;
-              }
+
               .showcase-product-name-wrapper {
                 flex-basis: 100%;
                 .showcase-product-name {
