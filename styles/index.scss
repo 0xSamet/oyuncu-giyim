@@ -268,7 +268,7 @@ body {
             background: none;
             border: none;
             outline: none;
-            border-radius: none;
+            border-radius: 0;
             -webkit-appearance: none;
             border-bottom: 1px solid #484848;
             width: 35px;
@@ -1052,7 +1052,7 @@ section.homepage {
                   display: none;
                 }*/
                 .showcase-product-options-left {
-                  flex-basis: 50%;
+                  flex-basis: 46%;
                   display: flex;
                   justify-content: space-evenly;
                   align-items: center;
@@ -1074,7 +1074,7 @@ section.homepage {
                       border: none;
                       outline: none;
                       background: none;
-                      border-radius: none;
+                      border-radius: 0;
                       -webkit-appearance: none;
                       text-align: center;
                       border-bottom: 1px solid #484848;
