@@ -45,7 +45,7 @@ export default function LeftMenu() {
           </a>
         </Link>
       </li>
-      <li
+      {/* {<li
         className={clsx({
           active: menuIndex === 1,
         })}
@@ -59,7 +59,7 @@ export default function LeftMenu() {
             <span className="main-menu-text-wrapper">Ön Sipariş</span>
           </a>
         </Link>
-      </li>
+      </li>} */}
       <li
         className={clsx({
           active: menuIndex === 2,

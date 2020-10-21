@@ -385,6 +385,9 @@ body header {
       display: flex;
       justify-content: center;
       align-items: center;
+      @media #{$mob} {
+        display: none;
+      }
       .ui.input {
         width: 50%;
         @media #{$tablet} {
@@ -563,7 +566,13 @@ body footer {
   padding: 20px 20px;
   display: flex;
   align-items: center;
+  @media #{$mob} {
+    flex-direction: column;
+  }
   .footer-left {
+    @media #{$mob} {
+      padding: 20px 0px;
+    }
     .copyright {
       font-size: 13px;
     }
@@ -629,6 +638,9 @@ main.main-wrapper {
       pointer-events: auto;
       @media #{$tablet} {
         display: block;
+      }
+      @media #{$mob} {
+        display: none;
       }
       .hamburger-wrapper {
         width: 100%;
@@ -849,6 +861,9 @@ section.homepage {
           width: 1em;
           height: 1em;
           fill: #616161;
+          @media #{$mob} {
+            font-size: 30px;
+          }
         }
         &.homepage-showcase-controller-next {
           svg {
