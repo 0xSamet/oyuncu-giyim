@@ -972,9 +972,9 @@ section.homepage {
                 display: flex;
                 align-items: center;
                 overflow: hidden;
-                @media #{$tablet} {
+                /*@media #{$tablet} {
                   display: none;
-                }
+                }*/
                 ul {
                   display: flex;
                   flex-direction: column;
@@ -1037,9 +1037,9 @@ section.homepage {
                 flex-basis: 100%;
                 display: flex;
                 padding: 15px 0px;
-                @media #{$tablet} {
+                /*@media #{$tablet} {
                   display: none;
-                }
+                }*/
                 .showcase-product-options-left {
                   flex-basis: 50%;
                   display: flex;
@@ -1109,9 +1109,9 @@ section.homepage {
                 background: #ddd;
                 cursor: pointer;
                 font-weight: 600;
-                @media #{$tablet} {
+                /*@media #{$tablet} {
                   display: none;
-                }
+                }*/
               }
             }
           }
