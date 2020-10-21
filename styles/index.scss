@@ -944,6 +944,9 @@ section.homepage {
                 background: #fff;
                 padding: 10px;
                 overflow: hidden;
+                @media #{$tablet} {
+                  font-size: 14px;
+                }
                 .showcase-product-price {
                   .showcase-product-old-price {
                     padding: 0px 5px;
@@ -1054,6 +1057,9 @@ section.homepage {
                       width: 1em;
                       height: 1em;
                       fill: #484848;
+                      @media #{$tablet} {
+                        font-size: 11px;
+                      }
                     }
                     input {
                       width: 100%;
@@ -1068,6 +1074,9 @@ section.homepage {
                       padding: 10px;
                       cursor: pointer;
                       background: #ddd;
+                      @media #{$tablet} {
+                        padding: 6px;
+                      }
                     }
                   }
                 }
@@ -1086,8 +1095,11 @@ section.homepage {
                     justify-content: center;
                     align-items: center;
                     font-weight: 500;
-
                     padding: 10px 0px;
+                    @media #{$tablet} {
+                      padding: 7px 0px;
+                      font-size: 13px;
+                    }
                   }
                   .selected-size {
                     padding: 10px;
@@ -1097,7 +1109,10 @@ section.homepage {
                     align-items: center;
                     color: #ddd;
                     min-width: 35px;
-                    height: 100%;
+                    @media #{$tablet} {
+                      padding: 7px;
+                      font-size: 13px;
+                    }
                   }
                 }
               }
@@ -1109,9 +1124,10 @@ section.homepage {
                 background: #ddd;
                 cursor: pointer;
                 font-weight: 600;
-                /*@media #{$tablet} {
-                  display: none;
-                }*/
+                @media #{$tablet} {
+                  /*display: none;*/
+                  font-size: 14px;
+                }
               }
             }
           }
