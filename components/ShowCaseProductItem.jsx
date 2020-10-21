@@ -42,7 +42,7 @@ export default function ShowCaseProductItem({ productId }) {
                           () => setSelectedSize("XL")
                       }>XL</li>
                       <li onClick={
-                          () => setSelectedSize("XXXXL")
+                          () => setSelectedSize("XXL")
                       }>XXL</li>
                     </ul>
                   </div>

@@ -39,14 +39,13 @@ export default function ShowCase({showCaseId}) {
               {
                 0: {
                   slidesPerView: 1,
-                  centeredSlides: false
+
                 },
                 768: {       
                   slidesPerView: 2,
-                  centeredSlides: false
                 },
                 1001: {
-                                    slidesPerView: 3,
+                  slidesPerView: 3,
                   centeredSlides: true
                 }
               }
