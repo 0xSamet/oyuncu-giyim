@@ -331,15 +331,21 @@ body header {
         }
         .search-mobile-close {
           position: absolute;
-          bottom: 45px;
+          bottom: 25px;
           left: 50%;
           transform: translateX(-50%);
           font-size: 45px;
           width: 1em;
           height: 1em;
           cursor: pointer;
-          @media #{$br500} {
+          @media #{$br767} {
             font-size: 37px;
+          }
+          @media #{$br500} {
+            font-size: 36px;
+          }
+          @media #{$br478} {
+            bottom: 15px;
           }
         }
         .search-results {
@@ -353,6 +359,9 @@ body header {
           overflow-y: scroll;
           -webkit-overflow-scrolling: touch;
           width: 90%;
+          @media #{$br478} {
+            top: calc(50% + 10px);
+          }
           &::-webkit-scrollbar {
             width: 2px;
           }

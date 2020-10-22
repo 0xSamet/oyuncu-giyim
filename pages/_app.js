@@ -50,7 +50,7 @@ function MyApp({ Component, pageProps }) {
     }
   }, [iconMode]);
   return (
-    <>
+    <div className="asd" >
       <Header />
       <main
         className={clsx({
@@ -136,7 +136,7 @@ function MyApp({ Component, pageProps }) {
         </div>
       </main>
       <Footer />
-    </>
+    </div>
   );
 }
 
