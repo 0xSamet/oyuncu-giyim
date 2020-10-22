@@ -14,6 +14,7 @@ const initialState = {
   header: {
     loginFormVisible: false,
     notificationsVisible: false,
+    mobileSearchVisible: false
   },
   body: {
     cartReviewVisible: false,
@@ -86,6 +87,14 @@ const reducer = (state = initialState, action) => {
         body: {
           ...state.body,
           cartReviewVisible: !state.body.cartReviewVisible,
+        },
+      };
+    case "TOGGLE_MOBILE_SEARCH":
+      return {
+        ...state,
+        header: {
+          ...state.header,
+          mobileSearchVisible: !state.header.mobileSearchVisible,
         },
       };
     default:

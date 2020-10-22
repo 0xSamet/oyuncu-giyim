@@ -8,9 +8,11 @@ import NotificationIcon from "../public/icons/notification.svg";
 import DeliveryTruckIcon from "../public/icons/delivery-truck.svg";
 import CheckedIcon from "../public/icons/checked.svg";
 import CancelIcon from "../public/icons/cancel.svg";
+import SearchIcon from "../public/icons/search.svg";
 
 import { Button, Divider, Input, Segment, Checkbox } from "semantic-ui-react";
 import clsx from "clsx";
+import MobileSearchListItem from "../components/MobileSearchListItem"
 
 import { Provider, useSelector, useDispatch } from "react-redux";
 
@@ -18,13 +20,17 @@ export default function Header() {
   const [searchWord, setSearchWord] = useState("");
   const [loginFormOpened, setLoginFormOpened] = useState(false);
   const {
-    header: { loginFormVisible, notificationsVisible },
+    header: { loginFormVisible, notificationsVisible, mobileSearchVisible },
     modalCloser: { opened: modalCloserOpened },
     body: { cartReviewVisible },
   } = useSelector((state) => state);
   const dispatch = useDispatch();
   return (
-    <header>
+    <header className={
+      clsx({
+        "mobile-search-active": mobileSearchVisible
+      })
+    }>
       <div className="logo-wrapper">
         <Link href="/" as="/">
           <a>
@@ -36,11 +42,28 @@ export default function Header() {
         <div className="header-right-left col-md-10">
           <Input
             placeholder="Ürün Ara"
+            icon={<SearchIcon />}
             loading={searchWord !== ""}
             onChange={(e) => {
               setSearchWord(e.target.value);
             }}
           />
+          <div
+            className="search-mobile-bg">
+            <ul class="search-results" >
+              <MobileSearchListItem productId={1} />
+              <MobileSearchListItem productId={2} />
+              <MobileSearchListItem productId={3} />
+              <MobileSearchListItem productId={4} />
+            </ul>
+            <CancelIcon
+              className="search-mobile-close"
+              onClick={() => {
+                dispatch({
+                  type: "TOGGLE_MOBILE_SEARCH",
+                });
+              }} />
+          </div>
         </div>
         <div className="header-right-right col-md-2">
           <div className="header-right-icon-wrapper">
@@ -183,6 +206,15 @@ export default function Header() {
               }}
             >
               <CartIcon />
+            </span>
+            <span className="search-icon-wrapper" onClick={
+              () => {
+                dispatch({
+                  type: "TOGGLE_MOBILE_SEARCH"
+                });
+              }
+            }>
+              <SearchIcon />
             </span>
           </div>
         </div>

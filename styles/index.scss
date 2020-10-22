@@ -1,145 +1,20 @@
 @import url("https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap");
 
-/*  RESET CSS START */
-html,
-body,
-div,
-span,
-applet,
-object,
-iframe,
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-p,
-blockquote,
-pre,
-a,
-abbr,
-acronym,
-address,
-big,
-cite,
-code,
-del,
-dfn,
-em,
-img,
-ins,
-kbd,
-q,
-s,
-samp,
-small,
-strike,
-strong,
-sub,
-sup,
-tt,
-var,
-b,
-u,
-i,
-center,
-dl,
-dt,
-dd,
-ol,
-ul,
-li,
-fieldset,
-form,
-label,
-legend,
-table,
-caption,
-tbody,
-tfoot,
-thead,
-tr,
-th,
-td,
-article,
-aside,
-canvas,
-details,
-embed,
-figure,
-figcaption,
-footer,
-header,
-hgroup,
-menu,
-nav,
-output,
-ruby,
-section,
-summary,
-time,
-mark,
-audio,
-video {
-  margin: 0;
-  padding: 0;
-  border: 0;
-  font-size: 100%;
-  font: inherit;
-  vertical-align: baseline;
-}
-/* HTML5 display-role reset for older browsers */
-article,
-aside,
-details,
-figcaption,
-figure,
-footer,
-header,
-hgroup,
-menu,
-nav,
-section {
-  display: block;
-}
-body {
-  line-height: 1;
-}
-ol,
-ul {
-  list-style: none;
-}
-blockquote,
-q {
-  quotes: none;
-}
-blockquote:before,
-blockquote:after,
-q:before,
-q:after {
-  content: "";
-  content: none;
-}
-table {
-  border-collapse: collapse;
-  border-spacing: 0;
-}
-/* RESET CSS END */
-
-$desktop: "(max-width: 1350px)";
+$br1350: "(max-width: 1350px)";
 $br1000: "(max-width: 1000px)";
-$tablet: "(max-width: 1199px)";
-$mob: "(max-width: 767px)";
+$br1199: "(max-width: 1199px)";
+$br900: "(max-width: 900px)";
+$br767: "(max-width: 767px)";
 $br677: "(max-width: 677px)";
 $br560: "(max-width: 560px)";
 $br500: "(max-width: 500px)";
+$br478: "(max-width: 478px)";
 
 body {
-  font-family: "Lato", sans-serif;
   background: #f5f5f5;
   color: #616161;
   * {
+    font-family: "Lato", sans-serif;
   }
 }
 
@@ -183,7 +58,7 @@ body {
   padding-bottom: 90px;
   transform: translateX(100%);
   transition: transform 0.5s ease-in-out;
-  @media #{$mob} {
+  @media #{$br767} {
     width: 100%;
   }
   &.cart-review-active {
@@ -310,7 +185,7 @@ body {
   font-size: 14px;
   transform: translateX(100%);
   transition: transform 0.5s ease-in-out;
-  @media #{$mob} {
+  @media #{$br767} {
     width: 100%;
   }
   .cart-review-price-wrapper {
@@ -369,10 +244,10 @@ body header {
   .logo-wrapper {
     cursor: pointer;
     flex: 0 0 225px;
-    @media #{$tablet} {
+    @media #{$br1199} {
       flex: 0 0 200px;
     }
-    @media #{$mob} {
+    @media #{$br767} {
       flex: 0 0 175px;
     }
     .logo {
@@ -391,16 +266,134 @@ body header {
       display: flex;
       justify-content: center;
       align-items: center;
-      @media #{$mob} {
-        display: none;
+      @media #{$br900} {
+        width: 0px;
       }
       .ui.input {
         width: 50%;
-        @media #{$tablet} {
+        @media #{$br1199} {
           width: 70%;
         }
         @media #{$br1000} {
           width: 85%;
+        }
+        @media #{$br900} {
+          position: fixed;
+          top: 130px;
+          left: 50%;
+          width: 90%;
+          z-index: 3;
+          transform: translate(-50%, calc(-100% - 130px));
+          transition: transform 0.4s;
+        }
+        @media #{$br500} {
+          font-size: 14px;
+        }
+        input {
+          color: #616161;
+          &:focus {
+            & ~ svg {
+              opacity: 1;
+            }
+          }
+        }
+        svg {
+          fill: #616161;
+          font-size: 20px;
+          cursor: default;
+          position: absolute;
+          top: 50%;
+          transform: translateY(-50%);
+          right: 15px;
+          margin: 0;
+          height: 1em;
+          width: 1em;
+          opacity: 0.7;
+          transition: opacity 0.3s ease;
+        }
+      }
+      .search-mobile-bg {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: calc(100% - 92px);
+        background: #ddd;
+        z-index: 2;
+        opacity: 0;
+        transition: opacity 0.3s;
+        pointer-events: none;
+        @media #{$br767} {
+          height: calc(100% - 84.5px);
+        }
+        .search-mobile-close {
+          position: absolute;
+          bottom: 45px;
+          left: 50%;
+          transform: translateX(-50%);
+          font-size: 45px;
+          width: 1em;
+          height: 1em;
+          cursor: pointer;
+          @media #{$br500} {
+            font-size: 37px;
+          }
+        }
+        .search-results {
+          display: flex;
+          flex-direction: column;
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          max-height: 68%;
+          overflow-y: scroll;
+          width: 90%;
+          &::-webkit-scrollbar {
+            width: 2px;
+          }
+          li {
+            display: flex;
+            padding: 30px 0px;
+            .product-image {
+              flex: 0 0 115px;
+              @media #{$br500} {
+                flex: 0 0 100px;
+              }
+              > img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+              }
+            }
+            .product-informations {
+              flex: 1;
+              padding: 0px 5px;
+              display: flex;
+              flex-direction: column;
+              justify-content: center;
+              .product-name {
+                font-size: 18px;
+                padding: 0px 10px 10px 10px;
+                @media #{$br500} {
+                  font-size: 16px;
+                }
+              }
+              .product-price {
+                display: block;
+                color: #484848;
+                padding: 0px 10px 10px 10px;
+                @media #{$br500} {
+                  font-size: 14px;
+                }
+                .old-price {
+                  color: #550000;
+                  text-decoration: line-through;
+                  padding-left: 10px;
+                }
+              }
+            }
+          }
         }
       }
     }
@@ -409,9 +402,6 @@ body header {
       display: flex;
       justify-content: flex-end;
       align-items: center;
-      @media #{$mob} {
-        display: none;
-      }
       .header-right-icon-wrapper {
         display: flex;
         svg {
@@ -420,7 +410,7 @@ body header {
           height: 1em;
           fill: #616161;
           cursor: pointer;
-          @media #{$tablet} {
+          @media #{$br1199} {
             font-size: 25px;
           }
         }
@@ -430,6 +420,9 @@ body header {
         }
         .login-icon-wrapper {
           position: relative;
+          @media #{$br900} {
+            display: none;
+          }
           &.login-form-active {
             .login-options-wrapper {
               opacity: 1;
@@ -492,6 +485,9 @@ body header {
         }
         .notification-icon-wrapper {
           position: relative;
+          @media #{$br900} {
+            margin-right: 20px;
+          }
           &.notifications-active {
             .notifications-wrapper {
               opacity: 1;
@@ -562,6 +558,39 @@ body header {
             }
           }
         }
+        .cart-icon-wrapper {
+          @media #{$br900} {
+            display: none;
+          }
+        }
+        .search-icon-wrapper {
+          display: none;
+          @media #{$br900} {
+            display: block;
+          }
+          svg {
+            width: 0.95em;
+            height: 0.95em;
+          }
+        }
+      }
+    }
+  }
+  &.mobile-search-active {
+    @media #{$br900} {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 3;
+      .header-right-left {
+        .ui.input {
+          transform: translate(-50%, 0);
+        }
+        .search-mobile-bg {
+          opacity: 1;
+          pointer-events: auto;
+        }
       }
     }
   }
@@ -572,11 +601,11 @@ body footer {
   padding: 20px 20px;
   display: flex;
   align-items: center;
-  @media #{$mob} {
+  @media #{$br767} {
     flex-direction: column;
   }
   .footer-left {
-    @media #{$mob} {
+    @media #{$br767} {
       padding: 20px 0px;
     }
     .copyright {
@@ -616,82 +645,8 @@ main.main-wrapper {
     flex: 0 0 250px;
     transition: flex 0.5s, width 0.5s;
     position: relative;
-    @media #{$tablet} {
-      position: fixed;
-      top: 50%;
-      transform: translateY(-50%);
-      left: 0;
-      width: 350px;
-      z-index: 3;
-      height: 305px;
-      transition: none;
-      pointer-events: none;
-      border-top-right-radius: 10px;
-      border-bottom-right-radius: 10px;
-      overflow: hidden;
-    }
-    .left-menu-tablet-opener {
-      width: 90px;
-      height: 90px;
-      background-color: #fff;
+    @media #{$br1199} {
       display: none;
-      position: absolute;
-      left: 0;
-      top: 50%;
-      transform: translateY(-50%);
-      border-top-right-radius: 10px;
-      border-bottom-right-radius: 10px;
-      pointer-events: auto;
-      @media #{$tablet} {
-        display: block;
-      }
-      @media #{$mob} {
-        display: none;
-      }
-      .hamburger-wrapper {
-        width: 100%;
-        height: 100%;
-        display: flex;
-        align-items: center;
-        &.opened {
-          #icon {
-            path {
-              &#top,
-              &#bottom {
-                stroke-dashoffset: -650px;
-                stroke-dashoffset: -650px;
-              }
-              &#middle {
-                stroke-dashoffset: -115px;
-                stroke-dasharray: 1px 220px;
-              }
-            }
-          }
-        }
-        #icon {
-          width: 90px;
-          height: 67.5px;
-          cursor: pointer;
-          transform: translate3d(0, 0, 0);
-          path {
-            fill: none;
-            transition: stroke-dashoffset 0.3s
-                cubic-bezier(0.25, -0.25, 0.75, 1.25),
-              stroke-dasharray 0.3s cubic-bezier(0.25, -0.25, 0.75, 1.25);
-            stroke-width: 40px;
-            stroke-linecap: round;
-            stroke: #484848;
-            stroke-dashoffset: 0px;
-            &#top,
-            &#bottom {
-              stroke-dasharray: 240px 950px;
-            }
-            &#middle {
-              stroke-dasharray: 240px 240px;
-            }
-          }
-        }
-      }
     }
     .main-menu {
       background-color: #fff;
@@ -701,13 +656,6 @@ main.main-wrapper {
       top: 0;
       left: 0;
       height: 100%;
-      @media #{$tablet} {
-        padding-top: 11px;
-        padding-left: 100px;
-        transform: translateX(-100%);
-        transition: transform 0.3s ease;
-        pointer-events: auto;
-      }
       li {
         cursor: pointer;
         a {
@@ -755,7 +703,7 @@ main.main-wrapper {
           margin: 5px 0px;
         }
         &:first-child {
-          @media #{$tablet} {
+          @media #{$br1199} {
             display: none;
           }
           a {
@@ -782,11 +730,136 @@ main.main-wrapper {
     transition: max-width 0.5s;
     max-width: calc(100% - 250px);
     min-height: 100vh;
-    @media #{$tablet} {
+    @media #{$br1199} {
       max-width: none;
       padding: 40px 15px 15px 15px;
       max-width: 100%;
       transition: none;
+    }
+  }
+  .mobile-menu-wrapper {
+    position: fixed;
+    bottom: 0;
+    z-index: 1;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #fff;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+    display: none;
+    @media #{$br900} {
+      display: block;
+    }
+    @media #{$br478} {
+      width: 100%;
+      border-radius: 0;
+    }
+    .mobile-menu {
+      display: flex;
+      justify-content: center;
+      li {
+        background: #fff;
+        &:first-child,
+        &:last-child {
+          overflow: hidden;
+        }
+        &:first-child {
+          border-top-left-radius: 10px;
+          @media #{$br478} {
+            border-radius: 0;
+          }
+        }
+        &:last-child {
+          border-top-right-radius: 10px;
+          @media #{$br478} {
+            border-radius: 0;
+          }
+        }
+        &.active {
+          a {
+            .mobile-menu-logo-wrapper {
+              background: #616161;
+              svg {
+                fill: #fff;
+              }
+            }
+            .mobile-menu-text-wrapper {
+              background: #616161;
+              color: #fff;
+            }
+          }
+          &.homepage {
+            a {
+              box-shadow: 0px 2px 23px 0px #616161;
+            }
+          }
+        }
+        &.homepage {
+          @media #{$br478} {
+            flex: 1;
+          }
+          a {
+            position: relative;
+            top: -15px;
+            background: #ddd;
+            border-radius: 10px;
+            overflow: hidden;
+            transition: box-shadow 0.3s;
+            box-shadow: 0px 1px 5px 1px rgba(61, 61, 61, 0.2);
+          }
+        }
+
+        a {
+          display: flex;
+          flex-direction: column;
+          height: 100%;
+          align-items: center;
+          justify-content: flex-end;
+          color: #616161;
+          min-width: 90px;
+          &:hover {
+            color: #616161;
+          }
+          .mobile-menu-logo-wrapper {
+            padding: 10px 20px 0px 20px;
+            width: 100%;
+            display: flex;
+            background: #fff;
+            justify-content: center;
+
+            svg {
+              font-size: 30px;
+              width: 1em;
+              height: 1em;
+              fill: #616161;
+              transition: fill 0.3s;
+              @media #{$br900} {
+                font-size: 28px;
+              }
+              @media #{$br478} {
+                font-size: 24px;
+              }
+            }
+          }
+          .mobile-menu-text-wrapper {
+            padding: 10px 20px;
+            background: #fff;
+            color: #616161;
+            font-size: 15px;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            white-space: nowrap;
+            transition: color 0.3s;
+            @media #{$br900} {
+              font-size: 14px;
+            }
+            @media #{$br478} {
+              font-size: 12px;
+            }
+          }
+        }
+      }
     }
   }
   &.left-menu-icon-mode-active {
@@ -812,13 +885,6 @@ main.main-wrapper {
     }
     .page-right-wrapper {
       max-width: calc(100% - 60px);
-    }
-  }
-  &.left-menu-show-tablet {
-    .page-left-wrapper {
-      .main-menu {
-        transform: translateX(0);
-      }
     }
   }
 }
@@ -867,7 +933,7 @@ section.homepage {
           width: 1em;
           height: 1em;
           fill: #616161;
-          @media #{$mob} {
+          @media #{$br767} {
             font-size: 30px;
           }
         }
@@ -880,7 +946,7 @@ section.homepage {
     }
     .homepage-showcase {
       max-width: 1165px;
-      @media #{$desktop} {
+      @media #{$br1350} {
         max-width: 100%;
       }
       .swiper-wrapper {
@@ -908,6 +974,7 @@ section.homepage {
               opacity: 1;
               .showcase-product-info {
                 opacity: 1;
+                pointer-events: auto;
               }
             }
           }
@@ -918,6 +985,7 @@ section.homepage {
               opacity: 1;
               .showcase-product-info {
                 opacity: 1;
+                pointer-events: auto;
               }
             }
           }
@@ -954,7 +1022,7 @@ section.homepage {
                 background: #fff;
                 padding: 10px;
                 overflow: hidden;
-                @media #{$tablet} {
+                @media #{$br1199} {
                   font-size: 14px;
                 }
                 .showcase-product-price {
@@ -1014,10 +1082,10 @@ section.homepage {
                     min-width: 30px;
                     cursor: pointer;
                     transition: background 0.2s ease-in, color 0.2s ease-in;
-                    @media #{$tablet} {
+                    @media #{$br1199} {
                       font-size: 11px;
                     }
-                    @media #{$mob} {
+                    @media #{$br767} {
                       font-size: 10px;
                     }
                     &:hover {
@@ -1049,7 +1117,7 @@ section.homepage {
               flex-wrap: wrap;
               opacity: 0;
               transition: opacity 0.3s ease-in;
-
+              pointer-events: none;
               .showcase-product-name-wrapper {
                 flex-basis: 100%;
                 .showcase-product-name {
@@ -1066,7 +1134,7 @@ section.homepage {
                 flex-basis: 100%;
                 display: flex;
                 padding: 15px 0px;
-                /*@media #{$tablet} {
+                /*@media #{$br1199} {
                   display: none;
                 }*/
                 .showcase-product-options-left {
@@ -1083,7 +1151,7 @@ section.homepage {
                       width: 1em;
                       height: 1em;
                       fill: #484848;
-                      @media #{$tablet} {
+                      @media #{$br1199} {
                         font-size: 11px;
                       }
                     }
@@ -1102,7 +1170,7 @@ section.homepage {
                       padding: 9px;
                       cursor: pointer;
                       background: #ddd;
-                      @media #{$tablet} {
+                      @media #{$br1199} {
                         padding: 6px;
                       }
                     }
@@ -1127,7 +1195,7 @@ section.homepage {
                     padding: 10px 0px;
                     font-size: 14px;
                     height: 100%;
-                    @media #{$tablet} {
+                    @media #{$br1199} {
                       padding: 7px 0px;
                       font-size: 13px;
                     }
@@ -1142,7 +1210,7 @@ section.homepage {
                     min-width: 35px;
                     font-size: 14px;
                     height: 100%;
-                    @media #{$tablet} {
+                    @media #{$br1199} {
                       padding: 7px;
                       font-size: 13px;
                     }
@@ -1157,7 +1225,7 @@ section.homepage {
                 background: #ddd;
                 cursor: pointer;
                 font-weight: 600;
-                @media #{$tablet} {
+                @media #{$br1199} {
                   /*display: none;*/
                   font-size: 14px;
                 }
