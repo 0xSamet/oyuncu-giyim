@@ -42,7 +42,7 @@ export default function LeftMenu() {
         })}
         onClick={() => setMenuIndex(5)}
       >
-        <Link href="/iletisim" as="/iletisim">
+        <Link href="/giris-yap" as="/giris-yap">
           <a>
             <span className="mobile-menu-logo-wrapper">
               <ProfileIcon />
@@ -73,7 +73,7 @@ export default function LeftMenu() {
         })}
         onClick={() => setMenuIndex(6)}
       >
-        <Link href="/iletisim" as="/iletisim">
+        <Link href="/sepetim" as="/sepetim">
           <a>
             <span className="mobile-menu-logo-wrapper">
               <CartIcon />
