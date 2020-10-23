@@ -30,7 +30,8 @@ import WalletIcon from "../public/icons/wallet.svg";
 
 function MyApp({ Component, pageProps }) {
   const {
-    menu: {iconMode, tabletVisible},
+    header: { mobileSearchVisible },
+    menu: { iconMode, tabletVisible },
     modalCloser: {
       opened: modalCloserOpened,
       withBackGround: modalCloserWithBg,
@@ -53,7 +54,13 @@ function MyApp({ Component, pageProps }) {
     }
   }, [iconMode]);
   return (
-    <div className="main-wrapper" >
+    <div className={
+      clsx({
+            "main-wrapper": true,
+            "cart-review-active": cartReviewVisible,
+            "mobile-search-active": mobileSearchVisible
+          })
+    } >
       <Header />
       <main
         className={clsx({
@@ -82,12 +89,7 @@ function MyApp({ Component, pageProps }) {
             });
           }}
         ></div>
-        <div
-          className={clsx({
-            "cart-review": true,
-            "cart-review-active": cartReviewVisible,
-          })}
-        >
+        <div className="cart-review" >
           <div className="cart-review-top">
             <span className="cart-review-title">Sepetiniz</span>
             <span

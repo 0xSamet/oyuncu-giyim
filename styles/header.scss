@@ -46,7 +46,7 @@ body header {
         }
         @media #{$br900} {
           position: fixed;
-          top: 130px;
+          top: 115px;
           left: 50%;
           width: 90%;
           z-index: 3;
@@ -84,12 +84,13 @@ body header {
         bottom: 0;
         left: 0;
         width: 100%;
-        height: calc(100% - 92px);
-        background: #ddd;
+        height: 100%;
+        background: #f3f3f3;
         z-index: 2;
         opacity: 0;
         transition: opacity 0.3s;
         pointer-events: none;
+        padding-top: 90px;
         @media #{$br767} {
           height: calc(100% - 84.5px);
         }
@@ -114,11 +115,16 @@ body header {
         }
         .search-results-wrapper {
           position: absolute;
-          top: calc(50% + 20px);
+          top: calc(50% + 40px);
           left: 50%;
           transform: translate(-50%, -50%);
           width: 90%;
           height: 68%;
+          padding-top: 30px;
+          @media #{$br767} {
+            top: 50%;
+            height: calc(100% - 170px);
+          }
           @media #{$br478} {
             top: calc(50% + 10px);
           }
@@ -138,6 +144,9 @@ body header {
               padding: 30px 0px;
               height: 160px;
               min-height: 160px;
+              &:nth-child(odd) {
+                background: #eaeaea;
+              }
               .product-image {
                 flex: 0 0 115px;
                 height: 100px;
@@ -364,19 +373,6 @@ body header {
             width: 0.95em;
             height: 0.95em;
           }
-        }
-      }
-    }
-  }
-  &.mobile-search-active {
-    @media #{$br900} {
-      .header-right-left {
-        .ui.input {
-          transform: translate(-50%, 0);
-        }
-        .search-mobile-bg {
-          opacity: 1;
-          pointer-events: auto;
         }
       }
     }

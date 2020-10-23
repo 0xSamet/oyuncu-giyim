@@ -26,11 +26,7 @@ export default function Header() {
   } = useSelector((state) => state);
   const dispatch = useDispatch();
   return (
-    <header className={
-      clsx({
-        "mobile-search-active": mobileSearchVisible
-      })
-    }>
+    <header>
       <div className="logo-wrapper">
         <Link href="/" as="/">
           <a>
