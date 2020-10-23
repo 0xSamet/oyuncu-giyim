@@ -356,7 +356,7 @@ body header {
           left: 50%;
           transform: translate(-50%, -50%);
           height: 68%;
-          overflow-y: scroll;
+          overflow-y: hidden;
           -webkit-overflow-scrolling: touch;
           width: 90%;
           @media #{$br478} {
