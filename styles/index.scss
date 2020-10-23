@@ -376,6 +376,7 @@ body header {
               }
               .product-image {
                 flex: 0 0 115px;
+                height: 100px;
                 @media #{$br500} {
                   flex: 0 0 100px;
                 }
