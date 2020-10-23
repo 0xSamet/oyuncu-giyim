@@ -115,18 +115,17 @@ body header {
         }
         .search-results-wrapper {
           position: absolute;
-          top: calc(50% + 40px);
+          top: calc(50% + 50px);
           left: 50%;
           transform: translate(-50%, -50%);
           width: 90%;
           height: 68%;
-          padding-top: 30px;
           @media #{$br767} {
-            top: 50%;
+            top: calc(50% + 10px);
             height: calc(100% - 170px);
           }
           @media #{$br478} {
-            top: calc(50% + 10px);
+            top: 50%;
           }
           .search-results {
             display: flex;

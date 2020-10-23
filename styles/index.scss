@@ -30,6 +30,7 @@ body .main-wrapper {
     }
   }
   &.mobile-search-active {
+    overflow-y: hidden;
     @media #{$br900} {
       header {
         position: fixed;
