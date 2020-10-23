@@ -97,6 +97,9 @@ body header {
         @media #{$br767} {
           height: calc(100% - 84.5px);
         }
+        @media #{$br500} {
+          height: calc(100% - 72.5px);
+        }
         .search-mobile-close {
           position: absolute;
           bottom: 25px;
@@ -118,18 +121,17 @@ body header {
         }
         .search-results-wrapper {
           position: absolute;
-          top: calc(50% + 50px);
+          top: 175px;
           left: 50%;
-          transform: translate(-50%, -50%);
+          transform: translateX(-50%);
           width: 90%;
-          height: 68%;
+          height: calc(100vh - 265px);
           @media #{$br767} {
-            top: calc(50% + 10px);
-            height: calc(100% - 170px);
+            top: 90px;
           }
-          @media #{$br478} {
+          /*@media #{$br478} {
             top: 50%;
-          }
+          }*/
           .search-results {
             display: flex;
             flex-direction: column;
@@ -137,13 +139,14 @@ body header {
             height: 100%;
             overflow-y: scroll;
             -webkit-overflow-scrolling: touch;
+            background: #d2d2d2;
             &::-webkit-scrollbar {
               width: 2px;
             }
             li {
               flex: 1;
               display: flex;
-              padding: 30px 0px;
+              padding: 30px 10px;
               height: 160px;
               min-height: 160px;
               &:nth-child(odd) {
