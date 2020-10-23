@@ -369,6 +369,7 @@ body header {
               width: 2px;
             }
             li {
+              flex: 1;
               display: flex;
               padding: 30px 0px;
               &:first-child {
@@ -392,6 +393,7 @@ body header {
                 display: flex;
                 flex-direction: column;
                 justify-content: center;
+                height: 100%;
                 .product-name {
                   font-size: 18px;
                   padding: 0px 10px 10px 10px;
