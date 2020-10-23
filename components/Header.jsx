@@ -50,12 +50,14 @@ export default function Header() {
           />
           <div
             className="search-mobile-bg">
-            <ul class="search-results" >
-              <MobileSearchListItem productId={1} />
-              <MobileSearchListItem productId={2} />
-              <MobileSearchListItem productId={3} />
-              <MobileSearchListItem productId={4} />
-            </ul>
+            <div className="search-results-wrapper" >
+              <ul class="search-results" >
+                <MobileSearchListItem productId={1} />
+                <MobileSearchListItem productId={2} />
+                <MobileSearchListItem productId={3} />
+                <MobileSearchListItem productId={4} />
+              </ul>
+            </div>
             <CancelIcon
               className="search-mobile-close"
               onClick={() => {
