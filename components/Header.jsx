@@ -56,6 +56,14 @@ export default function Header() {
                 <MobileSearchListItem productId={2} />
                 <MobileSearchListItem productId={3} />
                 <MobileSearchListItem productId={4} />
+                <MobileSearchListItem productId={5} />
+                <MobileSearchListItem productId={6} />
+                <MobileSearchListItem productId={1} />
+                <MobileSearchListItem productId={2} />
+                <MobileSearchListItem productId={3} />
+                <MobileSearchListItem productId={4} />
+                <MobileSearchListItem productId={5} />
+                <MobileSearchListItem productId={6} />
               </ul>
             </div>
             <CancelIcon
