@@ -1,0 +1,45 @@
+@import "variables";
+
+body footer {
+  background-color: #dedede;
+  padding: 20px 20px;
+  display: flex;
+  align-items: center;
+  @media #{$br767} {
+    flex-direction: column;
+  }
+  .footer-left {
+    @media #{$br767} {
+      padding: 20px 0px;
+    }
+    .copyright {
+      font-size: 13px;
+    }
+  }
+  .footer-right {
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+    height: 100%;
+    align-items: center;
+    svg {
+      font-size: 40px;
+      width: 1em;
+      height: 1em;
+      fill: #616161;
+      &.mastercard-icon {
+        width: 0.94em;
+        & * {
+          fill: inherit;
+        }
+      }
+    }
+    .informations-wrapper {
+      padding: 0px 10px;
+      span {
+        padding: 0px 5px;
+        font-size: 12px;
+      }
+    }
+  }
+}

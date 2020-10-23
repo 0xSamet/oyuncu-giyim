@@ -51,7 +51,7 @@ export default function Header() {
           <div
             className="search-mobile-bg">
             <div className="search-results-wrapper" >
-              <ul class="search-results" >
+              <ul className="search-results" >
                 <MobileSearchListItem productId={1} />
                 <MobileSearchListItem productId={2} />
                 <MobileSearchListItem productId={3} />

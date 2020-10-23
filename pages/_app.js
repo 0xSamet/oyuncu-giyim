@@ -1,7 +1,10 @@
 import "semantic-ui-css/semantic.min.css";
-import "../styles/globals.css";
 import "../styles/bootstrap-grid.css";
 import "../styles/reset.css";
+import "../styles/variables.scss";
+import "../styles/header.scss";
+import "../styles/homepage.scss";
+import "../styles/footer.scss";
 import "../styles/index.scss";
 
 import "swiper/swiper.scss";
@@ -50,11 +53,11 @@ function MyApp({ Component, pageProps }) {
     }
   }, [iconMode]);
   return (
-    <div className="asd" >
+    <div className="main-wrapper" >
       <Header />
       <main
         className={clsx({
-          "main-wrapper": true,
+          "content-wrapper": true,
           "left-menu-icon-mode-active": iconMode,
           "left-menu-show-tablet": tabletVisible
         })}
