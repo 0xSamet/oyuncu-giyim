@@ -13,9 +13,16 @@ body .main-wrapper {
   position: fixed;
   width: 100%;
   height: 100%;
+  overflow-x: hidden;
   overflow-y: scroll;
   &::-webkit-scrollbar {
     width: 7px;
+    @media #{$br1199} {
+      width: 5px;
+    }
+    @media #{$br500} {
+      width: 4px;
+    }
   }
   &::-webkit-scrollbar-thumb {
     border-radius: 0;
@@ -373,7 +380,7 @@ body .main-wrapper {
               font-size: 28px;
             }
             @media #{$br478} {
-              font-size: 24px;
+              font-size: 22px;
             }
           }
         }
@@ -391,7 +398,7 @@ body .main-wrapper {
             font-size: 14px;
           }
           @media #{$br478} {
-            font-size: 12px;
+            font-size: 11px;
             padding: 10px;
           }
         }
@@ -486,13 +493,11 @@ main.content-wrapper {
   }
   .page-right-wrapper {
     flex: 1;
-    padding: 40px 15px 0px 15px;
     transition: max-width 0.5s;
     max-width: calc(100% - 250px);
     min-height: 100vh;
     @media #{$br1199} {
       max-width: none;
-      padding: 40px 15px 15px 15px;
       max-width: 100%;
       transition: none;
     }

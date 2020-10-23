@@ -1,6 +1,10 @@
 @import "variables";
 
 section.homepage {
+  padding: 40px 15px 0px 15px;
+  @media #{$br1199} {
+    padding: 40px 15px 15px 15px;
+  }
   .homepage-slider {
     max-width: 1165px;
     max-height: 550px;
