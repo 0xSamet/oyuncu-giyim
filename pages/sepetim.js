@@ -1,7 +1,3 @@
-export default function Sepetim() {
-  return (
-    <>
-      <h1>Sepetim</h1>
-    </>
-  );
-}
+import Sepetim from "../components/pages/Sepetim";
+
+export default Sepetim;

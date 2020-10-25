@@ -15,7 +15,6 @@ export default function CartReviewListItem({ productId }) {
           99.90&#8378; <span className="old-price">129.90&#8378;</span>
         </span>
       </div>
-
     </li>
   );
 }

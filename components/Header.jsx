@@ -12,7 +12,7 @@ import SearchIcon from "../public/icons/search.svg";
 
 import { Button, Divider, Input, Segment, Checkbox } from "semantic-ui-react";
 import clsx from "clsx";
-import MobileSearchListItem from "../components/MobileSearchListItem"
+import MobileSearchListItem from "../components/MobileSearchListItem";
 
 import { Provider, useSelector, useDispatch } from "react-redux";
 
@@ -44,32 +44,6 @@ export default function Header() {
               setSearchWord(e.target.value);
             }}
           />
-          <div
-            className="search-mobile-bg">
-            <div className="search-results-wrapper" >
-              <ul className="search-results" >
-                <MobileSearchListItem productId={1} />
-                <MobileSearchListItem productId={2} />
-                <MobileSearchListItem productId={3} />
-                <MobileSearchListItem productId={4} />
-                <MobileSearchListItem productId={5} />
-                <MobileSearchListItem productId={6} />
-                <MobileSearchListItem productId={1} />
-                <MobileSearchListItem productId={2} />
-                <MobileSearchListItem productId={3} />
-                <MobileSearchListItem productId={4} />
-                <MobileSearchListItem productId={5} />
-                <MobileSearchListItem productId={6} />
-              </ul>
-            </div>
-            <CancelIcon
-              className="search-mobile-close"
-              onClick={() => {
-                dispatch({
-                  type: "TOGGLE_MOBILE_SEARCH",
-                });
-              }} />
-          </div>
         </div>
         <div className="header-right-right col-md-2">
           <div className="header-right-icon-wrapper">
@@ -213,13 +187,14 @@ export default function Header() {
             >
               <CartIcon />
             </span>
-            <span className="search-icon-wrapper" onClick={
-              () => {
+            <span
+              className="search-icon-wrapper"
+              onClick={() => {
                 dispatch({
-                  type: "TOGGLE_MOBILE_SEARCH"
+                  type: "TOGGLE_MOBILE_SEARCH",
                 });
-              }
-            }>
+              }}
+            >
               <SearchIcon />
             </span>
           </div>

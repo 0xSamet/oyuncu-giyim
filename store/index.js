@@ -4,8 +4,8 @@ import { createWrapper, HYDRATE } from "next-redux-wrapper";
 const initialState = {
   iconMode: false,
   menu: {
-    iconMode: false,
-    tabletVisible: false,
+    index: -1,
+    iconMode: false
   },
   modalCloser: {
     opened: false,
@@ -30,8 +30,6 @@ const reducer = (state = initialState, action) => {
 
     case "TOGGLE_ICONMODE":
       return { ...state, menu: { ...state.menu, iconMode: !state.menu.iconMode } };
-    case "TOGGLE_TABLET_MENU":
-      return { ...state, menu: { ...state.menu, tabletVisible: !state.menu.tabletVisible }};
     case "CLEAN_MODALS":
       return {
         ...state,

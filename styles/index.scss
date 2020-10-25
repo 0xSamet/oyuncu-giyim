@@ -27,6 +27,31 @@ body .main-wrapper {
   &::-webkit-scrollbar-thumb {
     border-radius: 0;
   }
+  &.left-menu-icon-mode-active {
+    .page-left-wrapper {
+      flex: 0 0 60px;
+      .main-menu {
+        width: 60px;
+        .main-menu-logo-wrapper {
+          svg {
+            font-size: 35px;
+          }
+        }
+        > li {
+          &:first-child {
+            .main-menu-logo-wrapper {
+              svg {
+                transform: rotate(180deg);
+              }
+            }
+          }
+        }
+      }
+    }
+    .page-right-wrapper {
+      max-width: calc(100% - 60px);
+    }
+  }
   &.cart-review-active {
     overflow-y: hidden;
     .cart-review {
@@ -38,32 +63,6 @@ body .main-wrapper {
   }
   &.mobile-search-active {
     overflow-y: hidden;
-    @media #{$br900} {
-      header {
-        position: fixed;
-        top: 0;
-        z-index: 3;
-        width: 100%;
-        background: #f3f3f3;
-        .header-right-left {
-          .ui.input {
-            transform: translate(-50%, 0);
-          }
-          .search-mobile-bg {
-            opacity: 1;
-            pointer-events: auto;
-          }
-        }
-        .logo-wrapper {
-          z-index: 3;
-          background: #f3f3f3;
-        }
-        .header-right-right {
-          z-index: 3;
-          background: #f3f3f3;
-        }
-      }
-    }
   }
 }
 
@@ -105,14 +104,22 @@ body .main-wrapper {
     width: 5px;
   }
   .cart-review-top {
-    padding: 43px 20px;
+    height: 99.5px;
     font-size: 21px;
     display: flex;
     justify-content: space-between;
+    align-items: center;
+    padding: 0px 20px;
     position: sticky;
     top: 0;
     background: #fff;
     box-shadow: 0px 2px 1px 0px rgba(122, 122, 122, 0.3);
+    @media #{$br1199} {
+      height: 92px;
+    }
+    @media #{$br767} {
+      height: 84.5px;
+    }
     .cart-review-go-back {
       cursor: pointer;
       svg {
@@ -284,7 +291,7 @@ body .main-wrapper {
   border-top-left-radius: 15px;
   border-top-right-radius: 15px;
   display: none;
-  @media #{$br900} {
+  @media #{$br1199} {
     display: block;
   }
   @media #{$br478} {
@@ -418,14 +425,25 @@ main.content-wrapper {
     .main-menu {
       background-color: #fff;
       transition: width 0.5s;
-      width: 100%;
-      position: absolute;
-      top: 0;
-      left: 0;
-      height: 100%;
+      position: fixed;
+      top: 71.5px;
+      width: 250px;
+      height: calc(100% - 71.5px);
+      padding-bottom: 82px;
+      overflow-y: auto;
+      &::-webkit-scrollbar {
+        width: 5px;
+        @media #{$br500} {
+          width: 3px;
+        }
+      }
+      &::-webkit-scrollbar-thumb {
+        border-radius: 0;
+      }
       li {
-        cursor: pointer;
+        overflow: hidden;
         a {
+          cursor: pointer;
           flex: 1;
           height: 100%;
           display: flex;
@@ -449,6 +467,7 @@ main.content-wrapper {
             white-space: nowrap;
             text-overflow: ellipsis;
             color: #3e3e3e;
+            font-size: 14px;
           }
           &:hover {
             .main-menu-logo-wrapper {
@@ -469,24 +488,31 @@ main.content-wrapper {
           opacity: 0.5;
           margin: 5px 0px;
         }
+      }
+      > li {
         &:first-child {
           @media #{$br1199} {
             display: none;
           }
           a {
             justify-content: flex-end;
+            cursor: auto;
             .main-menu-logo-wrapper {
               padding: 7px;
               border-radius: 100%;
               transition: 0.5s;
+              cursor: pointer;
               svg {
-                font-size: 15px;
+                font-size: 14px;
               }
               &:hover {
-                background-color: #cacaca;
+                background-color: #f5f5f5;
               }
             }
           }
+        }
+        .submenu {
+          background: #efeeee;
         }
       }
     }
@@ -500,31 +526,6 @@ main.content-wrapper {
       max-width: none;
       max-width: 100%;
       transition: none;
-    }
-  }
-  &.left-menu-icon-mode-active {
-    .page-left-wrapper {
-      flex: 0 0 60px;
-      .main-menu {
-        width: 60px;
-        .main-menu-logo-wrapper {
-          svg {
-            font-size: 35px;
-          }
-        }
-        li {
-          &:first-child {
-            .main-menu-logo-wrapper {
-              svg {
-                transform: rotate(180deg);
-              }
-            }
-          }
-        }
-      }
-    }
-    .page-right-wrapper {
-      max-width: calc(100% - 60px);
     }
   }
 }

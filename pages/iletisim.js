@@ -1,7 +1,3 @@
-export default function SweatRoute() {
-  return (
-    <>
-      <h1>İletişim</h1>
-    </>
-  );
-}
+import Iletisim from "../components/pages/Iletisim";
+
+export default Iletisim;
