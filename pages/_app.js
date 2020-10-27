@@ -13,6 +13,7 @@ import "swiper/components/pagination/pagination.scss";
 import "swiper/components/scrollbar/scrollbar.scss";
 
 import { wrapper } from "../store";
+import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import clsx from "clsx";
 
@@ -24,37 +25,48 @@ import CartReview from "../components/CartReview";
 import MobileMenu from "../components/MobileMenu";
 
 function MyApp({ Component, pageProps }) {
-    const {
-    header: { mobileSearchVisible },
-    menu: { iconMode, tabletVisible },
-    modalCloser: {
-      opened: modalCloserOpened,
-      withBackGround: modalCloserWithBg,
-    },
-      body: { cartReviewVisible },
+  const {
+    modals: { mobileSearchVisible, cartReviewVisible },
+    theme: { iconMode },
   } = useSelector((state) => state);
+
+  useEffect(() => {
+    function checkMenu() {
+      if (window.innerWidth < 1199 && iconMode) {
+        dispatch({
+          type: "TOGGLE_ICONMODE",
+        });
+      }
+    }
+    window.addEventListener("resize", checkMenu);
+    return () => {
+      window.removeEventListener("resize", checkMenu);
+    };
+  }, [iconMode]);
   return (
-          <div
-        className={clsx({
-          "main-wrapper": true,
-          "cart-review-active": cartReviewVisible,
-          "mobile-search-active": mobileSearchVisible,
-          "left-menu-icon-mode-active": iconMode,
-        })}
-      >
+    <div
+      className={clsx({
+        "main-wrapper": true,
+        "cart-review-active": cartReviewVisible,
+        "mobile-search-active": mobileSearchVisible,
+        "theme-icon-mode-active": iconMode,
+      })}
+    >
       <Header />
-            <main className="content-wrapper">
+      <main className="content-wrapper">
         <div className="row">
           <div className="page-left-wrapper">
             <LeftMenu />
           </div>
-          <div className="page-right-wrapper"><Component {...pageProps} /></div>
+          <div className="page-right-wrapper">
+            <Component {...pageProps} />
+          </div>
         </div>
         <ModalCloser />
         <CartReview />
         <MobileMenu />
       </main>
-      
+
       <Footer />
     </div>
   );

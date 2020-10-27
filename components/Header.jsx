@@ -1,4 +1,3 @@
-//import { Input } from "semantic-ui-react";
 import { useState } from "react";
 import Link from "next/link";
 
@@ -14,15 +13,24 @@ import { Button, Divider, Input, Segment, Checkbox } from "semantic-ui-react";
 import clsx from "clsx";
 import MobileSearchListItem from "../components/MobileSearchListItem";
 
-import { Provider, useSelector, useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+
+import {
+  openLoginForm,
+  openNotifications,
+  openCartReview,
+  openMobileSearch,
+} from "../store/reducers/modals";
 
 export default function Header() {
   const [searchWord, setSearchWord] = useState("");
-  const [loginFormOpened, setLoginFormOpened] = useState(false);
   const {
-    header: { loginFormVisible, notificationsVisible, mobileSearchVisible },
-    modalCloser: { opened: modalCloserOpened },
-    body: { cartReviewVisible },
+    modals: {
+      loginFormVisible,
+      notificationsVisible,
+      mobileSearchVisible,
+      cartReviewVisible,
+    },
   } = useSelector((state) => state);
   const dispatch = useDispatch();
   return (
@@ -53,12 +61,8 @@ export default function Header() {
                 "notifications-active": notificationsVisible,
               })}
               onClick={() => {
-                if (notificationsVisible) {
-                  return;
-                } else {
-                  dispatch({
-                    type: "TOGGLE_NOTIFICATIONS",
-                  });
+                if (!notificationsVisible) {
+                  dispatch(openNotifications());
                 }
               }}
             >
@@ -126,12 +130,8 @@ export default function Header() {
                 "login-form-active": loginFormVisible,
               })}
               onClick={() => {
-                if (loginFormVisible) {
-                  return;
-                } else {
-                  dispatch({
-                    type: "TOGGLE_LOGIN_FORM",
-                  });
+                if (!loginFormVisible) {
+                  dispatch(openLoginForm());
                 }
               }}
             >
@@ -174,14 +174,8 @@ export default function Header() {
             <span
               className="cart-icon-wrapper"
               onClick={() => {
-                if (cartReviewVisible) {
-                  console.log("actşve");
-                  return;
-                } else {
-                  console.log("dispatched");
-                  dispatch({
-                    type: "TOGGLE_CART_REVIEW",
-                  });
+                if (!cartReviewVisible) {
+                  dispatch(openCartReview());
                 }
               }}
             >
@@ -189,11 +183,7 @@ export default function Header() {
             </span>
             <span
               className="search-icon-wrapper"
-              onClick={() => {
-                dispatch({
-                  type: "TOGGLE_MOBILE_SEARCH",
-                });
-              }}
+              onClick={() => dispatch(openMobileSearch())}
             >
               <SearchIcon />
             </span>

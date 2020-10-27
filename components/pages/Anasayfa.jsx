@@ -5,17 +5,14 @@ import Layout from "./Layout";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 
+import { changeDesktopMenuIndex } from "../../store/reducers/menu";
+
 SwiperCore.use([Navigation]);
 
 export default function Home() {
   const dispatch = useDispatch();
   useEffect(() => {
-    dispatch({
-      type: "CHANGE_MENU_INDEX",
-      payload: {
-        index: 0,
-      },
-    });
+    dispatch(changeDesktopMenuIndex(0));
   }, []);
   return (
     <Layout title="Anasayfa - Oyuncu Giyim">

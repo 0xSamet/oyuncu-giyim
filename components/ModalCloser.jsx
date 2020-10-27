@@ -1,11 +1,15 @@
 import clsx from "clsx";
 import { useSelector, useDispatch } from "react-redux";
 
+import { closeAllModals } from "../store/reducers/modals";
+
 export default function ModalCloser() {
   const {
-    modalCloser: {
-      opened: modalCloserOpened,
-      withBackGround: modalCloserWithBg,
+    modals: {
+      modalCloser: {
+        opened: modalCloserOpened,
+        withBackGround: modalCloserWithBg,
+      },
     },
   } = useSelector((state) => state);
   const dispatch = useDispatch();
@@ -18,9 +22,7 @@ export default function ModalCloser() {
         "with-bg": modalCloserWithBg,
       })}
       onClick={() => {
-        dispatch({
-          type: "CLEAN_MODALS",
-        });
+        dispatch(closeAllModals());
       }}
     ></div>
   );

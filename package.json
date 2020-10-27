@@ -10,6 +10,7 @@
   "dependencies": {
     "@svgr/webpack": "^5.4.0",
     "clsx": "^1.1.1",
+    "immer": "^7.0.14",
     "next": "^9.5.5",
     "next-redux-wrapper": "^6.0.2",
     "react": "16.13.1",

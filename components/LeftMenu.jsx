@@ -14,6 +14,8 @@ import CategoriesIcon from "../public/icons/categories.svg";
 
 import { useSpring, animated } from "react-spring";
 
+import { toggleIconMode } from "../store/reducers/theme";
+
 function LeftMenuListItem({
   index = -4,
   text,
@@ -22,8 +24,11 @@ function LeftMenuListItem({
   submenu = [],
 }) {
   const {
-    menu: { index: indexFromStore, iconMode },
+    menu: {
+      desktopMenu: { index: indexFromStore },
+    },
   } = useSelector((state) => state);
+
   const [toggle, setToggle] = useState(false);
   const props = useSpring({ height: toggle ? submenu.length * 45 : 0 });
 
@@ -61,18 +66,9 @@ export default function LeftMenu() {
   const dispatch = useDispatch();
 
   const handleIconMode = () => {
-    return dispatch({
-      type: "TOGGLE_ICONMODE",
-    });
+    return dispatch(toggleIconMode());
   };
 
-  const {
-    menu: { index: indexFromStore, iconMode },
-  } = useSelector((state) => state);
-
-  useEffect(() => {
-    console.log("icon mode değişti");
-  }, [iconMode]);
   return (
     <ul className="main-menu">
       <li>
@@ -91,7 +87,7 @@ export default function LeftMenu() {
       />
       <LeftMenuListItem
         index={1}
-        text="Sweatler"
+        text="Sweatshirt"
         link={{
           href: "/kategoriler/[altKategori]",
           as: "/kategoriler/sweatler",
@@ -100,7 +96,7 @@ export default function LeftMenu() {
       />
       <LeftMenuListItem
         index={2}
-        text="T-Shirtler"
+        text="T-Shirt"
         link={{
           href: "/kategoriler/[altKategori]",
           as: "/kategoriler/t-shirtler",
