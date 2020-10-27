@@ -18,6 +18,10 @@ import clsx from "clsx";
 
 import Header from "../components/Header";
 import Footer from "../components/Footer";
+import LeftMenu from "../components/LeftMenu";
+import ModalCloser from "../components/ModalCloser";
+import CartReview from "../components/CartReview";
+import MobileMenu from "../components/MobileMenu";
 
 function MyApp({ Component, pageProps }) {
     const {
@@ -27,7 +31,7 @@ function MyApp({ Component, pageProps }) {
       opened: modalCloserOpened,
       withBackGround: modalCloserWithBg,
     },
-    body: { cartReviewVisible },
+      body: { cartReviewVisible },
   } = useSelector((state) => state);
   return (
           <div
@@ -39,7 +43,18 @@ function MyApp({ Component, pageProps }) {
         })}
       >
       <Header />
-      <Component {...pageProps} />
+            <main className="content-wrapper">
+        <div className="row">
+          <div className="page-left-wrapper">
+            <LeftMenu />
+          </div>
+          <div className="page-right-wrapper"><Component {...pageProps} /></div>
+        </div>
+        <ModalCloser />
+        <CartReview />
+        <MobileMenu />
+      </main>
+      
       <Footer />
     </div>
   );

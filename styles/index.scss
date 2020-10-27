@@ -104,8 +104,8 @@ body .main-wrapper {
     width: 5px;
   }
   .cart-review-top {
-    height: 99.5px;
-    font-size: 21px;
+    height: 71.5px;
+    font-size: 19px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -115,15 +115,15 @@ body .main-wrapper {
     background: #fff;
     box-shadow: 0px 2px 1px 0px rgba(122, 122, 122, 0.3);
     @media #{$br1199} {
-      height: 92px;
+      height: 68.5px;
     }
     @media #{$br767} {
-      height: 84.5px;
+      height: 65.5px;
     }
     .cart-review-go-back {
       cursor: pointer;
       svg {
-        font-size: 30px;
+        font-size: 25px;
         width: 1em;
         height: 1em;
         * {
@@ -150,7 +150,7 @@ body .main-wrapper {
         flex: 1;
         padding: 0px 5px;
         .product-name {
-          font-size: 18px;
+          font-size: 16px;
           padding: 0px 10px 10px 10px;
         }
         .product-price {
@@ -416,7 +416,7 @@ body .main-wrapper {
 
 main.content-wrapper {
   .page-left-wrapper {
-    flex: 0 0 250px;
+    flex: 0 0 240px;
     transition: flex 0.5s, width 0.5s;
     position: relative;
     @media #{$br1199} {
@@ -427,7 +427,7 @@ main.content-wrapper {
       transition: width 0.5s;
       position: fixed;
       top: 71.5px;
-      width: 250px;
+      width: 240px;
       height: calc(100% - 71.5px);
       padding-bottom: 82px;
       overflow-y: auto;
@@ -520,7 +520,7 @@ main.content-wrapper {
   .page-right-wrapper {
     flex: 1;
     transition: max-width 0.5s;
-    max-width: calc(100% - 250px);
+    max-width: calc(100% - 240px);
     min-height: 100vh;
     @media #{$br1199} {
       max-width: none;

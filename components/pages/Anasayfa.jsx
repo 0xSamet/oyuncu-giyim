@@ -2,10 +2,21 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import SwiperCore, { Navigation } from "swiper";
 import ShowCase from "../ShowCase";
 import Layout from "./Layout";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
 
 SwiperCore.use([Navigation]);
 
 export default function Home() {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch({
+      type: "CHANGE_MENU_INDEX",
+      payload: {
+        index: 0,
+      },
+    });
+  }, []);
   return (
     <Layout title="Anasayfa - Oyuncu Giyim">
       <section className="homepage">

@@ -95,6 +95,14 @@ const reducer = (state = initialState, action) => {
           mobileSearchVisible: !state.header.mobileSearchVisible,
         },
       };
+        case "CHANGE_MENU_INDEX":
+      return {
+        ...state,
+        menu: {
+          ...state.menu,
+          index: action.payload.index,
+        },
+      };
     default:
       return state;
   }

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import clsx from "clsx";
 import Link from "next/link";
 import { useDispatch, useSelector } from "react-redux";
@@ -22,10 +22,11 @@ function LeftMenuListItem({
   submenu = [],
 }) {
   const {
-    menu: { index: indexFromStore },
+    menu: { index: indexFromStore, iconMode },
   } = useSelector((state) => state);
   const [toggle, setToggle] = useState(false);
   const props = useSpring({ height: toggle ? submenu.length * 45 : 0 });
+
   return (
     <li
       className={clsx({
@@ -57,16 +58,21 @@ function LeftMenuListItem({
 }
 
 export default function LeftMenu() {
-  const [menuIndex, setMenuIndex] = useState(-1);
   const dispatch = useDispatch();
-  const {
-    menu: { index },
-  } = useSelector((state) => state);
 
-  const handleIconMode = () =>
-    dispatch({
+  const handleIconMode = () => {
+    return dispatch({
       type: "TOGGLE_ICONMODE",
     });
+  };
+
+  const {
+    menu: { index: indexFromStore, iconMode },
+  } = useSelector((state) => state);
+
+  useEffect(() => {
+    console.log("icon mode değişti");
+  }, [iconMode]);
   return (
     <ul className="main-menu">
       <li>
@@ -101,8 +107,8 @@ export default function LeftMenu() {
         }}
         logo={<ShirtIcon />}
       />
-      <LeftMenuListItem
-        index={2}
+      {/* {      <LeftMenuListItem
+        index={3}
         text="Tüm Kategoriler"
         link={{
           href: "/kategoriler",
@@ -129,9 +135,9 @@ export default function LeftMenu() {
             logo: <ShirtIcon />,
           },
         ]}
-      />
+      />} */}
       <LeftMenuListItem
-        index={6}
+        index={4}
         text="İletişim"
         link={{
           href: "/iletisim",

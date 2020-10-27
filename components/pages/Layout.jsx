@@ -45,17 +45,7 @@ const Layout = ({ children, title = "Oyuncu Giyim" }) => {
         <meta charSet="utf-8" />
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
-      <main className="content-wrapper">
-        <div className="row">
-          <div className="page-left-wrapper">
-            <LeftMenu />
-          </div>
-          <div className="page-right-wrapper">{children}</div>
-        </div>
-        <ModalCloser />
-        <CartReview />
-        <MobileMenu />
-      </main>
+      {children}
     </>
   );
 };
