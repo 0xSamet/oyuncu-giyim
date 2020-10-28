@@ -50,10 +50,16 @@ body .main-wrapper {
     }
     .page-right-wrapper {
       max-width: calc(100% - 60px);
+      @media #{$br900} {
+        max-width: 100%;
+      }
     }
   }
   &.cart-review-active {
     overflow-y: hidden;
+    header {
+      z-index: 5;
+    }
     .cart-review {
       transform: translateX(0);
       & ~ .cart-review-status {
@@ -73,7 +79,7 @@ body .main-wrapper {
   opacity: 0.1;
   width: 100%;
   height: 100%;
-  z-index: 2;
+  z-index: 5;
   pointer-events: none;
   &.open {
     pointer-events: auto;
@@ -92,7 +98,7 @@ body .main-wrapper {
   background: #fff;
   top: 0;
   right: 0;
-  z-index: 3;
+  z-index: 6;
   overflow-y: scroll;
   padding-bottom: 90px;
   transform: translateX(100%);
@@ -223,7 +229,7 @@ body .main-wrapper {
   right: 0;
   bottom: 0;
   width: 500px;
-  z-index: 3;
+  z-index: 6;
   background: #efeeee;
   display: flex;
   height: 65px;
@@ -291,7 +297,7 @@ body .main-wrapper {
   border-top-left-radius: 15px;
   border-top-right-radius: 15px;
   display: none;
-  @media #{$br1199} {
+  @media #{$br900} {
     display: block;
   }
   @media #{$br478} {
@@ -420,6 +426,9 @@ main.content-wrapper {
     transition: flex 0.5s, width 0.5s;
     position: relative;
     @media #{$br1199} {
+      flex: 0 0 60px;
+    }
+    @media #{$br900} {
       display: none;
     }
     .main-menu {
@@ -431,6 +440,10 @@ main.content-wrapper {
       height: calc(100% - 71.5px);
       padding-bottom: 82px;
       overflow-y: auto;
+      @media #{$br1199} {
+        top: 68.5px;
+        z-index: 3;
+      }
       &::-webkit-scrollbar {
         width: 5px;
         @media #{$br500} {
@@ -491,9 +504,6 @@ main.content-wrapper {
       }
       > li {
         &:first-child {
-          @media #{$br1199} {
-            display: none;
-          }
           a {
             justify-content: flex-end;
             cursor: auto;
@@ -523,9 +533,10 @@ main.content-wrapper {
     max-width: calc(100% - 240px);
     min-height: 100vh;
     @media #{$br1199} {
-      max-width: none;
+      max-width: calc(100% - 60px);
+    }
+    @media #{$br900} {
       max-width: 100%;
-      transition: none;
     }
   }
 }

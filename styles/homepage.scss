@@ -19,12 +19,15 @@ section.homepage {
     }
   }
   .homepage-showcase-wrapper {
-    margin: 135px 0px;
+    max-width: 1165px;
+    margin: 135px auto;
     position: relative;
     .homepage-showcase-title {
       text-align: center;
-      font-size: 25px;
+      font-size: 24px;
       padding: 15px 0px;
+      background: #484848;
+      color: #fff;
     }
     .homepage-showcase-controller {
       position: absolute;
@@ -60,7 +63,9 @@ section.homepage {
       }
     }
     .homepage-showcase {
-      max-width: 1165px;
+      max-width: 100%;
+      background: #e6e6e6;
+      padding: 20px 0px;
       @media #{$br1350} {
         max-width: 100%;
       }

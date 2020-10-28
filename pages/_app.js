@@ -14,7 +14,7 @@ import "swiper/components/scrollbar/scrollbar.scss";
 
 import { wrapper } from "../store";
 import { useEffect } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import clsx from "clsx";
 
 import Header from "../components/Header";
@@ -29,10 +29,10 @@ function MyApp({ Component, pageProps }) {
     modals: { mobileSearchVisible, cartReviewVisible },
     theme: { iconMode },
   } = useSelector((state) => state);
-
+  const dispatch = useDispatch();
   useEffect(() => {
     function checkMenu() {
-      if (window.innerWidth < 1199 && iconMode) {
+      if (window.innerWidth < 1199 && (iconMode === false)) {
         dispatch({
           type: "TOGGLE_ICONMODE",
         });

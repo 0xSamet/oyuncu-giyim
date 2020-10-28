@@ -47,18 +47,34 @@ const modalsReducer = (state = initialState, action) => {
     case OPEN_LOGIN_FORM:
       return produce(state, draft => {
         draft.loginFormVisible = true;
+        draft.notificationsVisible = false;
+        draft.cartReviewVisible = false;
+        draft.mobileSearchVisible = false;
+        draft.modalCloser.opened = true;
       });
     case OPEN_NOTIFICATIONS:
       return produce(state, draft => {
         draft.notificationsVisible = true;
+        draft.loginFormVisible = false;
+        draft.cartReviewVisible = false;
+        draft.mobileSearchVisible = false;
+        draft.modalCloser.opened = true;
       });
     case OPEN_CART_REVIEW:
       return produce(state, draft => {
         draft.cartReviewVisible = true;
+        draft.loginFormVisible = false;
+        draft.notificationsVisible = false;
+        draft.mobileSearchVisible = false;
+        draft.modalCloser.opened = true;
+        draft.modalCloser.withBackGround = true;
       });
     case OPEN_MOBILE_SEARCH:
       return produce(state, draft => {
         draft.mobileSearchVisible = true;
+        draft.notificationsVisible = false;
+        draft.cartReviewVisible = false;
+        draft.modalCloser.opened = true;
       });
     default:
       return state;
