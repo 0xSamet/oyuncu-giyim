@@ -1,4 +1,5 @@
 import produce from "immer"
+import { HYDRATE } from 'next-redux-wrapper';
 
 const initialState = {
   modalCloser: {
@@ -35,6 +36,11 @@ export const openMobileSearch = () => ({
 
 const modalsReducer = (state = initialState, action) => {
   switch (action.type) {
+    case HYDRATE:
+      return {
+        ...state,
+        ...action.payload.modals
+      }
     case CLOSE_ALL_MODALS:
       return produce(state, draft => {
         draft.modalCloser.opened = false;

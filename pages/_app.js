@@ -24,6 +24,8 @@ import ModalCloser from "../components/ModalCloser";
 import CartReview from "../components/CartReview";
 import MobileMenu from "../components/MobileMenu";
 
+import { toggleIconMode } from "../store/reducers/theme";
+
 function MyApp({ Component, pageProps }) {
   const {
     modals: { mobileSearchVisible, cartReviewVisible },
@@ -32,10 +34,8 @@ function MyApp({ Component, pageProps }) {
   const dispatch = useDispatch();
   useEffect(() => {
     function checkMenu() {
-      if (window.innerWidth < 1199 && (iconMode === false)) {
-        dispatch({
-          type: "TOGGLE_ICONMODE",
-        });
+      if (window.innerWidth < 1199 && !iconMode) {
+        dispatch(toggleIconMode());
       }
     }
     window.addEventListener("resize", checkMenu);
@@ -43,6 +43,14 @@ function MyApp({ Component, pageProps }) {
       window.removeEventListener("resize", checkMenu);
     };
   }, [iconMode]);
+  useEffect(() => {
+    function checkMenu() {
+      if (window.innerWidth < 1199 && !iconMode) {
+        dispatch(toggleIconMode());
+      }
+    }
+    checkMenu();
+  }, []);
   return (
     <div
       className={clsx({

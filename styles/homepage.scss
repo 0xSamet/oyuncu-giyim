@@ -24,10 +24,13 @@ section.homepage {
     position: relative;
     .homepage-showcase-title {
       text-align: center;
-      font-size: 24px;
+      font-size: 22px;
       padding: 15px 0px;
       background: #484848;
       color: #fff;
+      @media #{$br1350} {
+        padding: 13px 0px;
+      }
     }
     .homepage-showcase-controller {
       position: absolute;
@@ -112,12 +115,13 @@ section.homepage {
           .showcase-product-wrapper {
             transition: background-color 0.5s, opacity 0.5s;
             opacity: 0.5;
-            max-width: 100%;
+            /*max-width: 100%;*/
+            max-width: 360px;
             @media #{$br677} {
-              max-width: 70%;
+              //max-width: 70%;
             }
             @media #{$br500} {
-              max-width: 100%;
+              //max-width: 100%;
             }
             &.selecting-size {
               .showcase-product-image {

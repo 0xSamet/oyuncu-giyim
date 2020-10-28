@@ -1,9 +1,22 @@
+import { useEffect, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import ShowCaseProduct from "./ShowCaseProduct";
 import ArrowIcon from "../public/icons/arrow.svg";
 
 export default function ShowCase({ showCaseId }) {
+  const {
+    theme: { iconMode },
+  } = useSelector((state) => state);
+  const [showcase, setShowcase] = useState(undefined);
+  useEffect(() => {
+    if (showcase) {
+      setTimeout(() => {
+        showcase.update();
+      }, 500);
+    }
+  }, [iconMode]);
+
   return (
     <div
       className={`homepage-showcase-wrapper homepage-showcase-${showCaseId}`}
@@ -13,7 +26,7 @@ export default function ShowCase({ showCaseId }) {
         className="homepage-showcase"
         spaceBetween={30}
         slidesPerView={3}
-        onSwiper={(swiper) => console.log(swiper)}
+        onSwiper={(swiper) => setShowcase(swiper)}
         loop
         centeredSlides
         navigation={{
