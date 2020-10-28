@@ -5,6 +5,9 @@ section.homepage {
   @media #{$br1199} {
     padding: 40px 15px 15px 15px;
   }
+  @media #{$br677} {
+    padding: 15px 0px;
+  }
   .homepage-slider {
     max-width: 1165px;
     max-height: 550px;
@@ -30,6 +33,14 @@ section.homepage {
       color: #fff;
       @media #{$br1350} {
         padding: 13px 0px;
+      }
+      @media #{$br900} {
+        font-size: 19px;
+        padding: 12px 0px;
+      }
+      @media #{$br677} {
+        font-size: 17px;
+        padding: 11px 0px;
       }
     }
     .homepage-showcase-controller {
@@ -72,6 +83,10 @@ section.homepage {
       @media #{$br1350} {
         max-width: 100%;
       }
+      @media #{$br478} {
+        padding: 30px 0px;
+      }
+
       .swiper-wrapper {
         .swiper-slide {
           transform: scale(0.85);
@@ -115,13 +130,9 @@ section.homepage {
           .showcase-product-wrapper {
             transition: background-color 0.5s, opacity 0.5s;
             opacity: 0.5;
-            /*max-width: 100%;*/
             max-width: 360px;
-            @media #{$br677} {
-              //max-width: 70%;
-            }
-            @media #{$br500} {
-              //max-width: 100%;
+            @media #{$br478} {
+              max-width: 90%;
             }
             &.selecting-size {
               .showcase-product-image {

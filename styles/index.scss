@@ -395,8 +395,11 @@ body .main-wrapper {
             @media #{$br900} {
               font-size: 28px;
             }
+            @media #{$br677} {
+              font-size: 24px;
+            }
             @media #{$br478} {
-              font-size: 22px;
+              font-size: 20px;
             }
           }
         }
@@ -413,8 +416,11 @@ body .main-wrapper {
           @media #{$br900} {
             font-size: 14px;
           }
+          @media #{$br677} {
+            font-size: 12px;
+          }
           @media #{$br478} {
-            font-size: 11px;
+            font-size: 10px;
             padding: 10px;
           }
         }
