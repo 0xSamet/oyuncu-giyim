@@ -11,26 +11,20 @@ import SearchIcon from "../public/icons/search.svg";
 
 import { Button, Divider, Input, Segment, Checkbox } from "semantic-ui-react";
 import clsx from "clsx";
-import MobileSearchListItem from "../components/MobileSearchListItem";
 
 import { useSelector, useDispatch } from "react-redux";
 
 import {
-  openLoginForm,
-  openNotifications,
-  openCartReview,
-  openMobileSearch,
+  toggleLoginForm,
+  toggleNotifications,
+  toggleCartReview,
+  toggleMobileSearch,
 } from "../store/reducers/modals";
 
 export default function Header() {
   const [searchWord, setSearchWord] = useState("");
   const {
-    modals: {
-      loginFormVisible,
-      notificationsVisible,
-      mobileSearchVisible,
-      cartReviewVisible,
-    },
+    modals: { loginFormVisible, notificationsVisible },
   } = useSelector((state) => state);
   const dispatch = useDispatch();
   return (
@@ -60,11 +54,7 @@ export default function Header() {
                 "notification-icon-wrapper": true,
                 "notifications-active": notificationsVisible,
               })}
-              onClick={() => {
-                if (!notificationsVisible) {
-                  dispatch(openNotifications());
-                }
-              }}
+              onClick={() => dispatch(toggleNotifications())}
             >
               <NotificationIcon className="notification-icon" />
               <span className="notifications-wrapper">
@@ -129,11 +119,7 @@ export default function Header() {
                 "login-icon-wrapper": true,
                 "login-form-active": loginFormVisible,
               })}
-              onClick={() => {
-                if (!loginFormVisible) {
-                  dispatch(openLoginForm());
-                }
-              }}
+              onClick={() => dispatch(toggleLoginForm())}
             >
               <ProfileIcon className="login-icon" />
               <span className="login-options-wrapper">
@@ -173,17 +159,13 @@ export default function Header() {
             </span>
             <span
               className="cart-icon-wrapper"
-              onClick={() => {
-                if (!cartReviewVisible) {
-                  dispatch(openCartReview());
-                }
-              }}
+              onClick={() => dispatch(toggleCartReview())}
             >
               <CartIcon />
             </span>
             <span
               className="search-icon-wrapper"
-              onClick={() => dispatch(openMobileSearch())}
+              onClick={() => dispatch(toggleMobileSearch())}
             >
               <SearchIcon />
             </span>

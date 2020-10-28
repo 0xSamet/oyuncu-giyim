@@ -80,44 +80,6 @@ body header {
           transition: opacity 0.3s ease;
         }
       }
-      .search-mobile-bg {
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: #f3f3f3;
-        z-index: 2;
-        opacity: 0;
-        transition: opacity 0.3s;
-        pointer-events: none;
-        padding-top: 90px;
-        @media #{$br767} {
-          height: calc(100% - 84.5px);
-        }
-        @media #{$br500} {
-          height: calc(100% - 72.5px);
-        }
-        .search-mobile-close {
-          position: absolute;
-          bottom: 25px;
-          left: 50%;
-          transform: translateX(-50%);
-          font-size: 45px;
-          width: 1em;
-          height: 1em;
-          cursor: pointer;
-          @media #{$br767} {
-            font-size: 37px;
-          }
-          @media #{$br500} {
-            font-size: 36px;
-          }
-          @media #{$br478} {
-            bottom: 15px;
-          }
-        }
-      }
     }
     .header-right-right {
       height: 100%;

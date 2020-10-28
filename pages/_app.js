@@ -23,6 +23,7 @@ import LeftMenu from "../components/LeftMenu";
 import ModalCloser from "../components/ModalCloser";
 import CartReview from "../components/CartReview";
 import MobileMenu from "../components/MobileMenu";
+import MobileSearch from "../components/MobileSearch";
 
 import { toggleIconMode } from "../store/reducers/theme";
 
@@ -73,8 +74,8 @@ function MyApp({ Component, pageProps }) {
         <ModalCloser />
         <CartReview />
         <MobileMenu />
+        <MobileSearch />
       </main>
-
       <Footer />
     </div>
   );

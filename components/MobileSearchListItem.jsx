@@ -1,9 +1,7 @@
 import CancelIcon from "../public/icons/cancel.svg";
 import ArrowIcon from "../public/icons/arrow.svg";
-import PlusIcon from "../public/icons/plus.svg";
-import MinusIcon from "../public/icons/minus.svg";
 
-export default function CartReviewListItem({ productId }) {
+export default function MobileSearchListItem({ productId }) {
   return (
     <li className="product">
       <div className="product-image">

@@ -13,25 +13,25 @@ const initialState = {
 };
 
 const CLOSE_ALL_MODALS = "CLOSE_ALL_MODALS";
-const OPEN_LOGIN_FORM = "OPEN_LOGIN_FORM";
-const OPEN_NOTIFICATIONS = "OPEN_NOTIFICATIONS";
-const OPEN_CART_REVIEW = "OPEN_CART_REVIEW";
-const OPEN_MOBILE_SEARCH = "OPEN_MOBILE_SEARCH";
+const TOGGLE_LOGIN_FORM = "TOGGLE_LOGIN_FORM";
+const TOGGLE_NOTIFICATIONS = "TOGGLE_NOTIFICATIONS";
+const TOGGLE_CART_REVIEW = "TOGGLE_CART_REVIEW";
+const TOGGLE_MOBILE_SEARCH = "TOGGLE_MOBILE_SEARCH";
 
 export const closeAllModals = () => ({
     type: CLOSE_ALL_MODALS
 });
-export const openLoginForm = () => ({
-    type: OPEN_LOGIN_FORM
+export const toggleLoginForm = () => ({
+    type: TOGGLE_LOGIN_FORM
 });
-export const openNotifications = () => ({
-    type: OPEN_NOTIFICATIONS
+export const toggleNotifications = () => ({
+    type: TOGGLE_NOTIFICATIONS
 });
-export const openCartReview = () => ({
-    type: OPEN_CART_REVIEW
+export const toggleCartReview = () => ({
+    type: TOGGLE_CART_REVIEW
 });
-export const openMobileSearch = () => ({
-    type: OPEN_MOBILE_SEARCH
+export const toggleMobileSearch = () => ({
+    type: TOGGLE_MOBILE_SEARCH
 });
 
 const modalsReducer = (state = initialState, action) => {
@@ -50,37 +50,30 @@ const modalsReducer = (state = initialState, action) => {
         draft.cartReviewVisible = false;
         draft.mobileSearchVisible = false;
       });
-    case OPEN_LOGIN_FORM:
+    case TOGGLE_LOGIN_FORM:
       return produce(state, draft => {
-        draft.loginFormVisible = true;
+        draft.loginFormVisible = !draft.loginFormVisible;
         draft.notificationsVisible = false;
-        draft.cartReviewVisible = false;
-        draft.mobileSearchVisible = false;
         draft.modalCloser.opened = true;
       });
-    case OPEN_NOTIFICATIONS:
+    case TOGGLE_NOTIFICATIONS:
       return produce(state, draft => {
-        draft.notificationsVisible = true;
+        draft.notificationsVisible = !draft.notificationsVisible;
         draft.loginFormVisible = false;
-        draft.cartReviewVisible = false;
-        draft.mobileSearchVisible = false;
         draft.modalCloser.opened = true;
       });
-    case OPEN_CART_REVIEW:
+    case TOGGLE_CART_REVIEW:
       return produce(state, draft => {
-        draft.cartReviewVisible = true;
+        draft.cartReviewVisible = !draft.cartReviewVisible;
         draft.loginFormVisible = false;
         draft.notificationsVisible = false;
         draft.mobileSearchVisible = false;
         draft.modalCloser.opened = true;
         draft.modalCloser.withBackGround = true;
       });
-    case OPEN_MOBILE_SEARCH:
+    case TOGGLE_MOBILE_SEARCH:
       return produce(state, draft => {
-        draft.mobileSearchVisible = true;
-        draft.notificationsVisible = false;
-        draft.cartReviewVisible = false;
-        draft.modalCloser.opened = true;
+        draft.mobileSearchVisible = !draft.mobileSearchVisible;
       });
     default:
       return state;

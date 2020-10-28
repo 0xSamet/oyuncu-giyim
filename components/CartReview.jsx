@@ -3,6 +3,8 @@ import { useDispatch } from "react-redux";
 import GoBackIcon from "../public/icons/go-back.svg";
 import WalletIcon from "../public/icons/wallet.svg";
 
+import { closeAllModals } from "../store/reducers/modals";
+
 export default function CartReview() {
   const dispatch = useDispatch();
   return (
@@ -12,11 +14,7 @@ export default function CartReview() {
           <span className="cart-review-title">Sepetiniz</span>
           <span
             className="cart-review-go-back"
-            onClick={() => {
-              dispatch({
-                type: "CLEAN_MODALS",
-              });
-            }}
+            onClick={() => dispatch(closeAllModals())}
           >
             <GoBackIcon />
           </span>
