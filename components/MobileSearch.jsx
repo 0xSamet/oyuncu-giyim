@@ -2,6 +2,7 @@ import MobileSearchListItem from "./MobileSearchListItem";
 import { Input } from "semantic-ui-react";
 import SearchIcon from "../public/icons/search.svg";
 import ArrowIcon from "../public/icons/arrow.svg";
+import CancelIcon from "../public/icons/cancel.svg";
 import { useState } from "react";
 
 import clsx from "clsx";
@@ -23,12 +24,22 @@ export default function MobileSearch() {
       })}
     >
       <div className="input-wrapper">
-        <div class="go-back-icon" onClick={() => dispatch(closeAllModals())}>
+        <div
+          className="go-back-icon"
+          onClick={() => dispatch(closeAllModals())}
+        >
           <ArrowIcon />
         </div>
         <Input
           placeholder="Ürün Ara"
-          icon={<SearchIcon />}
+          value={searchWord || ""}
+          icon={
+            searchWord !== "" ? (
+              <CancelIcon onClick={() => setSearchWord("")} />
+            ) : (
+              <SearchIcon />
+            )
+          }
           loading={searchWord !== ""}
           onChange={(e) => {
             setSearchWord(e.target.value);

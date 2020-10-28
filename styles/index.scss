@@ -440,13 +440,14 @@ body .main-wrapper {
     display: flex;
     align-items: center;
     padding: 20px 15px;
+    max-height: 82px;
     .go-back-icon {
       display: flex;
       justify-content: center;
       align-items: center;
       border: 1px solid #dededf;
       height: 100%;
-      padding: 0px 15px;
+      padding: 15px;
       border-radius: 0.28571429rem;
       margin-right: 10px;
       cursor: pointer;
@@ -458,6 +459,30 @@ body .main-wrapper {
     }
     .ui.input {
       flex: 1;
+      input {
+        &:focus {
+          & ~ svg {
+            opacity: 1;
+          }
+        }
+      }
+      svg {
+        * {
+          fill: #616161;
+        }
+        fill: #616161;
+        font-size: 20px;
+        cursor: default;
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        right: 15px;
+        margin: 0;
+        height: 1em;
+        width: 1em;
+        opacity: 0.7;
+        transition: opacity 0.3s ease;
+      }
     }
   }
   .search-results-wrapper {
