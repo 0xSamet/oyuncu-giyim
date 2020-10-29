@@ -178,10 +178,30 @@ body header {
           @media #{$br900} {
             margin-right: 20px;
           }
+          &:after {
+            content: "";
+            width: 10px;
+            height: 10px;
+            background: #dcdcdc;
+            left: 50%;
+            top: calc(100% + 10px);
+            transform: translateX(-50%) rotate(45deg);
+            z-index: 1;
+            position: absolute;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease-in-out;
+            @media #{$br500} {
+              right: 36px;
+            }
+          }
           &.notifications-active {
             .notifications-wrapper {
               opacity: 1;
               pointer-events: auto;
+            }
+            &:after {
+              opacity: 1;
             }
           }
           .notifications-wrapper {
@@ -204,13 +224,7 @@ body header {
               right: -30px;
             }
             &::-webkit-scrollbar {
-              width: 7px;
-              @media #{$br1199} {
-                width: 5px;
-              }
-              @media #{$br500} {
-                width: 4px;
-              }
+              width: 3px;
             }
             &::-webkit-scrollbar-thumb {
               border-radius: 0;
@@ -230,20 +244,6 @@ body header {
                 padding: 7px 0px;
                 font-size: 13px;
                 border-top-right-radius: 0;
-              }
-            }
-            &:after {
-              content: "";
-              width: 10px;
-              height: 10px;
-              background: #dcdcdc;
-              right: 9px;
-              top: 0;
-              transform: translateY(-50%) rotate(45deg);
-              z-index: 1;
-              position: absolute;
-              @media #{$br500} {
-                right: 36px;
               }
             }
             ul {
