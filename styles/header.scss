@@ -197,6 +197,24 @@ body header {
             box-shadow: 0px 2px 23px 0px #e3e3e3;
             font-size: 13px;
             transition: opacity 0.3s ease-in-out;
+            max-height: 270px;
+            overflow-y: auto;
+            overflow-x: hidden;
+            @media #{$br500} {
+              right: -30px;
+            }
+            &::-webkit-scrollbar {
+              width: 7px;
+              @media #{$br1199} {
+                width: 5px;
+              }
+              @media #{$br500} {
+                width: 4px;
+              }
+            }
+            &::-webkit-scrollbar-thumb {
+              border-radius: 0;
+            }
             .notifications-title {
               text-align: center;
               font-size: 15px;
@@ -205,6 +223,14 @@ body header {
               padding: 10px 0px;
               border-top-left-radius: 5px;
               border-top-right-radius: 5px;
+              position: sticky;
+              top: 0;
+              z-index: 1;
+              @media #{$br500} {
+                padding: 7px 0px;
+                font-size: 13px;
+                border-top-right-radius: 0;
+              }
             }
             &:after {
               content: "";
@@ -216,6 +242,9 @@ body header {
               transform: translateY(-50%) rotate(45deg);
               z-index: 1;
               position: absolute;
+              @media #{$br500} {
+                right: 36px;
+              }
             }
             ul {
               display: flex;
@@ -231,16 +260,33 @@ body header {
                   display: flex;
                   align-items: center;
                   padding: 15px 10px;
+                  @media #{$br500} {
+                    padding: 12px 7px;
+                  }
                   .notification-icon {
                     padding-right: 15px;
+                    @media #{$br500} {
+                      padding-right: 10px;
+                    }
                   }
                   .notification-right {
                     .notification-title {
                       font-size: 15px;
                       padding-bottom: 10px;
+                      @media #{$br500} {
+                        font-size: 14px;
+                      }
                     }
                     .notification-description {
                       font-size: 12px;
+                      @media #{$br500} {
+                        font-size: 11px;
+                      }
+                    }
+                  }
+                  svg {
+                    @media #{$br500} {
+                      font-size: 19px;
                     }
                   }
                 }

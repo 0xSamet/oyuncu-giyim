@@ -425,7 +425,7 @@ body .main-wrapper {
   position: fixed;
   width: 100%;
   height: 100%;
-  z-index: 6;
+  z-index: 7;
   top: 0;
   left: 0;
   background: #fff;
@@ -513,6 +513,9 @@ body .main-wrapper {
         &:first-child {
           margin-top: 0;
         }
+        &:last-child {
+          margin-bottom: 100px;
+        }
         &:nth-child(odd) {
           background: #eaeaea;
         }
@@ -572,6 +575,7 @@ main.content-wrapper {
     }
     @media #{$br900} {
       display: none;
+      transition: none;
     }
     .main-menu {
       background-color: #fff;
