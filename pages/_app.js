@@ -27,6 +27,8 @@ import MobileSearch from "../components/MobileSearch";
 
 import { toggleIconMode } from "../store/reducers/theme";
 
+import { disablePageScroll, enablePageScroll } from 'scroll-lock';
+
 function MyApp({ Component, pageProps }) {
   const {
     modals: { mobileSearchVisible, cartReviewVisible },
@@ -39,19 +41,27 @@ function MyApp({ Component, pageProps }) {
         dispatch(toggleIconMode());
       }
     }
+    checkMenu();
     window.addEventListener("resize", checkMenu);
     return () => {
       window.removeEventListener("resize", checkMenu);
     };
   }, [iconMode]);
-  useEffect(() => {
-    function checkMenu() {
-      if (window.innerWidth < 1199 && !iconMode) {
-        dispatch(toggleIconMode());
+
+  useEffect(() => { 
+    const scrollableEl = document.querySelector(".main-wrapper"); 
+    const mobileSearchEl = document.querySelector(".mobile-search-wrapper"); 
+      if (cartReviewVisible) {
+        disablePageScroll(scrollableEl);
+      } else if (mobileSearchVisible) {
+        disablePageScroll(scrollableEl);
+        //enablePageScroll(mobileSearchEl);
       }
-    }
-    checkMenu();
-  }, []);
+      else {
+        enablePageScroll(scrollableEl);
+      }
+  }, [cartReviewVisible, mobileSearchVisible]);
+
   return (
     <div
       className={clsx({
