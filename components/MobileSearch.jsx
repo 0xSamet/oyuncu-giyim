@@ -49,6 +49,7 @@ export default function MobileSearch() {
       </div>
       <div className="search-results-wrapper">
         <ul className="search-results">
+          <h6 className="title">Popüler Ürünler</h6>
           <MobileSearchListItem productId={1} />
           <MobileSearchListItem productId={2} />
           <MobileSearchListItem productId={3} />
