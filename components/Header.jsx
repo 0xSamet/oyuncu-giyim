@@ -54,9 +54,11 @@ export default function Header() {
                 "notification-icon-wrapper": true,
                 "notifications-active": notificationsVisible,
               })}
-              onClick={() => dispatch(toggleNotifications())}
             >
-              <NotificationIcon className="notification-icon" />
+              <NotificationIcon
+                className="notification-icon"
+                onClick={() => dispatch(toggleNotifications())}
+              />
               <span className="notifications-wrapper">
                 <h4 className="notifications-title">Bildirimler</h4>
                 <ul>
@@ -111,6 +113,23 @@ export default function Header() {
                       </div>
                     </a>
                   </li>
+                  <li>
+                    <a>
+                      <span className="notification-icon">
+                        <CancelIcon className="cancel-icon" />
+                      </span>
+                      <div className="notification-right">
+                        <h5 className="notification-title">
+                          Siparişiniz Onaylanamadı
+                        </h5>
+                        <p className="notification-description">
+                          Lorem ipsum dolor sit amet consectetur adipisicing
+                          elit. Distinctio, nostrum ipsa aperiam consequuntur
+                          deserunt rem tempor
+                        </p>
+                      </div>
+                    </a>
+                  </li>
                 </ul>
               </span>
             </span>
@@ -119,9 +138,11 @@ export default function Header() {
                 "login-icon-wrapper": true,
                 "login-form-active": loginFormVisible,
               })}
-              onClick={() => dispatch(toggleLoginForm())}
             >
-              <ProfileIcon className="login-icon" />
+              <ProfileIcon
+                className="login-icon"
+                onClick={() => dispatch(toggleLoginForm())}
+              />
               <span className="login-options-wrapper">
                 <form
                   onSubmit={(e) => {

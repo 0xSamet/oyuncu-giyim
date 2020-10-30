@@ -7,15 +7,9 @@ import ShowCase from "../ShowCase";
 import MainSlider from "../MainSlider";
 import Layout from "./Layout";
 
-import { changeDesktopMenuIndex } from "../../store/reducers/menu";
-
 SwiperCore.use([Navigation]);
 
 export default function Home() {
-  const dispatch = useDispatch();
-  useEffect(() => {
-    dispatch(changeDesktopMenuIndex(0));
-  }, []);
   return (
     <Layout title="Anasayfa - Oyuncu Giyim">
       <section className="homepage">

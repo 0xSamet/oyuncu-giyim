@@ -11,9 +11,16 @@ const initialState = {
 };
 
 export const CHANGE_DESKTOP_MENU_INDEX = "CHANGE_DESKTOP_MENU_INDEX";
+export const CHANGE_MOBILE_MENU_INDEX = "CHANGE_MOBILE_MENU_INDEX";
 
 export const changeDesktopMenuIndex = (index) => ({
   type: CHANGE_DESKTOP_MENU_INDEX,
+  payload: {
+    index
+  }
+});
+export const changeMobileMenuIndex = (index) => ({
+  type: CHANGE_MOBILE_MENU_INDEX,
   payload: {
     index
   }
@@ -29,6 +36,10 @@ const menuReducer = (state = initialState, action) => {
     case CHANGE_DESKTOP_MENU_INDEX:
       return produce(state, draft => {
         draft.desktopMenu.index = action.payload.index;
+      });
+    case CHANGE_MOBILE_MENU_INDEX:
+      return produce(state, draft => {
+        draft.mobileMenu.index = action.payload.index;
       });
     default:
       return state;

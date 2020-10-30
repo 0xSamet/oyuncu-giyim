@@ -131,6 +131,7 @@ section.homepage {
             transition: background-color 0.5s, opacity 0.5s;
             opacity: 0.5;
             max-width: 360px;
+            margin: auto;
             @media #{$br478} {
               max-width: 90%;
             }
