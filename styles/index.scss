@@ -91,7 +91,7 @@ body .main-wrapper {
     }
   }
   &.mobile-search-active {
-    overflow-y: hidden;
+    /*overflow-y: hidden;*/
     .mobile-search-wrapper {
       opacity: 1;
       pointer-events: auto;
