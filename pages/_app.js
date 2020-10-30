@@ -56,7 +56,7 @@ function MyApp({ Component, pageProps }) {
       else {
         enablePageScroll(scrollableEl);
       }
-  }, [cartReviewVisible, mobileSearchVisible]);
+  }, [cartReviewVisible, mobileSearchVisible, notificationsVisible]);
 
   return (
     <div

@@ -61,7 +61,7 @@ export default function Header() {
               />
               <span className="notifications-wrapper">
                 <h4 className="notifications-title">Bildirimler</h4>
-                <ul>
+                <ul data-scroll-lock-scrollable="">
                   <li>
                     <a>
                       <span className="notification-icon">
