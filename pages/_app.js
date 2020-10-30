@@ -50,12 +50,8 @@ function MyApp({ Component, pageProps }) {
 
   useEffect(() => { 
     const scrollableEl = document.querySelector(".main-wrapper"); 
-    const mobileSearchEl = document.querySelector(".mobile-search-wrapper"); 
-      if (cartReviewVisible) {
+      if (cartReviewVisible || mobileSearchVisible) {
         disablePageScroll(scrollableEl);
-      } else if (mobileSearchVisible) {
-        disablePageScroll(scrollableEl);
-        enablePageScroll(mobileSearchEl);
       }
       else {
         enablePageScroll(scrollableEl);

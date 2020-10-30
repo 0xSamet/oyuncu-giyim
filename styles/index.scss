@@ -702,11 +702,19 @@ main.content-wrapper {
     transition: max-width 0.5s;
     max-width: calc(100% - 240px);
     min-height: 100vh;
+    padding-top: 72px;
     @media #{$br1199} {
       max-width: calc(100% - 60px);
+      padding-top: 68.5px;
     }
     @media #{$br900} {
       max-width: 100%;
+    }
+    @media #{$br767} {
+      padding-top: 65.5px;
+    }
+    @media #{$br500} {
+      padding-top: 62.5px;
     }
   }
 }

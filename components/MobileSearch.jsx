@@ -22,6 +22,7 @@ export default function MobileSearch() {
         "mobile-search-wrapper": true,
         "mobile-search-active": mobileSearchVisible,
       })}
+      data-scroll-lock-scrollable=""
     >
       <div className="input-wrapper">
         <div

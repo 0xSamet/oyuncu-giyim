@@ -9,7 +9,7 @@ export default function CartReview() {
   const dispatch = useDispatch();
   return (
     <>
-      <div className="cart-review">
+      <div className="cart-review" data-scroll-lock-scrollable="">
         <div className="cart-review-top">
           <span className="cart-review-title">Sepetiniz</span>
           <span
