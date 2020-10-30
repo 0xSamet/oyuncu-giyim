@@ -31,7 +31,7 @@ import { disablePageScroll, enablePageScroll } from 'scroll-lock';
 
 function MyApp({ Component, pageProps }) {
   const {
-    modals: { mobileSearchVisible, cartReviewVisible },
+    modals: { mobileSearchVisible, cartReviewVisible, notificationsVisible },
     theme: { iconMode },
   } = useSelector((state) => state);
   const dispatch = useDispatch();
@@ -50,7 +50,7 @@ function MyApp({ Component, pageProps }) {
 
   useEffect(() => { 
     const scrollableEl = document.querySelector(".main-wrapper"); 
-      if (cartReviewVisible || mobileSearchVisible) {
+      if (cartReviewVisible || mobileSearchVisible || notificationsVisible) {
         disablePageScroll(scrollableEl);
       }
       else {
