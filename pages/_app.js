@@ -55,7 +55,7 @@ function MyApp({ Component, pageProps }) {
         disablePageScroll(scrollableEl);
       } else if (mobileSearchVisible) {
         disablePageScroll(scrollableEl);
-        //enablePageScroll(mobileSearchEl);
+        enablePageScroll(mobileSearchEl);
       }
       else {
         enablePageScroll(scrollableEl);
