@@ -444,10 +444,23 @@ body .main-wrapper {
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.3s ease;
+  overflow-x: hidden;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 60px;
+  &::-webkit-scrollbar {
+    width: 5px;
+    @media #{$br500} {
+      width: 3px;
+    }
+  }
+  &::-webkit-scrollbar-thumb {
+    border-radius: 0;
+  }
   .input-wrapper {
     width: 100%;
     display: flex;
-    padding: 20px 15px;
+    padding: 20px 10px 20px 15px;
     max-height: 82px;
     .go-back-icon {
       display: flex;
@@ -495,18 +508,6 @@ body .main-wrapper {
   .search-results-wrapper {
     width: 100%;
     flex: 1;
-    overflow-x: hidden;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-    &::-webkit-scrollbar {
-      width: 5px;
-      @media #{$br500} {
-        width: 3px;
-      }
-    }
-    &::-webkit-scrollbar-thumb {
-      border-radius: 0;
-    }
     .search-results {
       width: 100%;
       height: 100%;
@@ -525,10 +526,6 @@ body .main-wrapper {
         &:first-child {
           margin-top: 0;
         }
-        &:last-child {
-          margin: 10px 10px 100px 15px;
-        }
-
         &:nth-child(odd) {
           background: #eaeaea;
         }
