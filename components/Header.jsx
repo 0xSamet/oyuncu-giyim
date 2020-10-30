@@ -9,7 +9,7 @@ import CheckedIcon from "../public/icons/checked.svg";
 import CancelIcon from "../public/icons/cancel.svg";
 import SearchIcon from "../public/icons/search.svg";
 
-import { Button, Divider, Input, Segment, Checkbox } from "semantic-ui-react";
+import { Button, Divider, Input, Checkbox } from "semantic-ui-react";
 import clsx from "clsx";
 
 import { useSelector, useDispatch } from "react-redux";
@@ -19,7 +19,31 @@ import {
   toggleNotifications,
   toggleCartReview,
   toggleMobileSearch,
+  toggleDesktopSearch,
 } from "../store/reducers/modals";
+
+function DesktopSearchListItem({ productId }) {
+  return (
+    <li className="product">
+      <div className="product-image">
+        <img src={`/products/valorant-sweat-${productId}.jpg`} />
+      </div>
+      <div className="product-informations">
+        <h3 className="product-name">Valorant Sweat Gri</h3>
+        <span className="product-price">
+          99.90&#8378; <span className="old-price">129.90&#8378;</span>
+        </span>
+      </div>
+    </li>
+  );
+}
+function DesktopSearchNotFound() {
+  return (
+    <li className="not-found">
+      <span>Ürün Bulunamadı</span>
+    </li>
+  );
+}
 
 export default function Header() {
   const [searchWord, setSearchWord] = useState("");
@@ -45,7 +69,33 @@ export default function Header() {
             onChange={(e) => {
               setSearchWord(e.target.value);
             }}
+            onFocus={() => dispatch(toggleDesktopSearch())}
+            onBlur={() => dispatch(toggleDesktopSearch())}
           />
+
+          <div className="desktop-search-wrapper">
+            <ul>
+              {searchWord.length > 3 ? (
+                <>
+                  <h6 className="title popular-products-title">
+                    Arama Sonuçları
+                  </h6>
+                  <DesktopSearchNotFound />
+                </>
+              ) : (
+                <>
+                  <h6 className="title popular-products-title">
+                    Popüler Ürünler
+                  </h6>
+                  <DesktopSearchListItem productId={1} />
+                  <DesktopSearchListItem productId={2} />
+                  <DesktopSearchListItem productId={2} />
+                  <DesktopSearchListItem productId={2} />
+                  <DesktopSearchListItem productId={2} />
+                </>
+              )}
+            </ul>
+          </div>
         </div>
         <div className="header-right-right col-md-2">
           <div className="header-right-icon-wrapper">

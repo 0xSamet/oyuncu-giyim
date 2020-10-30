@@ -27,11 +27,11 @@ import MobileSearch from "../components/MobileSearch";
 
 import { toggleIconMode } from "../store/reducers/theme";
 
-import { disablePageScroll, enablePageScroll } from 'scroll-lock';
+import { disablePageScroll, enablePageScroll, addFillGapTarget, addFillGapSelector, setFillGapMethod  } from 'scroll-lock';
 
 function MyApp({ Component, pageProps }) {
   const {
-    modals: { mobileSearchVisible, cartReviewVisible, notificationsVisible },
+    modals: { mobileSearchVisible, cartReviewVisible, notificationsVisible, desktopSearchVisible },
     theme: { iconMode },
   } = useSelector((state) => state);
   const dispatch = useDispatch();
@@ -50,12 +50,14 @@ function MyApp({ Component, pageProps }) {
 
   useEffect(() => { 
     const scrollableEl = document.querySelector(".main-wrapper"); 
-      if (cartReviewVisible || mobileSearchVisible || notificationsVisible) {
-        disablePageScroll(scrollableEl);
-      }
-      else {
-        enablePageScroll(scrollableEl);
-      }
+    setFillGapMethod("max-width");
+
+    if (cartReviewVisible || mobileSearchVisible || notificationsVisible) {
+      disablePageScroll(scrollableEl);
+    }
+    else {
+      enablePageScroll(scrollableEl);
+    }
   }, [cartReviewVisible, mobileSearchVisible, notificationsVisible]);
 
   return (
@@ -64,6 +66,7 @@ function MyApp({ Component, pageProps }) {
         "main-wrapper": true,
         "cart-review-active": cartReviewVisible,
         "mobile-search-active": mobileSearchVisible,
+        "desktop-search-active": desktopSearchVisible,
         "theme-icon-mode-active": iconMode,
       })}
     >

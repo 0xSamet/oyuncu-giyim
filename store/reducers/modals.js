@@ -6,16 +6,19 @@ const initialState = {
     opened: false,
     withBackGround: false,
   },
-    loginFormVisible: false,
-    notificationsVisible: false,
-    mobileSearchVisible: false,
-    cartReviewVisible: false,
+  loginFormVisible: false,
+  notificationsVisible: false,
+  mobileSearchVisible: false,
+  cartReviewVisible: false,
+  desktopSearchVisible: false
+    
 };
 
 const CLOSE_ALL_MODALS = "CLOSE_ALL_MODALS";
 const TOGGLE_LOGIN_FORM = "TOGGLE_LOGIN_FORM";
 const TOGGLE_NOTIFICATIONS = "TOGGLE_NOTIFICATIONS";
 const TOGGLE_CART_REVIEW = "TOGGLE_CART_REVIEW";
+const TOGGLE_DESKTOP_SEARCH = "TOGGLE_DESKTOP_SEARCH";
 const TOGGLE_MOBILE_SEARCH = "TOGGLE_MOBILE_SEARCH";
 
 export const closeAllModals = () => ({
@@ -32,6 +35,9 @@ export const toggleCartReview = () => ({
 });
 export const toggleMobileSearch = () => ({
     type: TOGGLE_MOBILE_SEARCH
+});
+export const toggleDesktopSearch = () => ({
+    type: TOGGLE_DESKTOP_SEARCH
 });
 
 const modalsReducer = (state = initialState, action) => {
@@ -74,6 +80,10 @@ const modalsReducer = (state = initialState, action) => {
     case TOGGLE_MOBILE_SEARCH:
       return produce(state, draft => {
         draft.mobileSearchVisible = !draft.mobileSearchVisible;
+      });
+    case TOGGLE_DESKTOP_SEARCH:
+      return produce(state, draft => {
+        draft.desktopSearchVisible = !draft.desktopSearchVisible;
       });
     default:
       return state;
