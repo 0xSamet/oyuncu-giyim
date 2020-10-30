@@ -57,7 +57,15 @@ export default function MobileSearch() {
               <MobileSearchListItem productId={1} />
             </>
           )}
-          <h6 className="title popular-products-title">Popüler Ürünler</h6>
+          <h6
+            className={clsx({
+              title: true,
+              "popular-products-title": true,
+              searched: searchWord !== "",
+            })}
+          >
+            Popüler Ürünler
+          </h6>
           <MobileSearchListItem productId={1} />
           <MobileSearchListItem productId={2} />
           <MobileSearchListItem productId={3} />

@@ -537,8 +537,11 @@ body .main-wrapper {
         top: 0;
         background: #fff;
         margin-bottom: 10px;
+        transition: margin-top 0.3s;
         &.popular-products-title {
-          margin-top: 40px;
+          &.searched {
+            margin-top: 40px;
+          }
         }
       }
       li {
