@@ -13,7 +13,7 @@ import "swiper/components/pagination/pagination.scss";
 import "swiper/components/scrollbar/scrollbar.scss";
 
 import { wrapper } from "../store";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import clsx from "clsx";
 
@@ -27,21 +27,25 @@ import MobileSearch from "../components/MobileSearch";
 
 import { toggleIconMode } from "../store/reducers/theme";
 
-import { disablePageScroll, enablePageScroll, addFillGapTarget, addFillGapSelector, setFillGapMethod  } from 'scroll-lock';
+import { disablePageScroll, enablePageScroll, setFillGapMethod, clearQueueScrollLocks   } from 'scroll-lock';
 
 function MyApp({ Component, pageProps }) {
   const {
-    modals: { mobileSearchVisible, cartReviewVisible, notificationsVisible, desktopSearchVisible },
+    modals: { mobileSearchVisible, cartReviewVisible, notificationsVisible, desktopSearchVisible, loginFormVisible },
     theme: { iconMode },
   } = useSelector((state) => state);
   const dispatch = useDispatch();
+  const [isTabletMenuClosed, setIsTabletMenuClosed] = useState(false);
   useEffect(() => {
     function checkMenu() {
       if (window.innerWidth < 1199 && !iconMode) {
         dispatch(toggleIconMode());
       }
     }
-    checkMenu();
+    if (!isTabletMenuClosed) {
+      checkMenu();
+      setIsTabletMenuClosed(true);
+    }
     window.addEventListener("resize", checkMenu);
     return () => {
       window.removeEventListener("resize", checkMenu);
@@ -49,16 +53,17 @@ function MyApp({ Component, pageProps }) {
   }, [iconMode]);
 
   useEffect(() => { 
-    const scrollableEl = document.querySelector(".main-wrapper"); 
+    const scrollableEl = document.querySelector("body"); 
     setFillGapMethod("max-width");
-
-    if (cartReviewVisible || mobileSearchVisible || notificationsVisible) {
+    console.log("effect");
+    if (cartReviewVisible || mobileSearchVisible || notificationsVisible || loginFormVisible || desktopSearchVisible) {
       disablePageScroll(scrollableEl);
     }
     else {
+      clearQueueScrollLocks();
       enablePageScroll(scrollableEl);
     }
-  }, [cartReviewVisible, mobileSearchVisible, notificationsVisible]);
+  }, [cartReviewVisible, mobileSearchVisible, notificationsVisible, loginFormVisible, desktopSearchVisible]);
 
   return (
     <div
