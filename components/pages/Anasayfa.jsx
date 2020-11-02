@@ -9,10 +9,11 @@ import Layout from "./Layout";
 
 SwiperCore.use([Navigation]);
 
-export default function Home() {
+export default function Home(p) {
   return (
     <Layout title="Anasayfa - Oyuncu Giyim">
       <section className="homepage">
+        <p>{JSON.stringify(p)}</p>
         <MainSlider />
         <ShowCase showCaseId={1} />
         <ShowCase showCaseId={2} />

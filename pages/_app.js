@@ -14,8 +14,9 @@ import "swiper/components/scrollbar/scrollbar.scss";
 
 import { wrapper } from "../store";
 import { useEffect, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { Provider, useSelector, useDispatch } from "react-redux";
 import clsx from "clsx";
+import Cookie from "js-cookie";
 
 import Header from "../components/Header";
 import Footer from "../components/Footer";
@@ -37,6 +38,9 @@ function MyApp({ Component, pageProps }) {
   const dispatch = useDispatch();
   const [isTabletMenuClosed, setIsTabletMenuClosed] = useState(false);
   useEffect(() => {
+
+    Cookie.set("iconMode", iconMode);
+
     function checkMenu() {
       if (window.innerWidth < 1199 && !iconMode) {
         dispatch(toggleIconMode());
@@ -55,7 +59,6 @@ function MyApp({ Component, pageProps }) {
   useEffect(() => { 
     const scrollableEl = document.querySelector("body"); 
     setFillGapMethod("max-width");
-    console.log("effect");
     if (cartReviewVisible || mobileSearchVisible || notificationsVisible || loginFormVisible || desktopSearchVisible) {
       disablePageScroll(scrollableEl);
     }
@@ -66,33 +69,38 @@ function MyApp({ Component, pageProps }) {
   }, [cartReviewVisible, mobileSearchVisible, notificationsVisible, loginFormVisible, desktopSearchVisible]);
 
   return (
-    <div
-      className={clsx({
-        "main-wrapper": true,
-        "cart-review-active": cartReviewVisible,
-        "mobile-search-active": mobileSearchVisible,
-        "desktop-search-active": desktopSearchVisible,
-        "theme-icon-mode-active": iconMode,
-      })}
-    >
-      <Header />
-      <main className="content-wrapper">
-        <div className="row">
-          <div className="page-left-wrapper">
-            <LeftMenu />
+      <div
+        className={clsx({
+          "main-wrapper": true,
+          "cart-review-active": cartReviewVisible,
+          "mobile-search-active": mobileSearchVisible,
+          "desktop-search-active": desktopSearchVisible,
+          "theme-icon-mode-active": iconMode,
+        })}
+      >
+        <Header />
+        <main className="content-wrapper">
+          <div className="row">
+            <div className="page-left-wrapper">
+              <LeftMenu />
+            </div>
+            <div className="page-right-wrapper">
+              <Component {...pageProps} />
+            </div>
           </div>
-          <div className="page-right-wrapper">
-            <Component {...pageProps} />
-          </div>
-        </div>
-        <ModalCloser />
-        <CartReview />
-        <MobileMenu />
-        <MobileSearch />
-      </main>
-      <Footer />
-    </div>
+          <ModalCloser />
+          <CartReview />
+          <MobileMenu />
+          <MobileSearch />
+        </main>
+        <Footer />
+      </div>
   );
+}
+
+export async function getServerSideProps({Component, ctx}) {
+  const pageProps = Component.getInitialProps ? await Component.getInitialProps(ctx) : {};
+  return { pageProps };
 }
 
 export default wrapper.withRedux(MyApp);

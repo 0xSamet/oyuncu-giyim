@@ -48,7 +48,7 @@ function DesktopSearchNotFound() {
 export default function Header() {
   const [searchWord, setSearchWord] = useState("");
   const {
-    modals: { loginFormVisible, notificationsVisible },
+    modals: { loginFormVisible, notificationsVisible, desktopSearchVisible },
   } = useSelector((state) => state);
   const dispatch = useDispatch();
   return (
@@ -69,8 +69,12 @@ export default function Header() {
             onChange={(e) => {
               setSearchWord(e.target.value);
             }}
-            onFocus={() => dispatch(toggleDesktopSearch())}
-            onBlur={() => dispatch(toggleDesktopSearch())}
+            onFocus={() => {
+              if (!desktopSearchVisible) {
+                dispatch(toggleDesktopSearch());
+              }
+            }}
+            /*onBlur={() => dispatch(toggleDesktopSearch())}*/
           />
 
           <div className="desktop-search-wrapper">

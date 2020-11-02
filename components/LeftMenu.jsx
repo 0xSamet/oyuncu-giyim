@@ -19,7 +19,7 @@ import { toggleIconMode } from "../store/reducers/theme";
 function LeftMenuListItem({
   index = -4,
   text,
-  link: { href = "#", as = "#" },
+  link: { href = "#" },
   logo,
   submenu = [],
 }) {
@@ -38,7 +38,7 @@ function LeftMenuListItem({
         active: index === indexFromStore,
       })}
     >
-      <Link href={href} as={as}>
+      <Link href={href}>
         <a onClick={() => setToggle(!toggle)}>
           <span className="main-menu-logo-wrapper">{logo}</span>
           <span className="main-menu-text-wrapper">{text}</span>
@@ -82,15 +82,14 @@ export default function LeftMenu() {
       <LeftMenuListItem
         index={0}
         text="Anasayfa"
-        link={{ href: "/", as: "/" }}
+        link={{ href: "/" }}
         logo={<HomeIcon />}
       />
       <LeftMenuListItem
         index={1}
         text="Sweatshirt"
         link={{
-          href: "/kategoriler/[altKategori]",
-          as: "/kategoriler/sweatler",
+          href: "/sweatshirt",
         }}
         logo={<SweatIcon />}
       />
@@ -98,8 +97,7 @@ export default function LeftMenu() {
         index={2}
         text="T-Shirt"
         link={{
-          href: "/kategoriler/[altKategori]",
-          as: "/kategoriler/t-shirtler",
+          href: "/t-shirt",
         }}
         logo={<ShirtIcon />}
       />
@@ -137,7 +135,6 @@ export default function LeftMenu() {
         text="İletişim"
         link={{
           href: "/iletisim",
-          as: "/iletisim",
         }}
         logo={<PaperPlaneIcon />}
       />
@@ -146,7 +143,6 @@ export default function LeftMenu() {
         text="İnstagram"
         link={{
           href: "#",
-          as: null,
         }}
         logo={<InstagramIcon />}
       />
@@ -154,7 +150,6 @@ export default function LeftMenu() {
         text="Whatsapp"
         link={{
           href: "#",
-          as: null,
         }}
         logo={<WPIcon />}
       />

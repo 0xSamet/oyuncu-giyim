@@ -1,5 +1,6 @@
-import { createStore, combineReducers } from "redux";
+import { createStore, combineReducers, applyMiddleware } from "redux";
 import { createWrapper, HYDRATE } from "next-redux-wrapper";
+import thunk from 'redux-thunk';
 
 import menuReducer from "./reducers/menu";
 import modalsReducer from "./reducers/modals";
@@ -12,9 +13,17 @@ const rootReducer = combineReducers({
   theme: themeReducer
 });
 
+const bindMiddleware = (middleware) => {
+  if (process.env.NODE_ENV !== "production") {
+    const { composeWithDevTools } = require("redux-devtools-extension");
+    return composeWithDevTools(applyMiddleware(...middleware));
+  }
+  return applyMiddleware(...middleware);
+};
+
 
 // create a makeStore function
-const makeStore = (context) => createStore(rootReducer);
+const makeStore = (context) => createStore(rootReducer, bindMiddleware([thunk]));
 
 // export an assembled wrapper
 export const wrapper = createWrapper(makeStore, { debug: true });
