@@ -7,11 +7,15 @@ export default Anasayfa;
 
 export const getServerSideProps = wrapper.getServerSideProps(
     ({ store, req, res, ...etc }) => {
+        
         handleIconMode(store, req);
         store.dispatch(changeDesktopMenuIndex(0));
         store.dispatch(changeMobileMenuIndex(0));
         return {
-            props: {sad: "asd"}
+            props: {
+                sad: "asd",
+                env: process.env.MONGODB_URI
+            }
         }
     }
 );

@@ -10,4 +10,7 @@ module.exports = {
 
     return config;
   },
+  env: {
+    MONGODB_URI: 'mongodb://localhost/test'
+  }
 };
