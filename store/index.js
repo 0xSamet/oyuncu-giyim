@@ -1,16 +1,18 @@
 import { createStore, combineReducers, applyMiddleware } from "redux";
 import { createWrapper, HYDRATE } from "next-redux-wrapper";
-import thunk from 'redux-thunk';
+import thunk from "redux-thunk";
 
 import menuReducer from "./reducers/menu";
 import modalsReducer from "./reducers/modals";
 import themeReducer from "./reducers/theme";
+import adminReducer from "./reducers/admin";
 
 // create your reducer
 const rootReducer = combineReducers({
   menu: menuReducer,
   modals: modalsReducer,
-  theme: themeReducer
+  theme: themeReducer,
+  admin: adminReducer,
 });
 
 const bindMiddleware = (middleware) => {
@@ -21,9 +23,11 @@ const bindMiddleware = (middleware) => {
   return applyMiddleware(...middleware);
 };
 
-
 // create a makeStore function
-const makeStore = (context) => createStore(rootReducer, bindMiddleware([thunk]));
+const makeStore = (context) =>
+  createStore(rootReducer, bindMiddleware([thunk]));
 
 // export an assembled wrapper
-export const wrapper = createWrapper(makeStore, { debug: true });
+export const wrapper = createWrapper(makeStore, {
+  debug: process.env.NODE_ENV !== "production",
+});

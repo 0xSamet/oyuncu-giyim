@@ -54,7 +54,7 @@ export default function Header() {
   return (
     <header>
       <div className="logo-wrapper">
-        <Link href="/" as="/">
+        <Link href="/">
           <a>
             <img className="logo" src="/oyuncu-giyim-logo.png" />
           </a>

@@ -1,5 +1,5 @@
-import produce from "immer"
-import { HYDRATE } from 'next-redux-wrapper';
+import produce from "immer";
+import { HYDRATE } from "next-redux-wrapper";
 
 const initialState = {
   modalCloser: {
@@ -10,8 +10,12 @@ const initialState = {
   notificationsVisible: false,
   mobileSearchVisible: false,
   cartReviewVisible: false,
-  desktopSearchVisible: false
+  desktopSearchVisible: false,
 };
+
+const OPEN_MODAL_CLOSER = "OPEN_MODAL_CLOSER";
+const OPEN_MODAL_WITH_BG = "OPEN_MODAL_WITH_BG";
+const CLOSE_MODAL_CLOSER = "CLOSE_MODAL_CLOSER";
 
 const CLOSE_ALL_MODALS = "CLOSE_ALL_MODALS";
 const TOGGLE_LOGIN_FORM = "TOGGLE_LOGIN_FORM";
@@ -20,23 +24,32 @@ const TOGGLE_CART_REVIEW = "TOGGLE_CART_REVIEW";
 const TOGGLE_DESKTOP_SEARCH = "TOGGLE_DESKTOP_SEARCH";
 const TOGGLE_MOBILE_SEARCH = "TOGGLE_MOBILE_SEARCH";
 
+export const openModalCloser = () => ({
+  type: OPEN_MODAL_CLOSER,
+});
+export const openModalCloserWithBg = () => ({
+  type: OPEN_MODAL_WITH_BG,
+});
+export const closeModalCloser = () => ({
+  type: CLOSE_MODAL_CLOSER,
+});
 export const closeAllModals = () => ({
-    type: CLOSE_ALL_MODALS
+  type: CLOSE_ALL_MODALS,
 });
 export const toggleLoginForm = () => ({
-    type: TOGGLE_LOGIN_FORM
+  type: TOGGLE_LOGIN_FORM,
 });
 export const toggleNotifications = () => ({
-    type: TOGGLE_NOTIFICATIONS
+  type: TOGGLE_NOTIFICATIONS,
 });
 export const toggleCartReview = () => ({
-    type: TOGGLE_CART_REVIEW
+  type: TOGGLE_CART_REVIEW,
 });
 export const toggleMobileSearch = () => ({
-    type: TOGGLE_MOBILE_SEARCH
+  type: TOGGLE_MOBILE_SEARCH,
 });
 export const toggleDesktopSearch = () => ({
-    type: TOGGLE_DESKTOP_SEARCH
+  type: TOGGLE_DESKTOP_SEARCH,
 });
 
 const modalsReducer = (state = initialState, action) => {
@@ -44,10 +57,25 @@ const modalsReducer = (state = initialState, action) => {
     case HYDRATE:
       return {
         ...state,
-        ...action.payload.modals
-      }
+        ...action.payload.modals,
+      };
+    case OPEN_MODAL_CLOSER:
+      return produce(state, (draft) => {
+        draft.modalCloser.opened = true;
+        draft.modalCloser.withBackGround = false;
+      });
+    case OPEN_MODAL_WITH_BG:
+      return produce(state, (draft) => {
+        draft.modalCloser.opened = true;
+        draft.modalCloser.withBackGround = true;
+      });
+    case CLOSE_MODAL_CLOSER:
+      return produce(state, (draft) => {
+        draft.modalCloser.opened = false;
+        draft.modalCloser.withBackGround = false;
+      });
     case CLOSE_ALL_MODALS:
-      return produce(state, draft => {
+      return produce(state, (draft) => {
         draft.modalCloser.opened = false;
         draft.modalCloser.withBackGround = false;
         draft.loginFormVisible = false;
@@ -57,7 +85,7 @@ const modalsReducer = (state = initialState, action) => {
         draft.desktopSearchVisible = false;
       });
     case TOGGLE_LOGIN_FORM:
-      return produce(state, draft => {
+      return produce(state, (draft) => {
         draft.loginFormVisible = !draft.loginFormVisible;
         draft.modalCloser.opened = true;
         draft.modalCloser.withBackGround = false;
@@ -67,7 +95,7 @@ const modalsReducer = (state = initialState, action) => {
         draft.desktopSearchVisible = false;
       });
     case TOGGLE_NOTIFICATIONS:
-      return produce(state, draft => {
+      return produce(state, (draft) => {
         draft.notificationsVisible = !draft.notificationsVisible;
         draft.modalCloser.opened = true;
         draft.modalCloser.withBackGround = false;
@@ -77,7 +105,7 @@ const modalsReducer = (state = initialState, action) => {
         draft.desktopSearchVisible = false;
       });
     case TOGGLE_CART_REVIEW:
-      return produce(state, draft => {
+      return produce(state, (draft) => {
         draft.cartReviewVisible = !draft.cartReviewVisible;
         draft.modalCloser.opened = true;
         draft.modalCloser.withBackGround = true;
@@ -87,7 +115,7 @@ const modalsReducer = (state = initialState, action) => {
         draft.desktopSearchVisible = false;
       });
     case TOGGLE_MOBILE_SEARCH:
-      return produce(state, draft => {
+      return produce(state, (draft) => {
         draft.mobileSearchVisible = !draft.mobileSearchVisible;
         draft.modalCloser.opened = false;
         draft.modalCloser.withBackGround = false;
@@ -97,7 +125,7 @@ const modalsReducer = (state = initialState, action) => {
         draft.desktopSearchVisible = false;
       });
     case TOGGLE_DESKTOP_SEARCH:
-      return produce(state, draft => {
+      return produce(state, (draft) => {
         draft.desktopSearchVisible = !draft.desktopSearchVisible;
         draft.modalCloser.opened = true;
         draft.modalCloser.withBackGround = true;

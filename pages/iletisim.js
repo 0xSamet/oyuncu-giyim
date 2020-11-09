@@ -1,17 +1,21 @@
-import Iletisim from "../components/pages/Iletisim";
-import { wrapper } from '../store';
-import { handleIconMode } from "../utils";
-import { changeDesktopMenuIndex, changeMobileMenuIndex } from "../store/reducers/menu";
+import Layout from "../components/Layout";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import {
+  changeDesktopMenuIndex,
+  changeMobileMenuIndex,
+} from "../store/reducers/menu";
 
-export default Iletisim;
+export default function Iletisim() {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(changeDesktopMenuIndex(4));
+    dispatch(changeMobileMenuIndex(4));
+  }, []);
 
-export const getServerSideProps = wrapper.getServerSideProps(
-    ({ store, req, res, ...etc }) => {
-        handleIconMode(store, req);
-        store.dispatch(changeDesktopMenuIndex(4));
-        store.dispatch(changeMobileMenuIndex(4));
-        return {
-            props: {sad: "asd"}
-        }
-    }
-);
+  return (
+    <Layout title="İletişim - Oyuncu Giyim">
+      <h1>İletişim</h1>
+    </Layout>
+  );
+}

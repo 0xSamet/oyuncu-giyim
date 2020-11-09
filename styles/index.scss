@@ -623,7 +623,7 @@ main.content-wrapper {
     }
     .main-menu {
       background-color: #fff;
-      transition: width 0.5s;
+      transition: width 0.5s, transform 0.5s;
       position: fixed;
       top: 71.5px;
       width: 240px;

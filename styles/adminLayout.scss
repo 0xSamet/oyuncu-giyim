@@ -1,0 +1,57 @@
+@import "variables";
+
+body .main-wrapper.admin-layout {
+  &.mobile-menu-visible {
+    .page-left-wrapper {
+      .main-menu {
+        transform: translateX(0);
+      }
+    }
+    .modal-closer {
+      z-index: 6;
+    }
+  }
+  header {
+    .mobile-hamburger {
+      padding: 0px 10px;
+      display: none;
+      justify-content: center;
+      align-items: center;
+      svg {
+        font-size: 40px;
+        width: 1em;
+        height: 1em;
+      }
+      @media #{$br1199} {
+        display: flex;
+      }
+    }
+    .header-right {
+      .login-icon-wrapper {
+        display: block;
+      }
+    }
+  }
+  .page-left-wrapper {
+    display: flex;
+    @media #{$br1199} {
+      flex: 0 0;
+    }
+    .main-menu {
+      @media #{$br1199} {
+        padding-top: 25px;
+        top: 0;
+        z-index: 7;
+        height: 100%;
+        transform: translateX(-100%);
+      }
+      li {
+        &:first-child {
+          @media #{$br1199} {
+            display: none;
+          }
+        }
+      }
+    }
+  }
+}
