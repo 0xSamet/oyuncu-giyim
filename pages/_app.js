@@ -14,7 +14,7 @@ import "swiper/components/pagination/pagination.scss";
 import "swiper/components/scrollbar/scrollbar.scss";
 
 import { wrapper } from "../store";
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, useLayoutEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import clsx from "clsx";
 import Cookie from "js-cookie";
@@ -30,12 +30,14 @@ import ModalCloser from "../components/ModalCloser";
 import CartReview from "../components/CartReview";
 import MobileMenu from "../components/MobileMenu";
 import MobileSearch from "../components/MobileSearch";
+// import Preloader from "../components/Preloader";
 
 import AdminHeader from "../components/admin/Header";
 import AdminModalCloser from "../components/admin/ModalCloser";
 import AdminLeftMenu from "../components/admin/LeftMenu";
 
 import { toggleIconMode } from "../store/reducers/theme";
+import { toggleFirstLoading } from "../store/reducers/page";
 
 import {
   disablePageScroll,
@@ -43,6 +45,10 @@ import {
   setFillGapMethod,
   clearQueueScrollLocks,
 } from "scroll-lock";
+
+const Preloader = dynamic(() => import("../components/Preloader"), {
+  ssr: false,
+});
 
 function MyApp({ Component, pageProps }) {
   const {
@@ -55,11 +61,11 @@ function MyApp({ Component, pageProps }) {
     },
     theme: { iconMode },
     admin: { mobileMenuVisible: adminMobileMenuVisible },
+    page: { firstLoading },
   } = useSelector((state) => state);
   const dispatch = useDispatch();
   const [isTabletMenuClosed, setIsTabletMenuClosed] = useState(false);
   const router = useRouter();
-  console.log(router);
   const apolloClient = useApollo(pageProps.initialApolloState);
   useEffect(() => {
     Cookie.set("iconMode", iconMode);
@@ -85,7 +91,6 @@ function MyApp({ Component, pageProps }) {
 
   useEffect(() => {
     const scrollableEl = document.querySelector("body");
-    setFillGapMethod("max-width");
     if (
       cartReviewVisible ||
       mobileSearchVisible ||
@@ -93,18 +98,47 @@ function MyApp({ Component, pageProps }) {
       loginFormVisible ||
       desktopSearchVisible
     ) {
+      console.log("closed");
       disablePageScroll(scrollableEl);
     } else {
+      console.log("opened");
       clearQueueScrollLocks();
       enablePageScroll(scrollableEl);
     }
-  }, [
-    cartReviewVisible,
-    mobileSearchVisible,
-    notificationsVisible,
-    loginFormVisible,
-    desktopSearchVisible,
-  ]);
+  }, [cartReviewVisible, mobileSearchVisible, desktopSearchVisible]);
+
+  useEffect(() => {
+    const handleRouteChange = (url) => {
+      console.log("App is changing to: ", url);
+    };
+
+    /*document.querySelector("header").onclick = () => {
+      const scrollableEl = document.querySelector("body");
+      return disablePageScroll(scrollableEl);
+    };
+
+    document.querySelector(".main-menu").onclick = () => {
+      const scrollableEl = document.querySelector("body");
+      clearQueueScrollLocks();
+      return enablePageScroll(scrollableEl);
+    };*/
+
+    if (typeof window !== "undefined") {
+      window.addEventListener("load", () => {
+        setTimeout(() => {
+          return dispatch(toggleFirstLoading());
+        }, 750);
+      });
+    }
+
+    router.events.on("routeChangeStart", handleRouteChange);
+
+    // If the component is unmounted, unsubscribe
+    // from the event with the `off` method:
+    return () => {
+      router.events.off("routeChangeStart", handleRouteChange);
+    };
+  }, []);
 
   const NormalLayout = useMemo(() => {
     return (
@@ -112,6 +146,7 @@ function MyApp({ Component, pageProps }) {
         <div
           className={clsx({
             "main-wrapper": true,
+            "hide-for-first-loading": firstLoading,
             "cart-review-active": cartReviewVisible,
             "mobile-search-active": mobileSearchVisible,
             "desktop-search-active": desktopSearchVisible,
@@ -135,6 +170,7 @@ function MyApp({ Component, pageProps }) {
           </main>
           <Footer />
         </div>
+        <Preloader />
       </ApolloProvider>
     );
   });
@@ -145,6 +181,7 @@ function MyApp({ Component, pageProps }) {
         <div
           className={clsx({
             "main-wrapper": true,
+            "hide-for-first-loading": firstLoading,
             "admin-layout": true,
             "theme-icon-mode-active": iconMode,
             "mobile-menu-visible": adminMobileMenuVisible,
@@ -164,6 +201,7 @@ function MyApp({ Component, pageProps }) {
           </main>
           <Footer />
         </div>
+        <Preloader />
       </ApolloProvider>
     );
   });

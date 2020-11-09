@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev -p 3001",
+    "dev": "next dev",
     "build": "next build",
     "start": "next start"
   },
@@ -23,6 +23,7 @@
     "pg": "^8.4.2",
     "react": "16.13.1",
     "react-dom": "16.13.1",
+    "react-preloaders": "^3.0.3",
     "react-redux": "^7.2.1",
     "react-spring": "^8.0.27",
     "redux": "^4.0.5",

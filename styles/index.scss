@@ -97,6 +97,9 @@ body .main-wrapper {
       }
     }
   }
+  &.hide-for-first-loading {
+    display: none;
+  }
 }
 
 .modal-closer {
@@ -115,6 +118,26 @@ body .main-wrapper {
       opacity: 0.6;
       transition: opacity 0.5s ease-in-out, background 0.5s ease-in-out;
     }
+  }
+}
+
+.preloader-wrapper {
+  position: relative;
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100vw;
+  z-index: 10;
+  transform: translateY(0);
+  transition: transform 1s cubic-bezier(0.75, 0, 0.5, 1);
+  border-top: 5px solid #616161;
+  &.loaded {
+    transform: translateY(100%);
+  }
+  #preloader {
+    position: absolute;
+    z-index: 1;
   }
 }
 
@@ -661,7 +684,7 @@ main.content-wrapper {
               font-size: 25px;
               width: 1em;
               height: 1em;
-              transition: 0.5s;
+              transition: width 0.5s, height 0.5s, fill 0.5s;
               fill: #616161;
             }
           }

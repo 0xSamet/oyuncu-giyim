@@ -36,7 +36,7 @@ import { GET_MENU } from "../apollo/query/menu";
 }*/
 
 import SwiperCore, { Navigation } from "swiper";
-import { useEffect } from "react";
+import { useEffect, useLayoutEffect } from "react";
 import { useDispatch } from "react-redux";
 
 import ShowCase from "../components/ShowCase";

@@ -6,6 +6,7 @@ import menuReducer from "./reducers/menu";
 import modalsReducer from "./reducers/modals";
 import themeReducer from "./reducers/theme";
 import adminReducer from "./reducers/admin";
+import pageReducer from "./reducers/page";
 
 // create your reducer
 const rootReducer = combineReducers({
@@ -13,6 +14,7 @@ const rootReducer = combineReducers({
   modals: modalsReducer,
   theme: themeReducer,
   admin: adminReducer,
+  page: pageReducer,
 });
 
 const bindMiddleware = (middleware) => {
