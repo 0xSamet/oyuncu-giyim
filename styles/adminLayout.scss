@@ -21,6 +21,10 @@ body .main-wrapper.admin-layout {
         font-size: 40px;
         width: 1em;
         height: 1em;
+        fill: #616161;
+        @media #{$br767} {
+          font-size: 35px;
+        }
       }
       @media #{$br1199} {
         display: flex;
