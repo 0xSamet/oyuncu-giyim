@@ -7,10 +7,3 @@ export default function AdminHome() {
     </Layout>
   );
 }
-
-export function getServerSideProps({ req, res }) {
-  res.writeHead(301, {
-    Location: "/admin/dashboard",
-  });
-  res.end();
-}
