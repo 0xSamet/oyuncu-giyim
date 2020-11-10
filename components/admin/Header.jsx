@@ -28,7 +28,7 @@ export default function Header() {
         <HamburgerMenuIcon />
       </div>
       <div className="logo-wrapper">
-        <Link href="/admin">
+        <Link href="/admin/dashboard">
           <a>
             <img className="logo" src="/oyuncu-giyim-logo.png" />
           </a>
