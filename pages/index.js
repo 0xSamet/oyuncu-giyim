@@ -35,30 +35,27 @@ import { GET_MENU } from "../apollo/query/menu";
   };
 }*/
 
-import SwiperCore, { Navigation } from "swiper";
-import { useEffect, useLayoutEffect } from "react";
-import { useDispatch } from "react-redux";
-
 import ShowCase from "../components/ShowCase";
 import MainSlider from "../components/MainSlider";
 import Layout from "../components/Layout";
 
 import { useQuery } from "@apollo/client";
+import SwiperCore, { Navigation, Autoplay, Pagination } from "swiper";
 
-SwiperCore.use([Navigation]);
+SwiperCore.use([Navigation, Autoplay, Pagination]);
 
 export default function Home(p) {
-  const { data, loading } = useQuery(GET_MENU);
+  //const { data, loading } = useQuery(GET_MENU);
   //console.log(loading, data);
 
-  if (loading) {
-    return <div>loading</div>;
-  }
+  // if (loading) {
+  //   return <div>loading</div>;
+  // }
 
   return (
     <Layout title="Anasayfa - Oyuncu Giyim">
       <section className="homepage">
-        <pre>{JSON.stringify(data, null, 2)}</pre>
+        {/* <pre>{JSON.stringify(data, null, 2)}</pre> */}
         <MainSlider />
         <ShowCase showCaseId={1} />
         <ShowCase showCaseId={2} />

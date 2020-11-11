@@ -27,7 +27,7 @@ function LeftMenuListItem({
   index = -4,
   text,
   link: { href = "#" },
-  logo,
+  icon,
   submenu = [],
 }) {
   const {
@@ -38,7 +38,6 @@ function LeftMenuListItem({
 
   const [toggle, setToggle] = useState(false);
   const props = useSpring({ height: toggle ? submenu.length * 45 : 0 });
-
   return (
     <li
       className={clsx({
@@ -47,7 +46,9 @@ function LeftMenuListItem({
     >
       <Link href={href}>
         <a onClick={() => setToggle(!toggle)}>
-          <span className="main-menu-logo-wrapper">{logo}</span>
+          <span className="main-menu-icon-wrapper">
+            <img src={icon} />
+          </span>
           <span className="main-menu-text-wrapper">{text}</span>
         </a>
       </Link>
@@ -59,7 +60,7 @@ function LeftMenuListItem({
                 index={menu.index}
                 text={menu.text}
                 link={menu.link}
-                logo={menu.logo}
+                icon={menu.icon}
               />
             );
           })}
@@ -80,8 +81,8 @@ export default function LeftMenu() {
     <ul className="main-menu">
       <li>
         <a>
-          <span className="main-menu-logo-wrapper" onClick={handleIconMode}>
-            <ArrowIcon />
+          <span className="main-menu-icon-wrapper" onClick={handleIconMode}>
+            <img src="/icons/arrow.svg" />
           </span>
           <span className="main-menu-text-wrapper"></span>
         </a>
@@ -90,7 +91,7 @@ export default function LeftMenu() {
         index={0}
         text="Dashboard"
         link={{ href: "/admin/dashboard" }}
-        logo={<DashboardIcon />}
+        icon="/icons/admin/dashboard.svg"
       />
       <LeftMenuListItem
         index={1}
@@ -98,7 +99,7 @@ export default function LeftMenu() {
         link={{
           href: "/admin/siparisler",
         }}
-        logo={<OrdersIcon />}
+        icon="/icons/admin/orders.svg"
       />
       <LeftMenuListItem
         index={2}
@@ -106,7 +107,7 @@ export default function LeftMenu() {
         link={{
           href: "/admin/musteriler",
         }}
-        logo={<CustomersIcon />}
+        icon="/icons/admin/customers.svg"
       />
       {/* {      <LeftMenuListItem
         index={3}
@@ -115,7 +116,7 @@ export default function LeftMenu() {
           href: "/kategoriler",
           as: "/kategoriler",
         }}
-        logo={<CategoriesIcon />}
+        icon={<CategoriesIcon />}
         submenu={[
           {
             index: 20,
@@ -124,7 +125,7 @@ export default function LeftMenu() {
               href: "/kategoriler/[altKategori]",
               as: "/kategoriler/t-shirtler",
             },
-            logo: <ShirtIcon />,
+            icon: <ShirtIcon />,
           },
           {
             index: 20,
@@ -133,7 +134,7 @@ export default function LeftMenu() {
               href: "/kategoriler/[altKategori]",
               as: "/kategoriler/t-shirtler",
             },
-            logo: <ShirtIcon />,
+            icon: <ShirtIcon />,
           },
         ]}
       />} */}
@@ -143,7 +144,7 @@ export default function LeftMenu() {
         link={{
           href: "/admin/urunler",
         }}
-        logo={<SweatIcon />}
+        icon="/icons/sweat.svg"
       />
       <li className="divider"></li>
       <LeftMenuListItem
@@ -152,7 +153,7 @@ export default function LeftMenu() {
         link={{
           href: "/admin/kategoriler",
         }}
-        logo={<CategoriesIcon />}
+        icon="/icons/categories.svg"
       />
       <LeftMenuListItem
         index={4}
@@ -160,7 +161,7 @@ export default function LeftMenu() {
         link={{
           href: "/admin/menu",
         }}
-        logo={<HamburgerMenuIcon />}
+        icon="/icons/admin/hamburger.svg"
       />
       <LeftMenuListItem
         index={4}
@@ -168,7 +169,7 @@ export default function LeftMenu() {
         link={{
           href: "/admin/sayfalar",
         }}
-        logo={<PagesIcon />}
+        icon="/icons/admin/pages.svg"
       />
       <li className="divider"></li>
       <LeftMenuListItem
@@ -177,7 +178,7 @@ export default function LeftMenu() {
         link={{
           href: "/admin/ayarlar",
         }}
-        logo={<SettingsIcon />}
+        icon="/icons/admin/settings.svg"
       />
     </ul>
   );

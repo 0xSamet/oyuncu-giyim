@@ -12,8 +12,9 @@ export default function Kategoriler() {
   );
 }
 
-export const getServerSideProps = wrapper.getServerSideProps(
+export const getServerSideProps = wrapper.getStaticProps(
   ({ store, req, res, ...etc }) => {
+    console.log(req.headers);
     handleIconMode(store, req);
     //store.dispatch();
     return {

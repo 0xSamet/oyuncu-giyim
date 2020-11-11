@@ -46,10 +46,6 @@ import {
   clearQueueScrollLocks,
 } from "scroll-lock";
 
-const Preloader = dynamic(() => import("../components/Preloader"), {
-  ssr: false,
-});
-
 function MyApp({ Component, pageProps }) {
   const {
     modals: {
@@ -91,21 +87,27 @@ function MyApp({ Component, pageProps }) {
 
   useEffect(() => {
     const scrollableEl = document.querySelector("body");
+    //setFillGapMethod("none");
     if (
       cartReviewVisible ||
       mobileSearchVisible ||
       notificationsVisible ||
-      loginFormVisible ||
       desktopSearchVisible
     ) {
-      console.log("closed");
+      if (notificationsVisible && innerWidth > 500) {
+        return;
+      }
       disablePageScroll(scrollableEl);
     } else {
-      console.log("opened");
       clearQueueScrollLocks();
       enablePageScroll(scrollableEl);
     }
-  }, [cartReviewVisible, mobileSearchVisible, desktopSearchVisible]);
+  }, [
+    cartReviewVisible,
+    mobileSearchVisible,
+    desktopSearchVisible,
+    notificationsVisible,
+  ]);
 
   useEffect(() => {
     const handleRouteChange = (url) => {
@@ -123,14 +125,6 @@ function MyApp({ Component, pageProps }) {
       return enablePageScroll(scrollableEl);
     };*/
 
-    if (typeof window !== "undefined") {
-      window.addEventListener("load", () => {
-        setTimeout(() => {
-          return dispatch(toggleFirstLoading());
-        }, 750);
-      });
-    }
-
     router.events.on("routeChangeStart", handleRouteChange);
 
     // If the component is unmounted, unsubscribe
@@ -146,7 +140,6 @@ function MyApp({ Component, pageProps }) {
         <div
           className={clsx({
             "main-wrapper": true,
-            "hide-for-first-loading": firstLoading,
             "cart-review-active": cartReviewVisible,
             "mobile-search-active": mobileSearchVisible,
             "desktop-search-active": desktopSearchVisible,
@@ -170,7 +163,6 @@ function MyApp({ Component, pageProps }) {
           </main>
           <Footer />
         </div>
-        <Preloader />
       </ApolloProvider>
     );
   });
@@ -181,7 +173,6 @@ function MyApp({ Component, pageProps }) {
         <div
           className={clsx({
             "main-wrapper": true,
-            "hide-for-first-loading": firstLoading,
             "admin-layout": true,
             "theme-icon-mode-active": iconMode,
             "mobile-menu-visible": adminMobileMenuVisible,
@@ -201,7 +192,6 @@ function MyApp({ Component, pageProps }) {
           </main>
           <Footer />
         </div>
-        <Preloader />
       </ApolloProvider>
     );
   });

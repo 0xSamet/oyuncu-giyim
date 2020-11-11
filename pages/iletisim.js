@@ -5,6 +5,8 @@ import {
   changeDesktopMenuIndex,
   changeMobileMenuIndex,
 } from "../store/reducers/menu";
+import { wrapper } from "../store";
+import { handleIconMode } from "../utils";
 
 export default function Iletisim() {
   const dispatch = useDispatch();
@@ -19,3 +21,13 @@ export default function Iletisim() {
     </Layout>
   );
 }
+
+export const getServerSideProps = wrapper.getStaticProps(
+  ({ store, req, res, ...etc }) => {
+    handleIconMode(store, req);
+    //store.dispatch();
+    return {
+      props: { sad: "asd" },
+    };
+  }
+);

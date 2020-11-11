@@ -3,15 +3,6 @@ import clsx from "clsx";
 import Link from "next/link";
 import { useDispatch, useSelector } from "react-redux";
 
-import SweatIcon from "../public/icons/sweat.svg";
-import HomeIcon from "../public/icons/home.svg";
-import ShirtIcon from "../public/icons/tshirt.svg";
-import ArrowIcon from "../public/icons/arrow.svg";
-import PaperPlaneIcon from "../public/icons/paper-plane.svg";
-import InstagramIcon from "../public/icons/instagram.svg";
-import WPIcon from "../public/icons/whatsapp.svg";
-import CategoriesIcon from "../public/icons/categories.svg";
-
 import { useSpring, animated } from "react-spring";
 
 import { toggleIconMode } from "../store/reducers/theme";
@@ -20,7 +11,7 @@ function LeftMenuListItem({
   index = -4,
   text,
   link: { href = "#" },
-  logo,
+  icon,
   submenu = [],
 }) {
   const {
@@ -40,7 +31,9 @@ function LeftMenuListItem({
     >
       <Link href={href}>
         <a onClick={() => setToggle(!toggle)}>
-          <span className="main-menu-logo-wrapper">{logo}</span>
+          <span className="main-menu-icon-wrapper">
+            <img src={icon} />
+          </span>
           <span className="main-menu-text-wrapper">{text}</span>
         </a>
       </Link>
@@ -52,7 +45,7 @@ function LeftMenuListItem({
                 index={menu.index}
                 text={menu.text}
                 link={menu.link}
-                logo={menu.logo}
+                icon={menu.icon}
               />
             );
           })}
@@ -73,8 +66,8 @@ export default function LeftMenu() {
     <ul className="main-menu">
       <li>
         <a>
-          <span className="main-menu-logo-wrapper" onClick={handleIconMode}>
-            <ArrowIcon />
+          <span className="main-menu-icon-wrapper" onClick={handleIconMode}>
+            <img src="/icons/arrow.svg" />
           </span>
           <span className="main-menu-text-wrapper"></span>
         </a>
@@ -83,7 +76,7 @@ export default function LeftMenu() {
         index={0}
         text="Anasayfa"
         link={{ href: "/" }}
-        logo={<HomeIcon />}
+        icon="/icons/home.svg"
       />
       <LeftMenuListItem
         index={1}
@@ -91,7 +84,7 @@ export default function LeftMenu() {
         link={{
           href: "/sweatshirt",
         }}
-        logo={<SweatIcon />}
+        icon="/icons/sweat.svg"
       />
       <LeftMenuListItem
         index={2}
@@ -99,7 +92,7 @@ export default function LeftMenu() {
         link={{
           href: "/t-shirt",
         }}
-        logo={<ShirtIcon />}
+        icon="/icons/tshirt.svg"
       />
       {/* {      <LeftMenuListItem
         index={3}
@@ -108,7 +101,7 @@ export default function LeftMenu() {
           href: "/kategoriler",
           as: "/kategoriler",
         }}
-        logo={<CategoriesIcon />}
+        icon={<CategoriesIcon />}
         submenu={[
           {
             index: 20,
@@ -117,7 +110,7 @@ export default function LeftMenu() {
               href: "/kategoriler/[altKategori]",
               as: "/kategoriler/t-shirtler",
             },
-            logo: <ShirtIcon />,
+            icon: <ShirtIcon />,
           },
           {
             index: 20,
@@ -126,7 +119,7 @@ export default function LeftMenu() {
               href: "/kategoriler/[altKategori]",
               as: "/kategoriler/t-shirtler",
             },
-            logo: <ShirtIcon />,
+            icon: <ShirtIcon />,
           },
         ]}
       />} */}
@@ -136,7 +129,7 @@ export default function LeftMenu() {
         link={{
           href: "/iletisim",
         }}
-        logo={<PaperPlaneIcon />}
+        icon="/icons/paper-plane.svg"
       />
       <li className="divider"></li>
       <LeftMenuListItem
@@ -144,14 +137,14 @@ export default function LeftMenu() {
         link={{
           href: "#",
         }}
-        logo={<InstagramIcon />}
+        icon="/icons/instagram.svg"
       />
       <LeftMenuListItem
         text="Whatsapp"
         link={{
           href: "#",
         }}
-        logo={<WPIcon />}
+        icon="/icons/whatsapp.svg"
       />
     </ul>
   );

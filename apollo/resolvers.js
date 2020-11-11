@@ -1,19 +1,16 @@
-import knex from "knex";
-import dbConfig from "../knexfile";
-
-var db = knex(dbConfig);
-
 export const resolvers = {
   Query: {
     menu: async (_parent, _args, _context) => {
-      try {
+      /*try {
         const menu = db.select().from("menu");
         return menu;
       } catch (err) {
         console.log(process.env.DB_HOST, err);
       } finally {
         //db.destroy();
-      }
+      }*/
+      console.log(_context);
+      return [{ asd: "asd" }];
     },
     page: async (_parent, _args, _context) => {
       // console.log(await db("page"));

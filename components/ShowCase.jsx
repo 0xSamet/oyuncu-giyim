@@ -16,7 +16,6 @@ export default function ShowCase({ showCaseId }) {
       }, 500);
     }
   }, [iconMode]);
-
   return (
     <div
       className={`homepage-showcase-wrapper homepage-showcase-${showCaseId}`}
