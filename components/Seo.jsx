@@ -1,11 +1,14 @@
 import Head from "next/head";
 
-const Layout = ({ children, title = "Oyuncu Giyim" }) => {
+const Seo = ({ children, seo }) => {
+  const { meta_title, meta_description, meta_keyword } = seo;
   return (
     <>
       <Head>
-        <title>{title}</title>
         <meta charSet="utf-8" />
+        <title>{meta_title}</title>
+        <meta name="description" content={meta_description} />
+        <meta name="keywords" content={meta_keyword} />
         <meta
           name="viewport"
           content="initial-scale=1.0, width=device-width, minimal-ui"
@@ -23,4 +26,4 @@ const Layout = ({ children, title = "Oyuncu Giyim" }) => {
   );
 };
 
-export default Layout;
+export default Seo;

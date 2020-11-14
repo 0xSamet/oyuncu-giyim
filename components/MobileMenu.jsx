@@ -1,19 +1,10 @@
 import clsx from "clsx";
 import Link from "next/link";
 import { useSelector } from "react-redux";
+import { useQuery } from "@apollo/client";
+import { GET_MOBILE_MENU } from "../apollo/query/menu";
 
-import CategoryIcon from "../public/icons/categories.svg";
-import HomeIcon from "../public/icons/home.svg";
-import PaperPlaneIcon from "../public/icons/paper-plane.svg";
-import CartIcon from "../public/icons/cart.svg";
-import ProfileIcon from "../public/icons/profile2.svg";
-
-function MobileMenuListItem({
-  index = -4,
-  text,
-  link: { href = "#", as = "#" },
-  icon,
-}) {
+function MobileMenuListItem({ index = -4, text, link = "#", icon }) {
   const {
     menu: {
       mobileMenu: { index: indexFromStore },
@@ -26,9 +17,11 @@ function MobileMenuListItem({
         active: index === indexFromStore,
       })}
     >
-      <Link href={href} as={as}>
+      <Link href={link}>
         <a>
-          <span className="mobile-menu-logo-wrapper">{icon}</span>
+          <span className="mobile-menu-icon-wrapper">
+            <img src={icon} />
+          </span>
           <span className="mobile-menu-text-wrapper">{text}</span>
         </a>
       </Link>
@@ -37,40 +30,34 @@ function MobileMenuListItem({
 }
 
 export default function MobileMenu() {
+  const { data, error, loading } = useQuery(GET_MOBILE_MENU);
+
+  if (loading) {
+    return <div>loading</div>;
+  }
+
+  if (error) {
+    return <div>error</div>;
+  }
+
   return (
     <div className="mobile-menu-wrapper">
       <ul className="mobile-menu">
-        <MobileMenuListItem
-          index={0}
-          text="Anasayfa"
-          link={{ href: "/", as: "/" }}
-          icon={<HomeIcon />}
-        />
-        <MobileMenuListItem
-          index={1}
-          text="Kategoriler"
-          link={{ href: "/kategoriler", as: "/kategoriler" }}
-          icon={<CategoryIcon />}
-        />
-
-        <MobileMenuListItem
-          index={2}
-          text="Giriş Yap"
-          link={{ href: "/giris-yap", as: "/giris-yap" }}
-          icon={<ProfileIcon />}
-        />
-        <MobileMenuListItem
-          index={3}
-          text="Sepet"
-          link={{ href: "/sepetim", as: "/sepetim" }}
-          icon={<CartIcon />}
-        />
-        <MobileMenuListItem
-          index={4}
-          text="İletişim"
-          link={{ href: "/iletisim", as: "/iletisim" }}
-          icon={<PaperPlaneIcon />}
-        />
+        {"mobileMenu" in data && data.mobileMenu.length > 0 ? (
+          data.mobileMenu.map((menu) => {
+            return (
+              <MobileMenuListItem
+                key={menu.id}
+                index={menu.id}
+                text={menu.name}
+                link={menu.href || undefined}
+                icon={menu.icon_url}
+              />
+            );
+          })
+        ) : (
+          <li></li>
+        )}
       </ul>
     </div>
   );

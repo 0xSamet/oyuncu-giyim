@@ -1,18 +1,27 @@
-require("dotenv").config();
-
 module.exports = {
-  client: "pg",
-  connection: {
-    host: process.env.DB_HOST,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASS,
-    database: process.env.DB_DATABASE,
-    ssl: { rejectUnauthorized: false },
+  development: {
+    client: "pg",
+    connection: {
+      host: "localhost",
+      user: "admin",
+      password: "admin",
+      database: "oyuncu_giyim",
+    },
+    migrations: {
+      directory: __dirname + "/database/migrations",
+    },
+    seeds: {
+      directory: __dirname + "/database/seeds",
+    },
   },
-  migrations: {
-    directory: __dirname + "/database/migrations",
-  },
-  seeds: {
-    directory: __dirname + "/database/seeds",
+  production: {
+    client: "pg",
+    connection: process.env.DATABASE_URL,
+    migrations: {
+      directory: __dirname + "/database/migrations",
+    },
+    seeds: {
+      directory: __dirname + "/database/seeds",
+    },
   },
 };

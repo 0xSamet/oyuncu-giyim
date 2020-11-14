@@ -58,4 +58,63 @@ body .main-wrapper.admin-layout {
       }
     }
   }
+  .page-right-wrapper {
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+    .page-loader {
+      position: absolute;
+      top: 71.5px;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border-radius: 0;
+    }
+    .admin-menu-page {
+      .menu-accordion {
+        margin: 40px auto;
+        .accordion {
+          .form,
+          .button {
+            font-size: 14px;
+          }
+          > .title {
+            /*position: relative;
+            z-index: 2;*/
+            transition: box-shadow 0.5s;
+          }
+          &.active {
+            .title {
+              box-shadow: 0px 1px 1px 0px rgb(107 107 107 / 25%);
+            }
+          }
+          .sortable-list-item {
+            &.active {
+              > .title {
+                background: #ececec;
+                box-shadow: 0px 1px 1px 0px rgb(0 0 0 / 25%);
+              }
+              > .content {
+                background: #f1f1f1;
+              }
+            }
+            > .content {
+              padding-top: 20px;
+              transition: background 0.3s;
+            }
+            > .title {
+              position: relative;
+              transition: background 0.3s;
+              z-index: 1;
+            }
+            .divider-field {
+              display: flex;
+              justify-content: center;
+              padding: 5px 0px;
+            }
+          }
+        }
+      }
+    }
+  }
 }

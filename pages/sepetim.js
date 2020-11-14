@@ -1,9 +1,24 @@
-import Layout from "../components/Layout";
+import SEO from "../components/Seo";
+import { wrapper } from "../store";
+import { handleIconMode } from "../utils";
 
 export default function Sepetim() {
   return (
-    <Layout title="Sepetim - Oyuncu Giyim">
+    <SEO title="Sepetim - Oyuncu Giyim">
       <h1>Sepetim</h1>
-    </Layout>
+    </SEO>
   );
 }
+
+export const getServerSideProps = wrapper.getStaticProps(
+  async ({ store, req, res, ...etc }) => {
+    handleIconMode(store, req);
+    //store.dispatch();
+
+    return {
+      props: {
+        asd: "asd",
+      },
+    };
+  }
+);

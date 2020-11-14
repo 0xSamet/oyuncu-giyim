@@ -1,9 +1,22 @@
-import Layout from "../../components/Layout";
+import { GetStaticProps } from "next";
+import SEO from "../../components/Seo";
 
-export default function AdminCategories() {
+export default function AdminDashboard({ page }) {
   return (
-    <Layout title="Kategoriler - Oyuncu Giyim">
+    <SEO seo={page}>
       <h1>Admin-kategoriler</h1>
-    </Layout>
+    </SEO>
   );
 }
+
+export const getStaticProps = () => {
+  return {
+    props: {
+      page: {
+        meta_title: "Kategoriler - Oyuncu Giyim",
+        meta_description: "",
+        meta_keyword: "",
+      },
+    },
+  };
+};

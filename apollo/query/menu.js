@@ -1,10 +1,25 @@
 import { gql } from "@apollo/client";
 
-export const GET_MENU = gql`
-  query menuQuery {
-    menu {
+export const GET_DESKTOP_MENU = gql`
+  query getDesktopMenu {
+    desktopMenu {
       id
-      text
+      name
+      href
+      icon_url
+      sort_order
+      is_divider
+    }
+  }
+`;
+
+export const GET_MOBILE_MENU = gql`
+  query getMobileMenu {
+    mobileMenu {
+      id
+      name
+      href
+      icon_url
       sort_order
     }
   }

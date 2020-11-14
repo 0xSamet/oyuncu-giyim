@@ -1,17 +1,18 @@
-import { ApolloServer } from "apollo-server-micro";
-import { schema } from "../../apollo/schema";
-import Cors from "micro-cors";
 import knex from "knex";
 import dbConfig from "../../knexfile";
+const { Model } = require("objection");
+
+import { ApolloServer } from "apollo-server-micro";
+import { schema } from "../../apollo/schema";
 
 const apolloServer = new ApolloServer({
   schema,
   context: () => {
-    try {
-      var db = knex(dbConfig);
-    } catch (err) {
-      console.log(err);
-    }
+    const configToUse = process.env.NODE_ENV || "development";
+
+    const db = knex(dbConfig[configToUse]);
+
+    Model.knex(db);
     return {
       db,
     };
@@ -24,10 +25,4 @@ export const config = {
   },
 };
 
-const cors = Cors({
-  allowMethods: ["POST", "GET", "OPTIONS", "DELETE", "PUT"],
-  allowCredentials: true,
-});
-
-const handler = apolloServer.createHandler({ path: "/api" });
-export default cors(handler);
+export default apolloServer.createHandler({ path: "/api" });

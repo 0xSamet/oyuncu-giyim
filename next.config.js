@@ -10,6 +10,9 @@ module.exports = {
 
     return config;
   },
+  env: {
+    API_URL: "http://localhost:3000/api",
+  },
   async redirects() {
     return [
       {

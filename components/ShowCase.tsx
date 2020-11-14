@@ -2,9 +2,14 @@ import { useEffect, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { useSelector } from "react-redux";
 import ShowCaseProduct from "./ShowCaseProduct";
+
 import ArrowIcon from "../public/icons/arrow.svg";
 
-export default function ShowCase({ showCaseId }) {
+type ShowCaseType = {
+  showCaseId: Number
+}
+
+export default function ShowCase({ showCaseId } : ShowCaseType) {
   const {
     theme: { iconMode },
   } = useSelector((state) => state);

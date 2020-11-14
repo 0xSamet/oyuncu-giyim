@@ -31,5 +31,7 @@ const makeStore = (context) =>
 
 // export an assembled wrapper
 export const wrapper = createWrapper(makeStore, {
-  debug: process.env.NODE_ENV !== "production",
+  debug: false,
 });
+
+//process.env.NODE_ENV !== "production"
