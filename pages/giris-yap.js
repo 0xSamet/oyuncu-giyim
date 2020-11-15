@@ -4,7 +4,13 @@ import { handleIconMode } from "../utils";
 
 export default function GirisYap() {
   return (
-    <SEO title="Giriş Yap - Oyuncu Giyim">
+    <SEO
+      seo={{
+        meta_title: "Giriş Yap - Oyuncu Giyim",
+        meta_description: "",
+        meta_keyword: "",
+      }}
+    >
       <h1>Giriş Yap Veya Kayıt Ol</h1>
     </SEO>
   );

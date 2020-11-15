@@ -4,7 +4,13 @@ import { handleIconMode } from "../../utils";
 
 export default function Kategoriler() {
   return (
-    <SEO title="Kategoriler - Oyuncu Giyim">
+    <SEO
+      seo={{
+        meta_title: "Kategoriler - Oyuncu Giyim",
+        meta_description: "",
+        meta_keyword: "",
+      }}
+    >
       <h1>Kategoriler</h1>
     </SEO>
   );

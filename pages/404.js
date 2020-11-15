@@ -5,7 +5,13 @@ import NotFound from "../components/NotFound";
 
 export default function NotFoundPage() {
   return (
-    <SEO title="Sayfa Bulunamadı - Oyuncu Giyim">
+    <SEO
+      seo={{
+        meta_title: "Sayfa Bulunamadı - Oyuncu Giyim",
+        meta_description: "",
+        meta_keyword: "",
+      }}
+    >
       <NotFound />
     </SEO>
   );
