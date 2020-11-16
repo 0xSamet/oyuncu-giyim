@@ -6,6 +6,7 @@ export const GET_DESKTOP_MENU = gql`
       id
       name
       href
+      target
       icon_url
       sort_order
       is_divider
@@ -19,6 +20,7 @@ export const GET_MOBILE_MENU = gql`
       id
       name
       href
+      target
       icon_url
       sort_order
     }

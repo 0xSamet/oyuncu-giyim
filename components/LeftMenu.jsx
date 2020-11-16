@@ -116,27 +116,29 @@ export default function LeftMenu(props) {
         </a>
       </li>
       {data.desktopMenu !== undefined && data.desktopMenu.length > 0 ? (
-        data.desktopMenu.map((menu) => {
-          if (menu.is_divider) {
-            return (
-              <LeftMenuListItem
-                key={menu.id}
-                divider
-                link={{ href: undefined }}
-              />
-            );
-          } else {
-            return (
-              <LeftMenuListItem
-                key={menu.id}
-                index={menu.id}
-                text={menu.name}
-                link={menu.href || undefined}
-                icon={menu.icon_url}
-              />
-            );
-          }
-        })
+        [...data.desktopMenu]
+          .sort((a, b) => a.sort_order - b.sort_order)
+          .map((menu) => {
+            if (menu.is_divider) {
+              return (
+                <LeftMenuListItem
+                  key={menu.id}
+                  divider
+                  link={{ href: undefined }}
+                />
+              );
+            } else {
+              return (
+                <LeftMenuListItem
+                  key={menu.id}
+                  index={menu.id}
+                  text={menu.name}
+                  link={menu.href || undefined}
+                  icon={menu.icon_url}
+                />
+              );
+            }
+          })
       ) : (
         <li></li>
       )}

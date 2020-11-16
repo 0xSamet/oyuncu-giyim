@@ -7,14 +7,20 @@ import {
   Loader,
   Segment,
   Button,
-  TextArea,
+  Input,
   Form,
   Select,
   Checkbox,
 } from "semantic-ui-react";
 import { useEffect, useState } from "react";
-import { useLazyQuery } from "@apollo/client";
+import { useLazyQuery, useMutation } from "@apollo/client";
 import { GET_DESKTOP_MENU, GET_MOBILE_MENU } from "../../apollo/query/menu";
+import {
+  UPDATE_DESKTOP_MENU,
+  ADD_DESKTOP_MENU,
+  SORT_DESKTOP_MENU,
+  DELETE_DESKTOP_MENU,
+} from "../../apollo/mutations/menu";
 import clsx from "clsx";
 import produce from "immer";
 
@@ -35,8 +41,10 @@ const DesktopMenuSortableItem = SortableElement(
     isActive,
     handleDesktopMenuClick,
     handleDesktopMenuInputChange,
-    desktopMenuAccordion,
-    setDesktopMenuAccordion,
+    handleDesktopMenuUpdate,
+    handleDesktopMenuDelete,
+    desktopMenu,
+    setDesktopMenu,
   }) => {
     return (
       <div
@@ -52,18 +60,26 @@ const DesktopMenuSortableItem = SortableElement(
         >
           <DragHandle />
           {menu.name}
+          <span
+            className="delete-icon-wrapper"
+            onClick={(e) => {
+              e.stopPropagation();
+              handleDesktopMenuDelete(menu.id);
+            }}
+          >
+            <img src="/icons/cancel.svg" />
+          </span>
         </Accordion.Title>
         <Accordion.Content active={isActive}>
           <Form
             onSubmit={(e) => {
               e.preventDefault();
-              console.log(e);
+              handleDesktopMenuUpdate(menu.id);
             }}
           >
             <Form.Field>
               <label>Menü Adı</label>
-              <input
-                key="samet-1-1-1"
+              <Input
                 name="name"
                 value={menu.name || ""}
                 onChange={(e) => handleDesktopMenuInputChange(e, menu.id)}
@@ -77,7 +93,7 @@ const DesktopMenuSortableItem = SortableElement(
             >
               <Form.Field>
                 <label>Gideceği Link</label>
-                <input
+                <Input
                   name="href"
                   value={menu.href || ""}
                   onChange={(e) => handleDesktopMenuInputChange(e, menu.id)}
@@ -89,7 +105,18 @@ const DesktopMenuSortableItem = SortableElement(
                   marginTop: 17,
                   marginRight: 7,
                 }}
-                placeholder="Target"
+                onChange={(_e, { value }) => {
+                  const menuId = menu.id;
+                  const index = desktopMenu.findIndex(
+                    (menu) => menu.id === menuId
+                  );
+                  setDesktopMenu(
+                    produce(desktopMenu, (draft) => {
+                      draft[index]["target"] = value;
+                    })
+                  );
+                }}
+                value={menu.target || ""}
                 options={[
                   {
                     key: "_self",
@@ -116,7 +143,7 @@ const DesktopMenuSortableItem = SortableElement(
             </Form.Group>
             <Form.Field>
               <label>Icon Url</label>
-              <input
+              <Input
                 name="icon_url"
                 value={menu.icon_url || ""}
                 onChange={(e) => handleDesktopMenuInputChange(e, menu.id)}
@@ -129,7 +156,22 @@ const DesktopMenuSortableItem = SortableElement(
                 paddingBottom: 5,
               }}
             >
-              <Checkbox toggle label="Divider ?" />
+              <Checkbox
+                toggle
+                label="Divider ?"
+                checked={menu.is_divider}
+                onChange={() => {
+                  const menuId = menu.id;
+                  const index = desktopMenu.findIndex(
+                    (menu) => menu.id === menuId
+                  );
+                  setDesktopMenu(
+                    produce(desktopMenu, (draft) => {
+                      draft[index]["is_divider"] = !draft[index]["is_divider"];
+                    })
+                  );
+                }}
+              />
             </Form.Field>
 
             <Button primary fluid>
@@ -145,10 +187,12 @@ const DesktopMenuSortableItem = SortableElement(
 const DesktopMenuSortableList = SortableContainer(
   ({
     desktopMenu,
+    setDesktopMenu,
     desktopMenuAccordion,
-    setDesktopMenuAccordion,
     handleDesktopMenuClick,
     handleDesktopMenuInputChange,
+    handleDesktopMenuUpdate,
+    handleDesktopMenuDelete,
   }) => {
     return (
       <div className="desktop-menu-sortable-list">
@@ -156,15 +200,17 @@ const DesktopMenuSortableList = SortableContainer(
           desktopMenu.map((menu, i) => {
             return (
               <DesktopMenuSortableItem
-                key={`item-${menu.name}`}
+                key={`sortable-item-${menu.id}`}
                 index={i}
                 menu={menu}
+                desktopMenu={desktopMenu}
+                setDesktopMenu={setDesktopMenu}
                 isActive={desktopMenuAccordion.activeIndex === menu.id}
                 handleDesktopMenuClick={handleDesktopMenuClick}
                 handleDesktopMenuInputChange={handleDesktopMenuInputChange}
+                handleDesktopMenuUpdate={handleDesktopMenuUpdate}
+                handleDesktopMenuDelete={handleDesktopMenuDelete}
                 disabled={desktopMenuAccordion.activeIndex === menu.id}
-                desktopMenuAccordion={setDesktopMenuAccordion}
-                setDesktopMenuAccordion={setDesktopMenuAccordion}
               />
             );
           })
@@ -262,7 +308,7 @@ const MobileMenuSortableList = SortableContainer(
           mobileMenu.map((menu, i) => {
             return (
               <MobileMenuSortableItem
-                key={`item-${menu.name}`}
+                key={`sortable-item-${menu.id}`}
                 index={i}
                 menu={menu}
                 isActive={mobileMenuAccordion.activeIndex === menu.id}
@@ -292,7 +338,7 @@ export default function AdminMenuPage({ page }) {
       fields: {
         name: "",
         href: "",
-        target: "",
+        target: "_self",
         icon_url: "",
         is_divider: false,
       },
@@ -306,18 +352,86 @@ export default function AdminMenuPage({ page }) {
       fields: {
         name: "",
         href: "",
-        target: "",
+        target: "_self",
         icon_url: "",
       },
     },
   });
 
-  const [getDesktopMenu, { data: data1, loading1, error1 }] = useLazyQuery(
-    GET_DESKTOP_MENU
-  );
-  const [getmobileMenu, { data: data2, loading2, error2 }] = useLazyQuery(
-    GET_MOBILE_MENU
-  );
+  const [
+    getDesktopMenu,
+    { data: data1, loading: loading1, error1 },
+  ] = useLazyQuery(GET_DESKTOP_MENU, { fetchPolicy: "no-cache" });
+  const [
+    getmobileMenu,
+    { data: data2, loading: loading2, error2 },
+  ] = useLazyQuery(GET_MOBILE_MENU, { fetchPolicy: "no-cache" });
+
+  const [desktopMenuUpdateRun] = useMutation(UPDATE_DESKTOP_MENU);
+
+  const [addDesktopMenuRun] = useMutation(ADD_DESKTOP_MENU);
+
+  const [sortDesktopMenuRun] = useMutation(SORT_DESKTOP_MENU);
+
+  const [deleteDesktopMenuRun] = useMutation(DELETE_DESKTOP_MENU);
+
+  const handleDesktopMenuUpdate = async (menuId) => {
+    const menu = desktopMenu.find((menu) => menu.id == menuId);
+    if (!menu) {
+      console.log("menü bulunamadı");
+    } else {
+      await desktopMenuUpdateRun({
+        variables: {
+          id: menu.id,
+          name: menu.name,
+          href: menu.href,
+          target: menu.target,
+          icon_url: menu.icon_url,
+          sort_order: menu.sort_order,
+          is_divider: menu.is_divider,
+        },
+      });
+      //console.log(samet);
+    }
+  };
+
+  const handleAddDesktopMenu = async () => {
+    const {
+      name,
+      href,
+      target,
+      icon_url,
+      is_divider,
+    } = desktopMenuAccordion.addMenuForm.fields;
+
+    if (name === "" || href === "" || icon_url === "") {
+      console.log("Tüm Alanları Doldurunuz");
+    } else {
+      await addDesktopMenuRun({
+        variables: {
+          name,
+          href,
+          target,
+          icon_url,
+          is_divider,
+        },
+      });
+
+      getDesktopMenu();
+    }
+  };
+
+  const handleDesktopMenuDelete = async (menuId) => {
+    await deleteDesktopMenuRun({
+      variables: {
+        input: {
+          id: menuId,
+        },
+      },
+    });
+
+    getDesktopMenu();
+  };
 
   const handleDesktopMenuClick = (index) => {
     const newIndex = desktopMenuAccordion.activeIndex === index ? -1 : index;
@@ -331,20 +445,11 @@ export default function AdminMenuPage({ page }) {
     //setDesktopMenu(...desktopMenu);
     const index = desktopMenu.findIndex((menu) => menu.id == menuId);
 
-    console.log(
-      produce(desktopMenu, (draft) => {
-        draft[index][e.target.name] = e.target.value;
-      })
-    );
-
     setDesktopMenu(
       produce(desktopMenu, (draft) => {
         draft[index][e.target.name] = e.target.value;
       })
     );
-
-    //setDesktopMenu([...desktopMenu]);
-    //console.log(e.currentTarget.name, e.currentTarget.value);
   };
 
   const handleMobileMenuClick = (index) => {
@@ -355,12 +460,22 @@ export default function AdminMenuPage({ page }) {
     });
   };
 
-  const desktopMenuOnSortStart = ({ node }) => {
-    console.log(node);
-  };
-
   const desktopMenuOnSortEnd = ({ oldIndex, newIndex }) => {
-    setDesktopMenu(arrayMove(desktopMenu, oldIndex, newIndex));
+    const reSortedMenu = arrayMove(desktopMenu, oldIndex, newIndex);
+    setDesktopMenu(reSortedMenu);
+
+    const requestArr = reSortedMenu.map((menu, i) => {
+      return {
+        id: menu.id,
+        sort_order: i,
+      };
+    });
+
+    sortDesktopMenuRun({
+      variables: {
+        input: requestArr,
+      },
+    });
   };
 
   const mobileMenuOnSortStart = ({ node }) => {
@@ -383,10 +498,14 @@ export default function AdminMenuPage({ page }) {
 
   useEffect(() => {
     if (data1 && data1.desktopMenu && data1.desktopMenu.length > 0) {
-      setDesktopMenu(data1.desktopMenu);
+      setDesktopMenu(
+        [...data1.desktopMenu].sort((a, b) => a.sort_order - b.sort_order)
+      );
     }
     if (data2 && data2.mobileMenu && data2.mobileMenu.length > 0) {
-      setMobileMenu(data2.mobileMenu);
+      setMobileMenu(
+        [...data2.mobileMenu].sort((a, b) => a.sort_order - b.sort_order)
+      );
     }
   }, [data1, data2]);
 
@@ -440,11 +559,12 @@ export default function AdminMenuPage({ page }) {
                 <DesktopMenuSortableList
                   useDragHandle
                   desktopMenu={desktopMenu}
+                  setDesktopMenu={setDesktopMenu}
                   desktopMenuAccordion={desktopMenuAccordion}
-                  setDesktopMenuAccordion={setDesktopMenuAccordion}
                   handleDesktopMenuClick={handleDesktopMenuClick}
+                  handleDesktopMenuUpdate={handleDesktopMenuUpdate}
+                  handleDesktopMenuDelete={handleDesktopMenuDelete}
                   handleDesktopMenuInputChange={handleDesktopMenuInputChange}
-                  onSortStart={desktopMenuOnSortStart}
                   onSortEnd={desktopMenuOnSortEnd}
                   helperContainer={() => {
                     if (typeof window === "undefined") {
@@ -479,7 +599,7 @@ export default function AdminMenuPage({ page }) {
                   <Form
                     onSubmit={(e) => {
                       e.preventDefault();
-                      console.log(e);
+                      handleAddDesktopMenu();
                     }}
                     style={{
                       paddingTop: 15,
@@ -489,15 +609,15 @@ export default function AdminMenuPage({ page }) {
                       <label>Menu Adı</label>
                       <input
                         type="text"
-                        /*onChange={(e) => {
-            const currentMenuId = menu.id;
-            const foundMenu = desktopMenu.find(
-              (menu) => menu.id === currentMenuId
-            );
-            //console.log(foundMenu);
-            setDesktopMenu([...desktopMenu]);
-            console.log(e.currentTarget.value);
-          }}*/
+                        value={desktopMenuAccordion.addMenuForm.fields.name}
+                        onChange={(e) =>
+                          setDesktopMenuAccordion(
+                            produce(desktopMenuAccordion, (draft) => {
+                              draft.addMenuForm.fields.name =
+                                e.currentTarget.value;
+                            })
+                          )
+                        }
                       />
                     </Form.Field>
                     <Form.Group
@@ -508,7 +628,18 @@ export default function AdminMenuPage({ page }) {
                     >
                       <Form.Field>
                         <label>Gideceği Link</label>
-                        <input />
+                        <input
+                          type="text"
+                          value={desktopMenuAccordion.addMenuForm.fields.href}
+                          onChange={(e) =>
+                            setDesktopMenuAccordion(
+                              produce(desktopMenuAccordion, (draft) => {
+                                draft.addMenuForm.fields.href =
+                                  e.currentTarget.value;
+                              })
+                            )
+                          }
+                        />
                       </Form.Field>
                       <Select
                         style={{
@@ -517,6 +648,14 @@ export default function AdminMenuPage({ page }) {
                           marginRight: 7,
                         }}
                         placeholder="Target"
+                        value={desktopMenuAccordion.addMenuForm.fields.target}
+                        onChange={(e, { value }) =>
+                          setDesktopMenuAccordion(
+                            produce(desktopMenuAccordion, (draft) => {
+                              draft.addMenuForm.fields.target = value;
+                            })
+                          )
+                        }
                         options={[
                           {
                             key: "_self",
@@ -543,7 +682,18 @@ export default function AdminMenuPage({ page }) {
                     </Form.Group>
                     <Form.Field>
                       <label>Icon Url</label>
-                      <input />
+                      <input
+                        type="text"
+                        value={desktopMenuAccordion.addMenuForm.fields.icon_url}
+                        onChange={(e) =>
+                          setDesktopMenuAccordion(
+                            produce(desktopMenuAccordion, (draft) => {
+                              draft.addMenuForm.fields.icon_url =
+                                e.currentTarget.value;
+                            })
+                          )
+                        }
+                      />
                     </Form.Field>
                     <Form.Field
                       style={{
@@ -552,7 +702,21 @@ export default function AdminMenuPage({ page }) {
                         paddingBottom: 5,
                       }}
                     >
-                      <Checkbox toggle label="Divider ?" />
+                      <Checkbox
+                        toggle
+                        label="Divider ?"
+                        checked={
+                          desktopMenuAccordion.addMenuForm.fields.is_divider
+                        }
+                        onChange={(e) =>
+                          setDesktopMenuAccordion(
+                            produce(desktopMenuAccordion, (draft) => {
+                              draft.addMenuForm.fields.is_divider = !draft
+                                .addMenuForm.fields.is_divider;
+                            })
+                          )
+                        }
+                      />
                     </Form.Field>
 
                     <Button primary fluid>
