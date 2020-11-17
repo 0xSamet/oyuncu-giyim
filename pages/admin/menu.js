@@ -39,6 +39,41 @@ const DragHandle = SortableHandle(() => (
   <Icon name="arrows alternate vertical" style={{ marginRight: 12 }} />
 ));
 
+const TargetSelectComponent = ({ ...all }) => {
+  return (
+    <Select
+      {...all}
+      style={{
+        maxHeight: 40,
+        marginTop: 17,
+        marginRight: 7,
+      }}
+      options={[
+        {
+          key: "_self",
+          value: "_self",
+          text: "_self",
+        },
+        {
+          key: "_blank",
+          value: "_blank",
+          text: "_blank",
+        },
+        {
+          key: "_parent",
+          value: "_parent",
+          text: "_parent",
+        },
+        {
+          key: "_top",
+          value: "_top",
+          text: "_top",
+        },
+      ]}
+    />
+  );
+};
+
 const DesktopMenuSortableItem = SortableElement(
   ({
     menu,
@@ -103,12 +138,7 @@ const DesktopMenuSortableItem = SortableElement(
                   onChange={(e) => handleDesktopMenuInputChange(e, menu.id)}
                 />
               </Form.Field>
-              <Select
-                style={{
-                  maxHeight: 40,
-                  marginTop: 17,
-                  marginRight: 7,
-                }}
+              <TargetSelectComponent
                 onChange={(_e, { value }) => {
                   const menuId = menu.id;
                   const index = desktopMenu.findIndex(
@@ -121,28 +151,6 @@ const DesktopMenuSortableItem = SortableElement(
                   );
                 }}
                 value={menu.target || "_self"}
-                options={[
-                  {
-                    key: "_self",
-                    value: "_self",
-                    text: "_self",
-                  },
-                  {
-                    key: "_blank",
-                    value: "_blank",
-                    text: "_blank",
-                  },
-                  {
-                    key: "_parent",
-                    value: "_parent",
-                    text: "_parent",
-                  },
-                  {
-                    key: "_top",
-                    value: "_top",
-                    text: "_top",
-                  },
-                ]}
               />
             </Form.Group>
             <Form.Field>
@@ -290,12 +298,7 @@ const MobileMenuSortableItem = SortableElement(
                   onChange={(e) => handleMobileMenuInputChange(e, menu.id)}
                 />
               </Form.Field>
-              <Select
-                style={{
-                  maxHeight: 40,
-                  marginTop: 17,
-                  marginRight: 7,
-                }}
+              <TargetSelectComponent
                 value={menu.target || "_self"}
                 onChange={(_e, { value }) => {
                   const menuId = menu.id;
@@ -308,28 +311,6 @@ const MobileMenuSortableItem = SortableElement(
                     })
                   );
                 }}
-                options={[
-                  {
-                    key: "_self",
-                    value: "_self",
-                    text: "_self",
-                  },
-                  {
-                    key: "_blank",
-                    value: "_blank",
-                    text: "_blank",
-                  },
-                  {
-                    key: "_parent",
-                    value: "_parent",
-                    text: "_parent",
-                  },
-                  {
-                    key: "_top",
-                    value: "_top",
-                    text: "_top",
-                  },
-                ]}
               />
             </Form.Group>
             <Form.Field>
@@ -698,7 +679,6 @@ export default function AdminMenuPage({ page }) {
           >
             <Accordion.Title
               active={desktopMenuAccordion.rootAccordionVisible}
-              index={0}
               onClick={() =>
                 setDesktopMenuAccordion({
                   ...desktopMenuAccordion,
@@ -798,13 +778,7 @@ export default function AdminMenuPage({ page }) {
                           }
                         />
                       </Form.Field>
-                      <Select
-                        style={{
-                          maxHeight: 40,
-                          marginTop: 17,
-                          marginRight: 7,
-                        }}
-                        placeholder="Target"
+                      <TargetSelectComponent
                         value={desktopMenuAccordion.addMenuForm.fields.target}
                         onChange={(e, { value }) =>
                           setDesktopMenuAccordion(
@@ -813,28 +787,6 @@ export default function AdminMenuPage({ page }) {
                             })
                           )
                         }
-                        options={[
-                          {
-                            key: "_self",
-                            value: "_self",
-                            text: "_self",
-                          },
-                          {
-                            key: "_blank",
-                            value: "_blank",
-                            text: "_blank",
-                          },
-                          {
-                            key: "_parent",
-                            value: "_parent",
-                            text: "_parent",
-                          },
-                          {
-                            key: "_top",
-                            value: "_top",
-                            text: "_top",
-                          },
-                        ]}
                       />
                     </Form.Group>
                     <Form.Field>
@@ -990,12 +942,7 @@ export default function AdminMenuPage({ page }) {
                           }}
                         />
                       </Form.Field>
-                      <Select
-                        style={{
-                          maxHeight: 40,
-                          marginTop: 17,
-                          marginRight: 7,
-                        }}
+                      <TargetSelectComponent
                         value={mobileMenuAccordion.addMenuForm.fields.target}
                         onChange={(e, { value }) => {
                           setMobileMenuAccordion(
@@ -1004,28 +951,6 @@ export default function AdminMenuPage({ page }) {
                             })
                           );
                         }}
-                        options={[
-                          {
-                            key: "_self",
-                            value: "_self",
-                            text: "_self",
-                          },
-                          {
-                            key: "_blank",
-                            value: "_blank",
-                            text: "_blank",
-                          },
-                          {
-                            key: "_parent",
-                            value: "_parent",
-                            text: "_parent",
-                          },
-                          {
-                            key: "_top",
-                            value: "_top",
-                            text: "_top",
-                          },
-                        ]}
                       />
                     </Form.Group>
                     <Form.Field>

@@ -74,6 +74,7 @@ body .main-wrapper.admin-layout {
       .menu-accordion {
         margin: 40px auto;
         .accordion {
+          overflow: hidden;
           .form,
           .button {
             font-size: 14px;
@@ -128,6 +129,14 @@ body .main-wrapper.admin-layout {
               }
             }
           }
+        }
+      }
+    }
+    .admin-pages-page {
+      .pages-accordion {
+        margin: 40px auto;
+        form {
+          font-size: 14px;
         }
       }
     }

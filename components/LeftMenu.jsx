@@ -116,7 +116,7 @@ export default function LeftMenu(props) {
           <span className="main-menu-text-wrapper"></span>
         </a>
       </li>
-      {data.desktopMenu !== undefined && data.desktopMenu.length > 0 ? (
+      {data && data.desktopMenu && data.desktopMenu.length > 0 ? (
         [...data.desktopMenu]
           .sort((a, b) => a.sort_order - b.sort_order)
           .map((menu) => {

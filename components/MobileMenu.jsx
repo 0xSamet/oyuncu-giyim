@@ -43,18 +43,20 @@ export default function MobileMenu() {
   return (
     <div className="mobile-menu-wrapper">
       <ul className="mobile-menu">
-        {"mobileMenu" in data && data.mobileMenu.length > 0 ? (
-          data.mobileMenu.map((menu) => {
-            return (
-              <MobileMenuListItem
-                key={menu.id}
-                index={menu.id}
-                text={menu.name}
-                link={menu.href || undefined}
-                icon={menu.icon_url}
-              />
-            );
-          })
+        {data && data.mobileMenu && data.mobileMenu.length > 0 ? (
+          [...data.mobileMenu]
+            .sort((a, b) => a.sort_order - b.sort_order)
+            .map((menu) => {
+              return (
+                <MobileMenuListItem
+                  key={menu.id}
+                  index={menu.id}
+                  text={menu.name}
+                  link={menu.href || undefined}
+                  icon={menu.icon_url}
+                />
+              );
+            })
         ) : (
           <li></li>
         )}

@@ -11,6 +11,7 @@ exports.seed = async function (knex) {
   await knex(tableNames.page).del();
   await knex(tableNames.desktop_menu).del();
   await knex(tableNames.mobile_menu).del();
+  await knex(tableNames.category).del();
 
   await knex(tableNames.desktop_menu).insert([
     {
@@ -127,6 +128,25 @@ exports.seed = async function (knex) {
       meta_description: "Oyuncu Giyim İletişim",
       meta_keyword: "sweatshirt, valorant sweat",
       slug: "/iletisim",
+    },
+  ]);
+
+  await knex(tableNames.category).insert([
+    {
+      name: "Sweatshirt",
+    },
+    {
+      name: "T-shirt",
+    },
+  ]);
+  await knex(tableNames.category).insert([
+    {
+      name: "Baskılı SweatShirt",
+      parent_id: 1,
+    },
+    {
+      name: "Baskılı T-shirt",
+      parent_id: 2,
     },
   ]);
 };

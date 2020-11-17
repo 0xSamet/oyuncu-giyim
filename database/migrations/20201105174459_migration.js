@@ -5,7 +5,7 @@ const { tableNames } = require("../tableNames");
  * @param {Knex} knex
  */
 exports.up = async function (knex) {
-  return await knex.schema
+  await knex.schema
     .createTable(tableNames.desktop_menu, (table) => {
       table.increments();
       table.string("name").notNullable();
@@ -40,6 +40,11 @@ exports.up = async function (knex) {
       table.string("meta_description", 500);
       table.string("meta_keyword", 500);
       table.string("slug").notNullable();
+    })
+    .createTable(tableNames.category, (table) => {
+      table.increments();
+      table.string("name").notNullable();
+      table.integer("parent_id").references("id").inTable(tableNames.category);
     });
 };
 
@@ -50,5 +55,6 @@ exports.down = async function (knex) {
   return await knex.schema
     .dropTable(tableNames.page)
     .dropTable(tableNames.desktop_menu)
-    .dropTable(tableNames.mobile_menu);
+    .dropTable(tableNames.mobile_menu)
+    .dropTable(tableNames.category);
 };

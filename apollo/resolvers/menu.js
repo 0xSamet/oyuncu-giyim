@@ -67,13 +67,18 @@ export default {
       }
     },
     deleteDesktopMenu: async (_parent, { input }, { db }, _info) => {
-      await DesktopMenu.query().deleteById(input.id);
-
-      const result = {
-        success: true,
-      };
-      db.destroy();
-      return result;
+      try {
+        await DesktopMenu.query().deleteById(input.id);
+        db.destroy();
+        return {
+          success: true,
+        };
+      } catch (err) {
+        console.log(err);
+        return {
+          success: false,
+        };
+      }
     },
     sortDesktopMenu: async (_parent, { input }, { db }, _info) => {
       try {
@@ -136,6 +141,7 @@ export default {
         });
 
         db.destroy();
+
         return {
           success: true,
         };
@@ -147,13 +153,18 @@ export default {
       }
     },
     deleteMobileMenu: async (_parent, { input }, { db }, _info) => {
-      await MobileMenu.query().deleteById(input.id);
-
-      const result = {
-        success: true,
-      };
-      db.destroy();
-      return result;
+      try {
+        await MobileMenu.query().deleteById(input.id);
+        db.destroy();
+        return {
+          success: true,
+        };
+      } catch (err) {
+        console.log(err);
+        return {
+          success: false,
+        };
+      }
     },
     sortMobileMenu: async (_parent, { input }, { db }, _info) => {
       try {
