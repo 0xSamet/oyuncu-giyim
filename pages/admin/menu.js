@@ -14,13 +14,17 @@ import {
 } from "semantic-ui-react";
 import { useEffect, useState } from "react";
 import { useLazyQuery, useMutation } from "@apollo/client";
-import { GET_DESKTOP_MENU, GET_MOBILE_MENU } from "../../apollo/query/menu";
+import { GET_DESKTOP_MENU, GET_MOBILE_MENU } from "../../apollo/gql/query/menu";
 import {
-  UPDATE_DESKTOP_MENU,
   ADD_DESKTOP_MENU,
-  SORT_DESKTOP_MENU,
+  UPDATE_DESKTOP_MENU,
   DELETE_DESKTOP_MENU,
-} from "../../apollo/mutations/menu";
+  SORT_DESKTOP_MENU,
+  ADD_MOBILE_MENU,
+  UPDATE_MOBILE_MENU,
+  DELETE_MOBILE_MENU,
+  SORT_MOBILE_MENU,
+} from "../../apollo/gql/mutations/menu";
 import clsx from "clsx";
 import produce from "immer";
 
@@ -116,7 +120,7 @@ const DesktopMenuSortableItem = SortableElement(
                     })
                   );
                 }}
-                value={menu.target || ""}
+                value={menu.target || "_self"}
                 options={[
                   {
                     key: "_self",
@@ -224,7 +228,16 @@ const DesktopMenuSortableList = SortableContainer(
 );
 
 const MobileMenuSortableItem = SortableElement(
-  ({ menu, isActive, handleMobileMenuClick }) => {
+  ({
+    menu,
+    isActive,
+    handleMobileMenuClick,
+    handleMobileMenuInputChange,
+    mobileMenu,
+    setMobileMenu,
+    handleMobileMenuUpdate,
+    handleMobileMenuDelete,
+  }) => {
     return (
       <div
         className={clsx({
@@ -238,12 +251,30 @@ const MobileMenuSortableItem = SortableElement(
         >
           <DragHandle />
           {menu.name}
+          <span
+            className="delete-icon-wrapper"
+            onClick={(e) => {
+              e.stopPropagation();
+              handleMobileMenuDelete(menu.id);
+            }}
+          >
+            <img src="/icons/cancel.svg" />
+          </span>
         </Accordion.Title>
         <Accordion.Content active={isActive}>
-          <Form>
+          <Form
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleMobileMenuUpdate(menu.id);
+            }}
+          >
             <Form.Field>
               <label>Menü Adı</label>
-              <input placeholder="First Name" />
+              <input
+                name="name"
+                value={menu.name}
+                onChange={(e) => handleMobileMenuInputChange(e, menu.id)}
+              />
             </Form.Field>
             <Form.Group
               widths="equal"
@@ -253,7 +284,11 @@ const MobileMenuSortableItem = SortableElement(
             >
               <Form.Field>
                 <label>Gideceği Link</label>
-                <input defaultValue={menu.href} />
+                <input
+                  name="href"
+                  value={menu.href}
+                  onChange={(e) => handleMobileMenuInputChange(e, menu.id)}
+                />
               </Form.Field>
               <Select
                 style={{
@@ -261,7 +296,18 @@ const MobileMenuSortableItem = SortableElement(
                   marginTop: 17,
                   marginRight: 7,
                 }}
-                placeholder="Target"
+                value={menu.target || "_self"}
+                onChange={(_e, { value }) => {
+                  const menuId = menu.id;
+                  const index = mobileMenu.findIndex(
+                    (menu) => menu.id === menuId
+                  );
+                  setMobileMenu(
+                    produce(mobileMenu, (draft) => {
+                      draft[index]["target"] = value;
+                    })
+                  );
+                }}
                 options={[
                   {
                     key: "_self",
@@ -288,7 +334,11 @@ const MobileMenuSortableItem = SortableElement(
             </Form.Group>
             <Form.Field>
               <label>Icon Url</label>
-              <input defaultValue={menu.icon_url} />
+              <input
+                name="icon_url"
+                value={menu.icon_url}
+                onChange={(e) => handleMobileMenuInputChange(e, menu.id)}
+              />
             </Form.Field>
             <Button primary fluid>
               Kaydet
@@ -301,7 +351,15 @@ const MobileMenuSortableItem = SortableElement(
 );
 
 const MobileMenuSortableList = SortableContainer(
-  ({ mobileMenu, mobileMenuAccordion, handleMobileMenuClick }) => {
+  ({
+    mobileMenu,
+    setMobileMenu,
+    handleMobileMenuUpdate,
+    handleMobileMenuDelete,
+    mobileMenuAccordion,
+    handleMobileMenuClick,
+    handleMobileMenuInputChange,
+  }) => {
     return (
       <div className="desktop-menu-sortable-list">
         {mobileMenu && mobileMenu.length > 0 ? (
@@ -311,9 +369,14 @@ const MobileMenuSortableList = SortableContainer(
                 key={`sortable-item-${menu.id}`}
                 index={i}
                 menu={menu}
+                mobileMenu={mobileMenu}
+                setMobileMenu={setMobileMenu}
                 isActive={mobileMenuAccordion.activeIndex === menu.id}
                 handleMobileMenuClick={handleMobileMenuClick}
+                handleMobileMenuInputChange={handleMobileMenuInputChange}
                 disabled={mobileMenuAccordion.activeIndex === menu.id}
+                handleMobileMenuUpdate={handleMobileMenuUpdate}
+                handleMobileMenuDelete={handleMobileMenuDelete}
               />
             );
           })
@@ -363,35 +426,68 @@ export default function AdminMenuPage({ page }) {
     { data: data1, loading: loading1, error1 },
   ] = useLazyQuery(GET_DESKTOP_MENU, { fetchPolicy: "no-cache" });
   const [
-    getmobileMenu,
+    getMobileMenu,
     { data: data2, loading: loading2, error2 },
   ] = useLazyQuery(GET_MOBILE_MENU, { fetchPolicy: "no-cache" });
 
-  const [desktopMenuUpdateRun] = useMutation(UPDATE_DESKTOP_MENU);
-
   const [addDesktopMenuRun] = useMutation(ADD_DESKTOP_MENU);
+
+  const [updateDesktopMenuRun] = useMutation(UPDATE_DESKTOP_MENU);
 
   const [sortDesktopMenuRun] = useMutation(SORT_DESKTOP_MENU);
 
   const [deleteDesktopMenuRun] = useMutation(DELETE_DESKTOP_MENU);
+
+  const [addMobileMenuRun] = useMutation(ADD_MOBILE_MENU);
+
+  const [updateMobileMenuRun] = useMutation(UPDATE_MOBILE_MENU);
+
+  const [deleteMobileMenuRun] = useMutation(DELETE_MOBILE_MENU);
+
+  const [sortMobileMenuRun] = useMutation(SORT_MOBILE_MENU);
+
+  useEffect(() => {
+    getDesktopMenu();
+    getMobileMenu();
+
+    return () => {
+      setDesktopMenu([]);
+      setMobileMenu([]);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (data1 && data1.desktopMenu && data1.desktopMenu.length > 0) {
+      setDesktopMenu(
+        [...data1.desktopMenu].sort((a, b) => a.sort_order - b.sort_order)
+      );
+    }
+    if (data2 && data2.mobileMenu && data2.mobileMenu.length > 0) {
+      setMobileMenu(
+        [...data2.mobileMenu].sort((a, b) => a.sort_order - b.sort_order)
+      );
+    }
+  }, [data1, data2]);
 
   const handleDesktopMenuUpdate = async (menuId) => {
     const menu = desktopMenu.find((menu) => menu.id == menuId);
     if (!menu) {
       console.log("menü bulunamadı");
     } else {
-      await desktopMenuUpdateRun({
+      await updateDesktopMenuRun({
         variables: {
-          id: menu.id,
-          name: menu.name,
-          href: menu.href,
-          target: menu.target,
-          icon_url: menu.icon_url,
-          sort_order: menu.sort_order,
-          is_divider: menu.is_divider,
+          input: {
+            id: menu.id,
+            name: menu.name,
+            href: menu.href,
+            target: menu.target,
+            icon_url: menu.icon_url,
+            is_divider: menu.is_divider,
+          },
         },
       });
-      //console.log(samet);
+
+      getDesktopMenu();
     }
   };
 
@@ -409,11 +505,13 @@ export default function AdminMenuPage({ page }) {
     } else {
       await addDesktopMenuRun({
         variables: {
-          name,
-          href,
-          target,
-          icon_url,
-          is_divider,
+          input: {
+            name,
+            href,
+            target,
+            icon_url,
+            is_divider,
+          },
         },
       });
 
@@ -452,15 +550,7 @@ export default function AdminMenuPage({ page }) {
     );
   };
 
-  const handleMobileMenuClick = (index) => {
-    const newIndex = mobileMenuAccordion.activeIndex === index ? -1 : index;
-    return setMobileMenuAccordion({
-      ...mobileMenuAccordion,
-      activeIndex: newIndex,
-    });
-  };
-
-  const desktopMenuOnSortEnd = ({ oldIndex, newIndex }) => {
+  const desktopMenuOnSortEnd = async ({ oldIndex, newIndex }) => {
     const reSortedMenu = arrayMove(desktopMenu, oldIndex, newIndex);
     setDesktopMenu(reSortedMenu);
 
@@ -471,43 +561,110 @@ export default function AdminMenuPage({ page }) {
       };
     });
 
-    sortDesktopMenuRun({
+    await sortDesktopMenuRun({
       variables: {
         input: requestArr,
       },
     });
+
+    getMobileMenu();
   };
 
-  const mobileMenuOnSortStart = ({ node }) => {
-    console.log(node);
+  const handleMobileMenuClick = (index) => {
+    const newIndex = mobileMenuAccordion.activeIndex === index ? -1 : index;
+    return setMobileMenuAccordion({
+      ...mobileMenuAccordion,
+      activeIndex: newIndex,
+    });
   };
 
-  const mobileMenuOnSortEnd = ({ oldIndex, newIndex }) => {
-    setMobileMenu(arrayMove(mobileMenu, oldIndex, newIndex));
-  };
+  const handleAddMobileMenu = async () => {
+    const {
+      name,
+      href,
+      target,
+      icon_url,
+    } = mobileMenuAccordion.addMenuForm.fields;
 
-  useEffect(() => {
-    getDesktopMenu();
-    getmobileMenu();
+    if (name === "" || href === "" || icon_url === "") {
+      console.log("Tüm Alanları Doldurunuz");
+    } else {
+      await addMobileMenuRun({
+        variables: {
+          input: {
+            name,
+            href,
+            target,
+            icon_url,
+          },
+        },
+      });
 
-    /*return () => {
-      setDesktopMenu([]);
-      setMobileMenu([]);
-    };*/
-  }, []);
-
-  useEffect(() => {
-    if (data1 && data1.desktopMenu && data1.desktopMenu.length > 0) {
-      setDesktopMenu(
-        [...data1.desktopMenu].sort((a, b) => a.sort_order - b.sort_order)
-      );
+      getMobileMenu();
     }
-    if (data2 && data2.mobileMenu && data2.mobileMenu.length > 0) {
-      setMobileMenu(
-        [...data2.mobileMenu].sort((a, b) => a.sort_order - b.sort_order)
-      );
+  };
+
+  const handleMobileMenuUpdate = async (menuId) => {
+    const menu = mobileMenu.find((menu) => menu.id == menuId);
+    if (!menu) {
+      console.log("menü bulunamadı");
+    } else {
+      await updateMobileMenuRun({
+        variables: {
+          input: {
+            id: menu.id,
+            name: menu.name,
+            href: menu.href,
+            target: menu.target,
+            icon_url: menu.icon_url,
+          },
+        },
+      });
+
+      getMobileMenu();
     }
-  }, [data1, data2]);
+  };
+
+  const handleMobileMenuDelete = async (menuId) => {
+    await deleteMobileMenuRun({
+      variables: {
+        input: {
+          id: menuId,
+        },
+      },
+    });
+
+    getMobileMenu();
+  };
+
+  const mobileMenuOnSortEnd = async ({ oldIndex, newIndex }) => {
+    const reSortedMenu = arrayMove(mobileMenu, oldIndex, newIndex);
+    setMobileMenu(reSortedMenu);
+    const requestArr = reSortedMenu.map((menu, i) => {
+      return {
+        id: menu.id,
+        sort_order: i,
+      };
+    });
+    await sortMobileMenuRun({
+      variables: {
+        input: requestArr,
+      },
+    });
+
+    getMobileMenu();
+  };
+
+  const handleMobileMenuInputChange = (e, menuId) => {
+    //setDesktopMenu(...desktopMenu);
+    const index = mobileMenu.findIndex((menu) => menu.id == menuId);
+
+    setMobileMenu(
+      produce(mobileMenu, (draft) => {
+        draft[index][e.target.name] = e.target.value;
+      })
+    );
+  };
 
   if (error1 || error2) {
     console.log(error1 || error2);
@@ -755,9 +912,12 @@ export default function AdminMenuPage({ page }) {
                 <MobileMenuSortableList
                   useDragHandle
                   mobileMenu={mobileMenu}
+                  setMobileMenu={setMobileMenu}
                   mobileMenuAccordion={mobileMenuAccordion}
                   handleMobileMenuClick={handleMobileMenuClick}
-                  onSortStart={mobileMenuOnSortStart}
+                  handleMobileMenuUpdate={handleMobileMenuUpdate}
+                  handleMobileMenuDelete={handleMobileMenuDelete}
+                  handleMobileMenuInputChange={handleMobileMenuInputChange}
                   onSortEnd={mobileMenuOnSortEnd}
                   helperContainer={() => {
                     if (typeof window === "undefined") {
@@ -789,10 +949,26 @@ export default function AdminMenuPage({ page }) {
                 <Accordion.Content
                   active={mobileMenuAccordion.addMenuForm.visible}
                 >
-                  <Form style={{ marginTop: 15 }}>
+                  <Form
+                    style={{ marginTop: 15 }}
+                    onSubmit={(e) => {
+                      e.preventDefault();
+                      handleAddMobileMenu();
+                    }}
+                  >
                     <Form.Field>
                       <label>Menü Adı</label>
-                      <input />
+                      <input
+                        type="text"
+                        value={mobileMenuAccordion.addMenuForm.fields.name}
+                        onChange={(e) => {
+                          setMobileMenuAccordion(
+                            produce(mobileMenuAccordion, (draft) => {
+                              draft.addMenuForm.fields.name = e.target.value;
+                            })
+                          );
+                        }}
+                      />
                     </Form.Field>
                     <Form.Group
                       widths="equal"
@@ -802,7 +978,17 @@ export default function AdminMenuPage({ page }) {
                     >
                       <Form.Field>
                         <label>Gideceği Link</label>
-                        <input />
+                        <input
+                          type="text"
+                          value={mobileMenuAccordion.addMenuForm.fields.href}
+                          onChange={(e) => {
+                            setMobileMenuAccordion(
+                              produce(mobileMenuAccordion, (draft) => {
+                                draft.addMenuForm.fields.href = e.target.value;
+                              })
+                            );
+                          }}
+                        />
                       </Form.Field>
                       <Select
                         style={{
@@ -810,7 +996,14 @@ export default function AdminMenuPage({ page }) {
                           marginTop: 17,
                           marginRight: 7,
                         }}
-                        placeholder="Target"
+                        value={mobileMenuAccordion.addMenuForm.fields.target}
+                        onChange={(e, { value }) => {
+                          setMobileMenuAccordion(
+                            produce(mobileMenuAccordion, (draft) => {
+                              draft.addMenuForm.fields.target = value;
+                            })
+                          );
+                        }}
                         options={[
                           {
                             key: "_self",
@@ -837,7 +1030,18 @@ export default function AdminMenuPage({ page }) {
                     </Form.Group>
                     <Form.Field>
                       <label>Icon Url</label>
-                      <input />
+                      <input
+                        type="text"
+                        value={mobileMenuAccordion.addMenuForm.fields.icon_url}
+                        onChange={(e) => {
+                          setMobileMenuAccordion(
+                            produce(mobileMenuAccordion, (draft) => {
+                              draft.addMenuForm.fields.icon_url =
+                                e.target.value;
+                            })
+                          );
+                        }}
+                      />
                     </Form.Field>
                     <Button primary fluid>
                       Ekle

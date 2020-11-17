@@ -2,7 +2,7 @@ import clsx from "clsx";
 import Link from "next/link";
 import { useSelector } from "react-redux";
 import { useQuery } from "@apollo/client";
-import { GET_MOBILE_MENU } from "../apollo/query/menu";
+import { GET_MOBILE_MENU } from "../apollo/gql/query/menu";
 
 function MobileMenuListItem({ index = -4, text, link = "#", icon }) {
   const {

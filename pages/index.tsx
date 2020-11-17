@@ -12,8 +12,8 @@ import SEO from "../components/Seo";
 
 import { ApolloClient, NormalizedCacheObject, useQuery } from "@apollo/client";
 import { initializeApollo } from "../apollo/client";
-import { GET_DESKTOP_MENU, GET_MOBILE_MENU } from "../apollo/query/menu";
-import { GET_PAGE } from "../apollo/query/page";
+import { GET_DESKTOP_MENU, GET_MOBILE_MENU } from "../apollo/gql/query/menu";
+import { GET_PAGE } from "../apollo/gql/query/page";
 
 import SwiperCore, { Navigation, Autoplay, Pagination } from "swiper";
 import { QueryBuilder } from "knex";

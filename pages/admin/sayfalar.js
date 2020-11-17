@@ -12,7 +12,7 @@ import {
 } from "semantic-ui-react";
 import { useState } from "react";
 import { useQuery } from "@apollo/client";
-import { GET_PAGES } from "../../apollo/query/page";
+import { GET_PAGES } from "../../apollo/gql/query/page";
 
 export default function AdminDashboard({ page }) {
   const [activeIndex, setActiveIndex] = useState(0);

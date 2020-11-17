@@ -7,8 +7,8 @@ import {
 } from "../store/reducers/menu";
 import { wrapper } from "../store";
 import { handleIconMode, handleMenuIndex } from "../utils";
-import { GET_PAGE } from "../apollo/query/page";
-import { GET_DESKTOP_MENU, GET_MOBILE_MENU } from "../apollo/query/menu";
+import { GET_PAGE } from "../apollo/gql/query/page";
+import { GET_DESKTOP_MENU, GET_MOBILE_MENU } from "../apollo/gql/query/menu";
 import { ApolloClient, NormalizedCacheObject, useQuery } from "@apollo/client";
 import { initializeApollo } from "../apollo/client";
 

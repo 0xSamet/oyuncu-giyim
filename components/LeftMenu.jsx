@@ -7,7 +7,7 @@ import { toggleIconMode } from "../store/reducers/theme";
 import Cookie from "js-cookie";
 import { useRouter } from "next/router";
 import { useQuery } from "@apollo/client";
-import { GET_DESKTOP_MENU } from "../apollo/query/menu";
+import { GET_DESKTOP_MENU } from "../apollo/gql/query/menu";
 
 function LeftMenuListItem({
   index = -4,
@@ -16,6 +16,7 @@ function LeftMenuListItem({
   icon,
   submenu = [],
   divider,
+  target,
 }) {
   const {
     menu: {
@@ -23,8 +24,8 @@ function LeftMenuListItem({
     },
   } = useSelector((state) => state);
 
-  const [toggle, setToggle] = useState(false);
-  const props = useSpring({ height: toggle ? submenu.length * 45 : 0 });
+  //const [toggle, setToggle] = useState(false);
+  //const props = useSpring({ height: toggle ? submenu.length * 45 : 0 });
 
   if (divider) {
     return <li className="divider"></li>;
@@ -37,7 +38,7 @@ function LeftMenuListItem({
       })}
     >
       <Link href={link}>
-        <a onClick={() => setToggle(!toggle)}>
+        <a target={target}>
           <span className="main-menu-icon-wrapper">
             <img src={icon} />
           </span>
@@ -134,6 +135,7 @@ export default function LeftMenu(props) {
                   index={menu.id}
                   text={menu.name}
                   link={menu.href || undefined}
+                  target={menu.target}
                   icon={menu.icon_url}
                 />
               );
