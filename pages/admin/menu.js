@@ -27,6 +27,7 @@ import {
 } from "../../apollo/gql/mutations/menu";
 import clsx from "clsx";
 import produce from "immer";
+import { useApollo } from "../../apollo/client";
 
 import {
   SortableContainer,
@@ -401,15 +402,24 @@ export default function AdminMenuPage({ page }) {
       },
     },
   });
+  const apollo = useApollo();
+
+  //console.log(apollo);
 
   const [
     getDesktopMenu,
     { data: data1, loading: loading1, error1 },
-  ] = useLazyQuery(GET_DESKTOP_MENU, { fetchPolicy: "no-cache" });
+  ] = useLazyQuery(GET_DESKTOP_MENU, {
+    fetchPolicy: "no-cache",
+    client: apollo,
+  });
   const [
     getMobileMenu,
     { data: data2, loading: loading2, error2 },
-  ] = useLazyQuery(GET_MOBILE_MENU, { fetchPolicy: "no-cache" });
+  ] = useLazyQuery(GET_MOBILE_MENU, {
+    fetchPolicy: "no-cache",
+    client: apollo,
+  });
 
   const [addDesktopMenuRun] = useMutation(ADD_DESKTOP_MENU);
 
