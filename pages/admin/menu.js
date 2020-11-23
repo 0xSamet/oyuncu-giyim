@@ -27,7 +27,7 @@ import {
 } from "../../apollo/gql/mutations/menu";
 import clsx from "clsx";
 import produce from "immer";
-import { useApollo } from "../../apollo/client";
+import { initializeApollo } from "../../apollo/client";
 
 import {
   SortableContainer,
@@ -402,7 +402,7 @@ export default function AdminMenuPage({ page }) {
       },
     },
   });
-  const apollo = useApollo();
+  const apollo = initializeApollo();
 
   //console.log(apollo);
 
