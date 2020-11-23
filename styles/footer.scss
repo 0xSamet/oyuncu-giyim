@@ -5,7 +5,7 @@ body footer {
   padding: 20px 20px;
   display: flex;
   align-items: center;
-  z-index: 4;
+  z-index: 5;
   position: relative;
   @media #{$br767} {
     flex-direction: column;

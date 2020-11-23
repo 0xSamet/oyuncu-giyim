@@ -16,7 +16,199 @@ export default function DynamicPage({ notFound, page }) {
 
   return (
     <SEO seo={page} >
-      <h1>Dynamic</h1>
+      <section className="listing-page">
+        <div className="subcategories-wrapper">
+          <div className="subcategory" >
+            Valorant SweatShirt
+          </div>
+        </div>
+        <div className="product-filter-wrapper">
+          <ul>
+            <li>Beden Seç</li>
+          </ul>
+        </div>
+        <div className="product-listing-wrapper">
+          <div className="product">
+            <div className="product-image">
+              <img src="/products/valorant-sweat-1.jpg" />
+            </div>
+            <div className="product-info">
+              <h3 className="product-name" >Valorant Sweat - 1</h3>
+              <div className="product-price-wrapper" >
+                <span className="product-price" >
+                  99.90&#8378;
+                  <span className="old-price" >
+                    129.90&#8378;
+                  </span>
+                </span>
+              </div>
+            </div>
+          </div>
+          <div className="product">
+            <div className="product-image">
+              <img src="/products/valorant-sweat-1.jpg" />
+            </div>
+            <div className="product-info">
+              <h3 className="product-name" >Valorant Sweat - 1</h3>
+                            <div className="product-price-wrapper" >
+                <span className="product-price" >
+                  99.90&#8378;
+                  <span className="old-price" >
+                    129.90&#8378;
+                  </span>
+                </span>
+              </div>
+            </div>
+          </div>
+          <div className="product">
+            <div className="product-image">
+              <img src="/products/valorant-sweat-1.jpg" />
+            </div>
+            <div className="product-info">
+              <h3 className="product-name" >Valorant Sweat - 1</h3>
+                            <div className="product-price-wrapper" >
+                <span className="product-price" >
+                  99.90&#8378;
+                  <span className="old-price" >
+                    129.90&#8378;
+                  </span>
+                </span>
+              </div>
+            </div>
+          </div>
+          <div className="product">
+            <div className="product-image">
+              <img src="/products/valorant-sweat-1.jpg" />
+            </div>
+            <div className="product-info">
+              <h3 className="product-name" >Valorant Sweat - 1</h3>
+                            <div className="product-price-wrapper" >
+                <span className="product-price" >
+                  99.90&#8378;
+                  <span className="old-price" >
+                    129.90&#8378;
+                  </span>
+                </span>
+              </div>
+            </div>
+          </div>
+          <div className="product">
+            <div className="product-image">
+              <img src="/products/valorant-sweat-1.jpg" />
+            </div>
+            <div className="product-info">
+              <h3 className="product-name" >Valorant Sweat - 1</h3>
+                            <div className="product-price-wrapper" >
+                <span className="product-price" >
+                  99.90&#8378;
+                  <span className="old-price" >
+                    129.90&#8378;
+                  </span>
+                </span>
+              </div>
+            </div>
+          </div>
+          <div className="product">
+            <div className="product-image">
+              <img src="/products/valorant-sweat-1.jpg" />
+            </div>
+            <div className="product-info">
+              <h3 className="product-name" >Valorant Sweat - 1</h3>
+                            <div className="product-price-wrapper" >
+                <span className="product-price" >
+                  99.90&#8378;
+                  <span className="old-price" >
+                    129.90&#8378;
+                  </span>
+                </span>
+              </div>
+            </div>
+          </div>
+          <div className="product">
+            <div className="product-image">
+              <img src="/products/valorant-sweat-1.jpg" />
+            </div>
+            <div className="product-info">
+              <h3 className="product-name" >Valorant Sweat - 1</h3>
+                            <div className="product-price-wrapper" >
+                <span className="product-price" >
+                  99.90&#8378;
+                  <span className="old-price" >
+                    129.90&#8378;
+                  </span>
+                </span>
+              </div>
+            </div>
+          </div>
+          <div className="product">
+            <div className="product-image">
+              <img src="/products/valorant-sweat-1.jpg" />
+            </div>
+            <div className="product-info">
+              <h3 className="product-name" >Valorant Sweat - 1</h3>
+                            <div className="product-price-wrapper" >
+                <span className="product-price" >
+                  99.90&#8378;
+                  <span className="old-price" >
+                    129.90&#8378;
+                  </span>
+                </span>
+              </div>
+            </div>
+          </div>
+          <div className="product">
+            <div className="product-image">
+              <img src="/products/valorant-sweat-1.jpg" />
+            </div>
+            <div className="product-info">
+              <h3 className="product-name" >Valorant Sweat - 1</h3>
+                            <div className="product-price-wrapper" >
+                <span className="product-price" >
+                  99.90&#8378;
+                  <span className="old-price" >
+                    129.90&#8378;
+                  </span>
+                </span>
+              </div>
+            </div>
+          </div>
+          <div className="product">
+            <div className="product-image">
+              <img src="/products/valorant-sweat-1.jpg" />
+            </div>
+            <div className="product-info">
+              <h3 className="product-name" >Valorant Sweat - 1</h3>
+                            <div className="product-price-wrapper" >
+                <span className="product-price" >
+                  99.90&#8378;
+                  <span className="old-price" >
+                    129.90&#8378;
+                  </span>
+                </span>
+              </div>
+            </div>
+          </div>
+                    <div className="product">
+            <div className="product-image">
+              <img src="/products/valorant-sweat-1.jpg" />
+            </div>
+            <div className="product-info">
+              <h3 className="product-name" >Valorant Sweat - 1</h3>
+                            <div className="product-price-wrapper" >
+                <span className="product-price" >
+                  99.90&#8378;
+                  <span className="old-price" >
+                    129.90&#8378;
+                  </span>
+                </span>
+              </div>
+            </div>
+          </div>
+          <div className="product">
+
+          </div>
+        </div>
+      </section>
     </SEO>
   );
 }

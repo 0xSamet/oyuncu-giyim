@@ -695,6 +695,7 @@ export default function AdminMenuPage({ page }) {
               <Accordion styled>
                 <DesktopMenuSortableList
                   useDragHandle
+                  lockAxis="y"
                   desktopMenu={desktopMenu}
                   setDesktopMenu={setDesktopMenu}
                   desktopMenuAccordion={desktopMenuAccordion}
@@ -863,6 +864,7 @@ export default function AdminMenuPage({ page }) {
               <Accordion styled>
                 <MobileMenuSortableList
                   useDragHandle
+                  lockAxis="y"
                   mobileMenu={mobileMenu}
                   setMobileMenu={setMobileMenu}
                   mobileMenuAccordion={mobileMenuAccordion}
