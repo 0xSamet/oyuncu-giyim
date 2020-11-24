@@ -402,9 +402,10 @@ export default function AdminMenuPage({ page }) {
       },
     },
   });
+
   const apollo = initializeApollo();
 
-  //console.log(apollo);
+  console.log(apollo);
 
   const [
     getDesktopMenu,
