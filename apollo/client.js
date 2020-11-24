@@ -4,17 +4,17 @@ import { ApolloClient, InMemoryCache } from "@apollo/client";
 let apolloClient;
 
 function createIsomorphLink() {
-  if (typeof window === "undefined") {
+  /*if (typeof window === "undefined") {
     const { SchemaLink } = require("@apollo/client/link/schema");
     const { schema } = require("./schema");
     return new SchemaLink({ schema });
   } else {
     const { HttpLink } = require("@apollo/client/link/http");
     return new HttpLink({
-      uri: "/api",
+      uri: "/api/v1",
       credentials: "same-origin",
     });
-    /*const { HttpLink } = require("@apollo/client/link/http");
+    const { HttpLink } = require("@apollo/client/link/http");
     const devolopmentApiUrl = "http://localhost:3000/api";
     return new HttpLink({
       uri:
@@ -22,8 +22,14 @@ function createIsomorphLink() {
           ? devolopmentApiUrl
           : process.env.API_URL,
       credentials: "same-origin",
-    });*/
-  }
+    });
+  }*/
+
+  const { HttpLink } = require("@apollo/client/link/http");
+  return new HttpLink({
+    uri: "/api/v1",
+    credentials: "same-origin",
+  });
 }
 
 function createApolloClient() {

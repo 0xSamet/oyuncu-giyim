@@ -1,9 +1,9 @@
 import knex from "knex";
-import dbConfig from "../../knexfile";
+import dbConfig from "../../../knexfile";
 const { Model } = require("objection");
 
 import { ApolloServer } from "apollo-server-micro";
-import { schema } from "../../apollo/schema";
+import { schema } from "../../../apollo/schema";
 
 const apolloServer = new ApolloServer({
   schema,
@@ -26,4 +26,4 @@ export const config = {
   },
 };
 
-export default apolloServer.createHandler({ path: "/api" });
+export default apolloServer.createHandler({ path: "/api/v1" });
