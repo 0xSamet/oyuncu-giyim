@@ -14,16 +14,16 @@ function createIsomorphLink() {
       uri: "/api",
       credentials: "same-origin",
     });
+    /*const { HttpLink } = require("@apollo/client/link/http");
+    const devolopmentApiUrl = "http://localhost:3000/api";
+    return new HttpLink({
+      uri:
+        process.env.NODE_ENV !== "production"
+          ? devolopmentApiUrl
+          : process.env.API_URL,
+      credentials: "same-origin",
+    });*/
   }
-  /*const { HttpLink } = require("@apollo/client/link/http");
-  const devolopmentApiUrl = "http://localhost:3000/api";
-  return new HttpLink({
-    uri:
-      process.env.NODE_ENV !== "production"
-        ? devolopmentApiUrl
-        : process.env.API_URL,
-    credentials: "same-origin",
-  });*/
 }
 
 function createApolloClient() {
@@ -39,8 +39,16 @@ export function initializeApollo(initialState = null) {
 
   // If your page has Next.js data fetching methods that use Apollo Client, the initial state
   // gets hydrated here
-  if (initialState) {
+  /*if (initialState) {
     _apolloClient.cache.restore(initialState);
+    
+  }*/
+  if (initialState) {
+    const existingCache = _apolloClient.extract();
+    _apolloClient.cache.restore({
+      ...existingCache,
+      ...initialState,
+    });
   }
   // For SSG and SSR always create a new Apollo Client
   if (typeof window === "undefined") return _apolloClient;
