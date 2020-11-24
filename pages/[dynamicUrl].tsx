@@ -22,10 +22,13 @@ export default function DynamicPage({ notFound, page }) {
             Valorant SweatShirt
           </div>
         </div>
+        <div className="product-filter-title-wrapper">
+          <h3>Filtrele</h3>
+        </div>
         <div className="product-filter-wrapper">
-          <ul>
-            <li className="filter" >
-              <span className="filter-title">
+          <ul className="filter" >
+            <li className="filter-el" >
+              <span className="filter-el-title">
                 Beden Seç
                  <img className="filter-down-icon" src="/icons/arrow.svg" />
               </span>
@@ -37,8 +40,8 @@ export default function DynamicPage({ notFound, page }) {
                 </ul>
               </span>
             </li>
-            <li className="filter" >
-              <span className="filter-title">
+            <li className="filter-el" >
+              <span className="filter-el-title">
                 Cinsiyet Seç
                  <img className="filter-down-icon" src="/icons/arrow.svg" />
               </span>
@@ -46,8 +49,8 @@ export default function DynamicPage({ notFound, page }) {
                 
               </span>
             </li>
-            <li className="filter" >
-              <span className="filter-title">
+            <li className="filter-el" >
+              <span className="filter-el-title">
                 Fiyat Seç
                  <img className="filter-down-icon" src="/icons/arrow.svg" />
               </span>

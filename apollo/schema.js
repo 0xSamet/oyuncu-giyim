@@ -7,8 +7,9 @@ import categoryTypes from "./types/category";
 
 import menuResolver from "./resolvers/menu";
 import pageResolver from "./resolvers/page";
+import categoryResolver from "./resolvers/category";
 
-const resolvers = [menuResolver, pageResolver];
+const resolvers = [menuResolver, pageResolver, categoryResolver];
 const typeDefs = [menuTypes, pageTypes, categoryTypes];
 
 export const schema = makeExecutableSchema({

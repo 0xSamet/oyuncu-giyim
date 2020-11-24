@@ -132,6 +132,12 @@ body .main-wrapper.admin-layout {
         }
       }
     }
+    .admin-categories-page {
+      .categories-table {
+        max-width: 90%;
+        margin: 40px auto;
+      }
+    }
     .admin-pages-page {
       .pages-accordion {
         margin: 40px auto;

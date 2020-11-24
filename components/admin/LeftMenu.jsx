@@ -3,22 +3,6 @@ import clsx from "clsx";
 import Link from "next/link";
 import { useDispatch, useSelector } from "react-redux";
 
-import DashboardIcon from "../../public/icons/admin/dashboard.svg";
-import OrdersIcon from "../../public/icons/admin/orders.svg";
-import CustomersIcon from "../../public/icons/admin/customers.svg";
-import HamburgerMenuIcon from "../../public/icons/admin/hamburger.svg";
-import PagesIcon from "../../public/icons/admin/pages.svg";
-import SettingsIcon from "../../public/icons/admin/settings.svg";
-import SweatIcon from "../../public/icons/sweat.svg";
-
-import HomeIcon from "../../public/icons/home.svg";
-import ShirtIcon from "../../public/icons/tshirt.svg";
-import ArrowIcon from "../../public/icons/arrow.svg";
-import PaperPlaneIcon from "../../public/icons/paper-plane.svg";
-import InstagramIcon from "../../public/icons/instagram.svg";
-import WPIcon from "../../public/icons/whatsapp.svg";
-import CategoriesIcon from "../../public/icons/categories.svg";
-
 import { useSpring, animated } from "react-spring";
 
 import { toggleIconMode } from "../../store/reducers/theme";
@@ -109,35 +93,7 @@ export default function LeftMenu() {
         }}
         icon="/icons/admin/customers.svg"
       />
-      {/* {      <LeftMenuListItem
-        index={3}
-        text="Tüm Kategoriler"
-        link={{
-          href: "/kategoriler",
-          as: "/kategoriler",
-        }}
-        icon={<CategoriesIcon />}
-        submenu={[
-          {
-            index: 20,
-            text: "Alt Kategori 1",
-            link: {
-              href: "/kategoriler/[altKategori]",
-              as: "/kategoriler/t-shirtler",
-            },
-            icon: <ShirtIcon />,
-          },
-          {
-            index: 20,
-            text: "Alt Kategori 2",
-            link: {
-              href: "/kategoriler/[altKategori]",
-              as: "/kategoriler/t-shirtler",
-            },
-            icon: <ShirtIcon />,
-          },
-        ]}
-      />} */}
+      <li className="divider"></li>
       <LeftMenuListItem
         index={4}
         text="Ürünler"
@@ -146,7 +102,6 @@ export default function LeftMenu() {
         }}
         icon="/icons/sweat.svg"
       />
-      <li className="divider"></li>
       <LeftMenuListItem
         index={4}
         text="Kategoriler"
@@ -155,6 +110,15 @@ export default function LeftMenu() {
         }}
         icon="/icons/categories.svg"
       />
+      <LeftMenuListItem
+        index={3}
+        text="Seçenekler"
+        link={{
+          href: "/admin/secenekler",
+        }}
+        icon="/icons/options.svg"
+      />
+      <li className="divider"></li>
       <LeftMenuListItem
         index={4}
         text="Menü"
@@ -171,7 +135,6 @@ export default function LeftMenu() {
         }}
         icon="/icons/admin/pages.svg"
       />
-      <li className="divider"></li>
       <LeftMenuListItem
         index={4}
         text="Ayarlar"

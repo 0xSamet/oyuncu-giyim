@@ -402,8 +402,6 @@ export default function AdminMenuPage({ page, ...a }) {
     },
   });
 
-  console.log(initializeApollo());
-
   const [
     getDesktopMenu,
     { data: data1, loading: loading1, error: error1 },
