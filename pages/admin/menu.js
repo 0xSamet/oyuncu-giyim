@@ -33,6 +33,7 @@ import {
   SortableHandle,
 } from "react-sortable-hoc";
 import arrayMove from "array-move";
+import { initializeApollo } from "../../apollo/client";
 
 const DragHandle = SortableHandle(() => (
   <Icon name="arrows alternate vertical" style={{ marginRight: 12 }} />
@@ -400,6 +401,8 @@ export default function AdminMenuPage({ page, ...a }) {
       },
     },
   });
+
+  console.log(initializeApollo());
 
   const [
     getDesktopMenu,
