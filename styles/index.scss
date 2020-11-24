@@ -2,7 +2,6 @@
 @import "variables";
 
 body {
-  background: #f5f5f5;
   color: #616161;
   * {
     font-family: "Lato", sans-serif;
@@ -624,7 +623,7 @@ main.content-wrapper {
       transition: none;
     }
     .main-menu {
-      background-color: #fff;
+      background-color: #f3f3f3;
       transition: width 0.5s, transform 0.5s;
       position: fixed;
       top: 71.5px;
@@ -690,7 +689,7 @@ main.content-wrapper {
         }
         &.active {
           a {
-            background-color: #f5f5f5;
+            background-color: #fff;
           }
         }
         &.divider {
@@ -744,15 +743,49 @@ main.content-wrapper {
     }
     section.listing-page {
       padding: 60px 0px;
-      .product-filter-wrapper {
-        padding: 15px 10px;
+      .subcategories-wrapper {
         max-width: 1165px;
-        margin: 0 auto;
+        margin: 15px auto;
+      }
+      .product-filter-wrapper {
+        max-width: 1165px;
+        margin: 15px auto;
         position: sticky;
         top: 71.5px;
-        background: #fff;
+        background: #f2f2f2;
         display: flex;
         align-items: center;
+        ul {
+          display: flex;
+          .filter {
+            display: flex;
+            padding: 15px 25px 15px 15px;
+            position: relative;
+            font-size: 15px;
+            cursor: pointer;
+            transition: background 0.3s;
+            &:hover {
+              background: #e6e6e6;
+            }
+            .filter-down-icon {
+              transform: rotate(-90deg) translateX(50%);
+              position: absolute;
+              right: 5px;
+              top: calc(50% + 1px);
+              width: 12px;
+            }
+            .filter-options {
+              position: absolute;
+              bottom: 0;
+              left: 0;
+              transform: translateY(100%);
+              ul {
+                display: flex;
+                flex-direction: column;
+              }
+            }
+          }
+        }
       }
       .product-listing-wrapper {
         display: flex;

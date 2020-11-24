@@ -24,7 +24,37 @@ export default function DynamicPage({ notFound, page }) {
         </div>
         <div className="product-filter-wrapper">
           <ul>
-            <li>Beden Seç</li>
+            <li className="filter" >
+              <span className="filter-title">
+                Beden Seç
+                 <img className="filter-down-icon" src="/icons/arrow.svg" />
+              </span>
+              <span className="filter-options">
+                <ul>
+                  <li>S</li>
+                  <li>M</li>
+                  <li>L</li>
+                </ul>
+              </span>
+            </li>
+            <li className="filter" >
+              <span className="filter-title">
+                Cinsiyet Seç
+                 <img className="filter-down-icon" src="/icons/arrow.svg" />
+              </span>
+              <span className="filter-desc">
+                
+              </span>
+            </li>
+            <li className="filter" >
+              <span className="filter-title">
+                Fiyat Seç
+                 <img className="filter-down-icon" src="/icons/arrow.svg" />
+              </span>
+              <span className="filter-desc">
+                
+              </span>
+            </li>
           </ul>
         </div>
         <div className="product-listing-wrapper">

@@ -1,10 +1,5 @@
 import SEO from "../components/Seo";
-import { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import {
-  changeDesktopMenuIndex,
-  changeMobileMenuIndex,
-} from "../store/reducers/menu";
 import { wrapper } from "../store";
 import { handleIconMode, handleMenuIndex } from "../utils";
 import { GET_PAGE } from "../apollo/gql/query/page";
@@ -25,6 +20,7 @@ export default function Iletisim({ page }) {
 export const getServerSideProps = wrapper.getServerSideProps(
   async ({ store, req, res, ...etc }) => {
     handleIconMode(store, req);
+    
     const apolloClient: ApolloClient<NormalizedCacheObject> = initializeApollo();
 
     await apolloClient.query({

@@ -8,6 +8,7 @@ import { schema } from "../../apollo/schema";
 const apolloServer = new ApolloServer({
   schema,
   context: () => {
+    //console.log("geldi");
     const configToUse = process.env.NODE_ENV || "development";
 
     const db = knex(dbConfig[configToUse]);

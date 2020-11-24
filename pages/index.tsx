@@ -24,9 +24,7 @@ SwiperCore.use([Navigation, Autoplay, Pagination]);
 // <pre>{JSON.stringify(data || {}, null, 2)}</pre>
 
 export default function Home({ page }) {
-  const { data } = useQuery(GET_PAGE);
-
-  //console.log(data);
+    //console.log(data);
   return (
     <SEO seo={page} >
       <section className="homepage">
