@@ -26,8 +26,10 @@ function createIsomorphLink() {
   }*/
 
   const { HttpLink } = require("@apollo/client/link/http");
+  const devolopmentApiUrl = "http://localhost:3000/api/v1";
+  const prodApiUrl = "https://oyuncu-giyim.herokuapp.com/api/v1";
   return new HttpLink({
-    uri: "/api/v1",
+    uri: process.env.NODE_ENV !== "production" ? devolopmentApiUrl : prodApiUrl,
     credentials: "same-origin",
   });
 }
