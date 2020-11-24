@@ -405,6 +405,7 @@ export default function AdminMenuPage({ page }) {
 
   const apollo = initializeApollo();
 
+  console.log(process.env.API_URL);
   console.log(apollo);
 
   const [
