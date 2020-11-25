@@ -43,8 +43,9 @@ exports.up = async function (knex) {
     })
     .createTable(tableNames.category, (table) => {
       table.increments();
-      table.string("name").notNullable();
       table.integer("parent_id").references("id").inTable(tableNames.category);
+      table.string("name").notNullable();
+      table.integer("sort_order");
     });
 };
 

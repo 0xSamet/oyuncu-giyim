@@ -19,14 +19,7 @@ export default {
       db.destroy();
       //console.log(result);
 
-      return [
-        {
-          id: 1,
-          name: "sweat",
-          sort_order: 1,
-          parent_id: 1,
-        },
-      ];
+      return result;
     },
   },
 };

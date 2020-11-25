@@ -186,7 +186,8 @@ const DesktopMenuSortableItem = SortableElement(
               />
             </Form.Field>
 
-            <Button primary fluid>
+            <Button fluid icon size="tiny" color="blue">
+              <Icon name="save" />
               Kaydet
             </Button>
           </Form>
@@ -321,7 +322,8 @@ const MobileMenuSortableItem = SortableElement(
                 onChange={(e) => handleMobileMenuInputChange(e, menu.id)}
               />
             </Form.Field>
-            <Button primary fluid>
+            <Button fluid icon size="tiny" color="blue">
+              <Icon name="save" />
               Kaydet
             </Button>
           </Form>
@@ -832,8 +834,8 @@ export default function AdminMenuPage({ page, ...a }) {
                         }
                       />
                     </Form.Field>
-
-                    <Button primary fluid>
+                    <Button fluid icon size="tiny" color="blue">
+                      <Icon name="add square" />
                       Ekle
                     </Button>
                   </Form>
@@ -974,7 +976,8 @@ export default function AdminMenuPage({ page, ...a }) {
                         }}
                       />
                     </Form.Field>
-                    <Button primary fluid>
+                    <Button fluid icon size="tiny" color="blue">
+                      <Icon name="add square" />
                       Ekle
                     </Button>
                   </Form>
