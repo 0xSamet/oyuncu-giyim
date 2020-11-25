@@ -17,7 +17,7 @@ import { GET_PAGE } from "../apollo/gql/query/page";
 
 import SwiperCore, { Navigation, Autoplay, Pagination } from "swiper";
 import { QueryBuilder } from "knex";
-import { GetServerSideProps, GetServerSidePropsContext, GetStaticProps, GetStaticPropsContext } from "next";
+import { GetServerSideProps, GetServerSidePropsContext, GetStaticProps, GetStaticPropsContext, GetStaticPropsResult } from "next";
 
 SwiperCore.use([Navigation, Autoplay, Pagination]);
 
@@ -37,7 +37,7 @@ export default function Home({ page }) {
   );
 }
 
-export const getStaticProps = wrapper.getStaticProps(
+export const getStaticProps: GetStaticProps = wrapper.getStaticProps(
   async({ store, ...etc }) => {
     //handleIconMode(store, req);
     const apolloClient: ApolloClient<NormalizedCacheObject> = initializeApollo();
@@ -62,6 +62,7 @@ export const getStaticProps = wrapper.getStaticProps(
     }
 
     return {
+      revalidate: 60,
       props: {
         initialApolloState: apolloClient.cache.extract(),
         page: data.page
