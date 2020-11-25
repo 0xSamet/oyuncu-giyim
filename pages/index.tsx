@@ -37,9 +37,9 @@ export default function Home({ page }) {
   );
 }
 
-export const getServerSideProps = wrapper.getServerSideProps(
-  async({ store, req, res, ...etc }) => {
-    handleIconMode(store, req);
+export const getStaticProps = wrapper.getStaticProps(
+  async({ store, ...etc }) => {
+    //handleIconMode(store, req);
     const apolloClient: ApolloClient<NormalizedCacheObject> = initializeApollo();
 
     await apolloClient.query({
