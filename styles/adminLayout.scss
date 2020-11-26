@@ -62,6 +62,9 @@ body .main-wrapper.admin-layout {
     position: relative;
     overflow: hidden;
     z-index: 1;
+    @media #{$br1199} {
+      max-width: none;
+    }
     .page-loader {
       position: absolute;
       top: 71.5px;
@@ -153,8 +156,11 @@ body .main-wrapper.admin-layout {
         .form {
           max-width: 700px;
           margin: 45px auto;
-          background: #f9fafb;
+          background: #e0ecf7;
           padding: 25px;
+        }
+        .category-select * {
+          font-size: 13px;
         }
       }
     }

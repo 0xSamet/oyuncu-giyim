@@ -10,7 +10,7 @@ import {
   Dimmer,
   Loader,
 } from "semantic-ui-react";
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { GET_CATEGORIES } from "../../../apollo/gql/query/category";
 import { useLazyQuery } from "@apollo/client";
 import Link from "next/link";
@@ -35,86 +35,27 @@ export default function AdminDashboard() {
 
   useEffect(() => {
     if (data && data.categories && data.categories.length > 0) {
-      setCategories(getNestedChildren(data.categories));
+      setCategories(data.categories);
     }
   }, [data]);
 
-  function getNestedChildren(arr, parent) {
-    var out = [];
-    for (var i in arr) {
-      if (arr[i].parent_id == parent) {
-        var children = getNestedChildren(arr, arr[i].id);
-
-        if (children.length) {
-          arr[i].children = children;
-        }
-        out.push(arr[i]);
-      }
-    }
-    return out;
-  }
-
-  //console.log();
-
-  const renderChildrens = (category, categoryNames) => {
-    if (category.children) {
-      return category.children.map((c) => {
-        return (
-          <>
-            <Table.Row>
-              <Table.Cell>
-                {categoryNames.map((name) => {
-                  return (
-                    <>
-                      {name}
-                      <Icon name="angle right" style={{ margin: "0 1px" }} />
-                    </>
-                  );
-                })}
-                {c.name}
-              </Table.Cell>
-              <Table.Cell textAlign="center">{c.sort_order}</Table.Cell>
-              <Table.Cell singleLine>
-                <Link href={`/admin/kategoriler/duzenle/${c.id}`}>
-                  <a>
-                    <Button icon labelPosition="left" size="tiny" color="teal">
-                      <Icon name="edit" />
-                      Düzenle
-                    </Button>
-                  </a>
-                </Link>
-
-                <Button icon="trash" size="tiny" color="red"></Button>
-              </Table.Cell>
-            </Table.Row>
-            {renderChildrens(c, [...categoryNames, c.name])}
-          </>
-        );
-      });
-    }
-  };
-
   const renderCategory = (category) => {
     return (
-      <>
-        <Table.Row>
-          <Table.Cell>{category.name}</Table.Cell>
-          <Table.Cell textAlign="center">{category.sort_order}</Table.Cell>
-          <Table.Cell singleLine>
-            <Link href={`/admin/kategoriler/duzenle/${category.id}`}>
-              <a>
-                <Button icon labelPosition="left" size="tiny" color="teal">
-                  <Icon name="edit" />
-                  Düzenle
-                </Button>
-              </a>
-            </Link>
-
-            <Button icon="trash" size="tiny" color="red"></Button>
-          </Table.Cell>
-        </Table.Row>
-        {renderChildrens(category, [category.name])}
-      </>
+      <Table.Row key={category.id}>
+        <Table.Cell>{category.name}</Table.Cell>
+        <Table.Cell textAlign="center">{category.sort_order}</Table.Cell>
+        <Table.Cell singleLine>
+          <Link href={`/admin/kategoriler/duzenle/${category.id}`}>
+            <a>
+              <Button icon labelPosition="left" size="tiny" color="teal">
+                <Icon name="edit" />
+                Düzenle
+              </Button>
+            </a>
+          </Link>
+          <Button icon="trash" size="tiny" color="red"></Button>
+        </Table.Cell>
+      </Table.Row>
     );
   };
 
@@ -172,7 +113,11 @@ export default function AdminDashboard() {
                 return renderCategory(category);
               })
             ) : (
-              <div>error</div>
+              <Table.Row>
+                <Table.HeaderCell colSpan="3" textAlign="center">
+                  Yükleniyor...
+                </Table.HeaderCell>
+              </Table.Row>
             )}
           </Table.Body>
 

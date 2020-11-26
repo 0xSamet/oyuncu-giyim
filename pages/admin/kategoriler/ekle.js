@@ -1,8 +1,10 @@
 import SEO from "../../../components/Seo";
 import { Button, Checkbox, Form, Icon, Select } from "semantic-ui-react";
 import { useEffect, useState } from "react";
-import { useLazyQuery } from "@apollo/client";
+import { useLazyQuery, useMutation } from "@apollo/client";
 import { GET_CATEGORIES } from "../../../apollo/gql/query/category";
+import { ADD_CATEGORY } from "../../../apollo/gql/mutations/category";
+import { useRouter } from "next/router";
 
 export default function AddCategory() {
   const [fields, setFields] = useState({
@@ -11,13 +13,22 @@ export default function AddCategory() {
     sort_order: null,
   });
   const [categories, setCategories] = useState([]);
-
+  const router = useRouter();
   const [
     getCategories,
     { data: data, loading: loading, error: error },
   ] = useLazyQuery(GET_CATEGORIES, {
     fetchPolicy: "no-cache",
   });
+
+  const [
+    addCategoryRun,
+    {
+      loading: addCategoryLoading,
+      error: addCategoryError,
+      data: addCategoryResponse,
+    },
+  ] = useMutation(ADD_CATEGORY);
 
   useEffect(() => {
     getCategories();
@@ -29,62 +40,71 @@ export default function AddCategory() {
 
   useEffect(() => {
     if (data && data.categories && data.categories.length > 0) {
-      setCategories(
-        getNestedChildren(
-          data.categories.map((a) => {
-            return {
-              ...a,
-              formattedName: a.name,
-            };
-          })
-        )
-      );
+      setCategories(data.categories);
     }
   }, [data]);
 
-  const handleFormSubmit = () => {
-    console.log("submit");
+  useEffect(() => {
+    if (
+      addCategoryResponse &&
+      addCategoryResponse.addCategory &&
+      addCategoryResponse.addCategory.success
+    ) {
+      router.push("/admin/kategoriler");
+    }
+  }, [addCategoryResponse]);
+
+  const handleFormSubmit = async () => {
+    let parentId;
+    let sortOrder;
+
+    if (fields.parent_id) {
+      parentId = Number(fields.parent_id);
+    } else {
+      parentId = null;
+    }
+
+    if (fields.sort_order && !isNaN(fields.sort_order)) {
+      sortOrder = Number(fields.sort_order);
+    } else {
+      sortOrder = null;
+    }
+
+    await addCategoryRun({
+      variables: {
+        input: {
+          name: fields.name,
+          parent_id: parentId,
+          sort_order: sortOrder,
+        },
+      },
+    });
   };
 
   const handleInputChange = (e) => {
-    setFields({
+    return setFields({
       ...fields,
       [e.target.name]: e.target.value,
     });
   };
 
-  const getChildrenCategories = (category, categoryNames) => {
-    if (category.children) {
-    }
-  };
-
   const getCategoriesForOption = () => {
-    const result = categories.map((category) => {
-      //const subs = getChildrenCategories(category, [category.name]);
-      //console.log(getChildrenCategories(category, [category.name]));
+    const a = categories.map((c) => {
       return {
-        key: category.id,
-        value: category.name,
-        text: category.name,
+        key: c.id,
+        value: c.id,
+        text: c.name,
       };
     });
-    return result;
+    return [
+      {
+        key: -1,
+        value: "-1",
+        text: "Üst Kategori Yok",
+      },
+      ...a,
+    ];
   };
-
-  function getNestedChildren(arr, parent) {
-    var out = [];
-    for (var i in arr) {
-      if (arr[i].parent_id == parent) {
-        var children = getNestedChildren(arr, arr[i].id);
-
-        if (children.length) {
-          arr[i].children = children;
-        }
-        out.push(arr[i]);
-      }
-    }
-    return out;
-  }
 
   return (
     <SEO
@@ -111,12 +131,23 @@ export default function AddCategory() {
           </Form.Field>
           <Form.Field>
             <label>Üst Kategori</label>
-            <Select options={getCategoriesForOption()} />
+            <Select
+              className="category-select"
+              options={getCategoriesForOption()}
+              value={fields.parent_id ? fields.parent_id : "-1"}
+              onChange={(_, { value }) => {
+                console.log(value);
+                setFields({
+                  ...fields,
+                  parent_id: value === "-1" ? null : value,
+                });
+              }}
+            />
           </Form.Field>
           <Form.Field>
-            <label>Sort Order</label>
+            <label>Sıralama</label>
             <input
-              name="icon_url"
+              name="sort_order"
               value={fields.sort_order || ""}
               onChange={handleInputChange}
             />
@@ -130,9 +161,3 @@ export default function AddCategory() {
     </SEO>
   );
 }
-
-/*              style={{
-                maxHeight: 40,
-                marginTop: 17,
-                marginRight: 7,
-              }}*/
