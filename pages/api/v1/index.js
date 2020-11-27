@@ -4,6 +4,7 @@ const { Model } = require("objection");
 
 import { ApolloServer } from "apollo-server-micro";
 import { schema } from "../../../apollo/schema";
+import { parentCategoriesLoader } from "../../../apollo/dataloaders";
 
 const apolloServer = new ApolloServer({
   schema,
@@ -16,6 +17,7 @@ const apolloServer = new ApolloServer({
     Model.knex(db);
     return {
       db,
+      parentCategoriesLoader,
     };
   },
 });

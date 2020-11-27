@@ -28,10 +28,10 @@ export default `
   }
   input updateDesktopMenuInput {
     id: ID!
-    name: String!
-    href: String!
-    target: String!
-    icon_url: String!
+    name: String
+    href: String
+    target: String
+    icon_url: String
     is_divider: Boolean!
   }
   type updateDesktopMenuResponse {
@@ -61,10 +61,10 @@ export default `
   }
   input updateMobileMenuInput {
     id: ID!
-    name: String!
-    href: String!
-    target: String!
-    icon_url: String!
+    name: String
+    href: String
+    target: String
+    icon_url: String
   }
   type updateMobileMenuResponse {
     success: Boolean!

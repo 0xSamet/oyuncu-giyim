@@ -70,12 +70,12 @@ function MyApp({ Component, pageProps }) {
 
   useEffect(() => {
     const handleRouteChange = (url) => {
-      console.log("App is changing to: ", url);
+      //console.log("App is changing to: ", url);
       //console.time("asd");
     };
 
     const handleRouteComplete = (url) => {
-      console.log("App is changed to: ", url);
+      //console.log("App is changed to: ", url);
       //console.timeEnd("asd");
     };
 

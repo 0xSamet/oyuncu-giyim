@@ -4,6 +4,7 @@ export default `
     name: String!
     sort_order: Int!
     parent_id: Int
+    parents : [Category]
   }
   input addCategoryInput {
     name: String!
@@ -13,8 +14,8 @@ export default `
   type addCategoryResponse {
     success: Boolean!
   }
-    input updateCategoryInput {
-      id: ID!
+  input updateCategoryInput {
+    id: ID!
     name: String!
     parent_id: Int
     sort_order: Int

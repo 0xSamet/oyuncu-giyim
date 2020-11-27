@@ -1,9 +1,18 @@
 import { Category } from "../../database/models/category";
 
 export default {
+  Category: {
+    parents: async (parent, _params, { db, parentCategoriesLoader }, _info) => {
+      return parentCategoriesLoader.load(parent);
+      return [];
+    },
+  },
   Query: {
     categories: async (_parent, _params, { db }, _info) => {
       const result = await Category.query();
+
+      //console.log(result);
+
       db.destroy();
       //console.log(result);
 
@@ -52,8 +61,6 @@ export default {
             .orderBy([{ column: "sort_order", order: "DESC" }])
             .first();
         }
-
-        console.log(input);
 
         await Category.query()
           .where("id", id)
