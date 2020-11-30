@@ -11,14 +11,17 @@ import {
   Segment,
   Dimmer,
   Loader,
+  Message,
 } from "semantic-ui-react";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useLazyQuery, useMutation } from "@apollo/client";
 import { GET_CATEGORIES } from "../../../apollo/gql/query/category";
 import { ADD_CATEGORY } from "../../../apollo/gql/mutations/category";
 import { useRouter } from "next/router";
+import { useDispatch } from "react-redux";
 
 import { Tab } from "semantic-ui-react";
+import { putAdminRequestError } from "../../../store/reducers/admin";
 
 export default function AddCategory() {
   const [fields, setFields] = useState({
@@ -30,6 +33,7 @@ export default function AddCategory() {
   });
   const [categories, setCategories] = useState([]);
   const router = useRouter();
+  const dispatch = useDispatch();
   const [getCategories, { data, loading, error }] = useLazyQuery(
     GET_CATEGORIES,
     {
@@ -80,23 +84,31 @@ export default function AddCategory() {
       parentId = null;
     }
 
-    if (!isNaN(fields.sort_order)) {
+    if (!isNaN(fields.sort_order) && fields.sort_order) {
       sortOrder = Number(fields.sort_order);
     } else {
       sortOrder = null;
     }
 
-    await addCategoryRun({
-      variables: {
-        input: {
-          name: fields.name,
-          parent_id: parentId,
-          sort_order: sortOrder,
-          status: fields.status,
-          slug: fields.slug,
+    try {
+      await addCategoryRun({
+        variables: {
+          input: {
+            name: fields.name,
+            parent_id: parentId,
+            sort_order: sortOrder,
+            status: fields.status,
+            slug: fields.slug,
+          },
         },
-      },
-    });
+      });
+    } catch (err) {
+      dispatch(
+        putAdminRequestError({
+          error: err.graphQLErrors[0],
+        })
+      );
+    }
   };
 
   const handleInputChange = (e) => {
@@ -106,7 +118,7 @@ export default function AddCategory() {
     });
   };
 
-  const getCategoriesForOption = () => {
+  const getCategoriesForOption = useCallback(() => {
     const a = [...categories]
       .sort((a, b) => a.sort_order - b.sort_order)
       .map((c) => {
@@ -127,7 +139,7 @@ export default function AddCategory() {
       },
       ...a,
     ];
-  };
+  }, [categories]);
 
   const panes = [
     {

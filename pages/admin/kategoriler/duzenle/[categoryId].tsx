@@ -12,7 +12,7 @@ import {
   Dimmer,
   Loader,
 } from "semantic-ui-react";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useLazyQuery, useMutation } from "@apollo/client";
 import { GET_CATEGORIES } from "../../../../apollo/gql/query/category";
 import { UPDATE_CATEGORY } from "../../../../apollo/gql/mutations/category";
@@ -98,7 +98,7 @@ export default function AddCategory() {
       parentId = null;
     }
 
-    if (!isNaN(fields.sort_order)) {
+    if (!isNaN(fields.sort_order) && fields.sort_order) {
       sortOrder = Number(fields.sort_order);
     } else {
       sortOrder = null;
@@ -125,7 +125,7 @@ export default function AddCategory() {
     });
   };
 
-  const getCategoriesForOption = () => {
+  const getCategoriesForOption = useCallback(() => {
     const a = [...categories]
       .sort((a, b) => a.sort_order - b.sort_order)
       .filter((c) => {
@@ -137,16 +137,8 @@ export default function AddCategory() {
           }
         }
         return true;
-        // if (c.parents) {
-        //   console.log("parents var");
-        //   const foundC = c.parents.find((category) => category.id == fields.id);
-        //   console.log(foundC);
-        //   if (foundC) return false;
-        // }
-        // return true;
       })
       .map((c) => {
-        console.log(c);
         const parentCategoriesAsArray = c.parents.reverse().map((a) => a.name);
         const categoryName =
           parentCategoriesAsArray.length > 0 ? ` > ${c.name}` : c.name;
@@ -165,7 +157,7 @@ export default function AddCategory() {
       },
       ...a,
     ];
-  };
+  }, [categories]);
 
   const panes = [
     {

@@ -1,10 +1,15 @@
+import { UserInputError } from "apollo-server-micro";
 import { Category } from "../../database/models/category";
 
 export default {
   Category: {
-    parents: async (parent, _params, { db, parentCategoriesLoader }, _info) => {
+    parents: async (
+      parent,
+      _params,
+      { db, loaders: { parentCategoriesLoader } },
+      _info
+    ) => {
       return parentCategoriesLoader.load(parent);
-      return [];
     },
   },
   Query: {
@@ -21,17 +26,46 @@ export default {
   },
   Mutation: {
     addCategory: async (_parent, { input }, { db }, _info) => {
-      try {
-        let { name, parent_id, sort_order, status, slug } = input;
-        let biggestSortOrder;
-        if (!sort_order && sort_order != 0) {
-          biggestSortOrder = await Category.query()
-            .select("sort_order")
-            .orderBy([{ column: "sort_order", order: "DESC" }])
-            .first();
-        }
+      let { name, parent_id, sort_order, status, slug } = input;
+      let biggestSortOrder;
 
-        await Category.query().insert({
+      if (!sort_order && sort_order != 0) {
+        biggestSortOrder = await Category.query()
+          .select("sort_order")
+          .orderBy([{ column: "sort_order", order: "DESC" }])
+          .first();
+      }
+
+      await Category.query().insert({
+        name,
+        parent_id,
+        sort_order: biggestSortOrder
+          ? biggestSortOrder.sort_order + 1
+          : sort_order,
+        status,
+        slug,
+      });
+
+      db.destroy();
+      return {
+        success: true,
+      };
+    },
+    updateCategory: async (_parent, { input }, { db }, _info) => {
+      let { id, name, parent_id, sort_order, status, slug } = input;
+      let biggestSortOrder;
+
+      if (!sort_order && sort_order != 0) {
+        biggestSortOrder = await Category.query()
+          .select("sort_order")
+          .orderBy([{ column: "sort_order", order: "DESC" }])
+          .first();
+      }
+
+      await Category.query()
+        .where("id", id)
+        .first()
+        .update({
           name,
           parent_id,
           sort_order: biggestSortOrder
@@ -41,52 +75,10 @@ export default {
           slug,
         });
 
-        db.destroy();
-        return {
-          success: true,
-        };
-      } catch (err) {
-        console.log(err);
-        return {
-          success: false,
-        };
-      }
-    },
-    updateCategory: async (_parent, { input }, { db }, _info) => {
-      try {
-        let { id, name, parent_id, sort_order, status, slug } = input;
-        let biggestSortOrder;
-
-        if (!sort_order && sort_order != 0) {
-          biggestSortOrder = await Category.query()
-            .select("sort_order")
-            .orderBy([{ column: "sort_order", order: "DESC" }])
-            .first();
-        }
-
-        await Category.query()
-          .where("id", id)
-          .first()
-          .update({
-            name,
-            parent_id,
-            sort_order: biggestSortOrder
-              ? biggestSortOrder.sort_order + 1
-              : sort_order,
-            status,
-            slug,
-          });
-
-        db.destroy();
-        return {
-          success: true,
-        };
-      } catch (err) {
-        console.log(err);
-        return {
-          success: false,
-        };
-      }
+      db.destroy();
+      return {
+        success: true,
+      };
     },
     deleteCategory: async (_parent, { input }, { db }, _info) => {
       try {
