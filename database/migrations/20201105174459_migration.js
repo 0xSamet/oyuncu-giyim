@@ -43,7 +43,11 @@ exports.up = async function (knex) {
     })
     .createTable(tableNames.category, (table) => {
       table.increments();
-      table.integer("parent_id").references("id").inTable(tableNames.category);
+      table
+        .integer("parent_id")
+        .references("id")
+        .inTable(tableNames.category)
+        .onDelete("cascade");
       table.string("name").notNullable();
       table.string("slug").notNullable().unique();
       table.boolean("status").defaultTo(true);

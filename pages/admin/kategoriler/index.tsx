@@ -158,7 +158,7 @@ export default function AdminDashboard() {
             ) : (
               <Table.Row>
                 <Table.HeaderCell colSpan="3" textAlign="center">
-                  Yükleniyor...
+                  Kategori Bulunamadı
                 </Table.HeaderCell>
               </Table.Row>
             )}

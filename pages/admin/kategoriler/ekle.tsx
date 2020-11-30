@@ -80,7 +80,7 @@ export default function AddCategory() {
       parentId = null;
     }
 
-    if (fields.sort_order && !isNaN(fields.sort_order)) {
+    if (!isNaN(fields.sort_order)) {
       sortOrder = Number(fields.sort_order);
     } else {
       sortOrder = null;

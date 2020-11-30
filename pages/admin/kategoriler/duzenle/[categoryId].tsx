@@ -98,7 +98,7 @@ export default function AddCategory() {
       parentId = null;
     }
 
-    if (fields.sort_order && !isNaN(fields.sort_order)) {
+    if (!isNaN(fields.sort_order)) {
       sortOrder = Number(fields.sort_order);
     } else {
       sortOrder = null;
@@ -128,7 +128,25 @@ export default function AddCategory() {
   const getCategoriesForOption = () => {
     const a = [...categories]
       .sort((a, b) => a.sort_order - b.sort_order)
+      .filter((c) => {
+        if (c.id == fields.id) return false;
+        if (c.parents) {
+          const foundC = c.parents.find((category) => category.id == fields.id);
+          if (foundC) {
+            return false;
+          }
+        }
+        return true;
+        // if (c.parents) {
+        //   console.log("parents var");
+        //   const foundC = c.parents.find((category) => category.id == fields.id);
+        //   console.log(foundC);
+        //   if (foundC) return false;
+        // }
+        // return true;
+      })
       .map((c) => {
+        console.log(c);
         const parentCategoriesAsArray = c.parents.reverse().map((a) => a.name);
         const categoryName =
           parentCategoriesAsArray.length > 0 ? ` > ${c.name}` : c.name;
@@ -138,6 +156,7 @@ export default function AddCategory() {
           text: parentCategoriesAsArray.join(" > ") + categoryName,
         };
       });
+
     return [
       {
         key: -1,

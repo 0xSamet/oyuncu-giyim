@@ -24,7 +24,7 @@ export default {
       try {
         let { name, parent_id, sort_order, status, slug } = input;
         let biggestSortOrder;
-        if (!sort_order) {
+        if (!sort_order && sort_order != 0) {
           biggestSortOrder = await Category.query()
             .select("sort_order")
             .orderBy([{ column: "sort_order", order: "DESC" }])
@@ -34,7 +34,9 @@ export default {
         await Category.query().insert({
           name,
           parent_id,
-          sort_order: sort_order ? sort_order : biggestSortOrder.sort_order + 1,
+          sort_order: biggestSortOrder
+            ? biggestSortOrder.sort_order + 1
+            : sort_order,
           status,
           slug,
         });
@@ -55,7 +57,7 @@ export default {
         let { id, name, parent_id, sort_order, status, slug } = input;
         let biggestSortOrder;
 
-        if (!sort_order) {
+        if (!sort_order && sort_order != 0) {
           biggestSortOrder = await Category.query()
             .select("sort_order")
             .orderBy([{ column: "sort_order", order: "DESC" }])
@@ -68,9 +70,9 @@ export default {
           .update({
             name,
             parent_id,
-            sort_order: sort_order
-              ? sort_order
-              : biggestSortOrder.sort_order + 1,
+            sort_order: biggestSortOrder
+              ? biggestSortOrder.sort_order + 1
+              : sort_order,
             status,
             slug,
           });
