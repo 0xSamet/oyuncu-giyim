@@ -152,12 +152,20 @@ body .main-wrapper.admin-layout {
           border-bottom-right-radius: 0;
         }
       }
-      &.add-category-page {
-        .form {
+      &.category-sub-page {
+        .tabs {
           max-width: 700px;
-          margin: 45px auto;
-          background: #e0ecf7;
-          padding: 25px;
+          margin: 45px auto 15px auto;
+          .segment {
+            background: #e0ecf7;
+          }
+        }
+        .button {
+          max-width: 700px;
+          margin: 0 auto;
+        }
+        i.flag {
+          margin: 0;
         }
         .category-select * {
           font-size: 13px;

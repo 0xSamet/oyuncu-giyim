@@ -12,18 +12,28 @@ import {
 } from "semantic-ui-react";
 import { Fragment, useEffect, useState } from "react";
 import { GET_CATEGORIES } from "../../../apollo/gql/query/category";
-import { useLazyQuery } from "@apollo/client";
+import { DELETE_CATEGORY } from "../../../apollo/gql/mutations/category";
+import { useLazyQuery, useMutation } from "@apollo/client";
 import Link from "next/link";
 
 export default function AdminDashboard() {
   const [categories, setCategories] = useState([]);
 
+  const [getCategories, { data, loading, error }] = useLazyQuery(
+    GET_CATEGORIES,
+    {
+      fetchPolicy: "no-cache",
+    }
+  );
+
   const [
-    getCategories,
-    { data: data, loading: loading, error: error },
-  ] = useLazyQuery(GET_CATEGORIES, {
-    fetchPolicy: "no-cache",
-  });
+    deleteCategoryRun,
+    {
+      loading: deleteCategoryLoading,
+      error: deleteCategoryError,
+      data: deleteCategoryResponse,
+    },
+  ] = useMutation(DELETE_CATEGORY);
 
   useEffect(() => {
     getCategories();
@@ -42,7 +52,21 @@ export default function AdminDashboard() {
   const renderCategory = (category) => {
     return (
       <Table.Row key={category.id}>
-        <Table.Cell>{category.name}</Table.Cell>
+        <Table.Cell>
+          {category.parents.reverse().map((category) => {
+            return (
+              <Fragment key={category.id}>
+                {category.name}
+                <Icon
+                  name="chevron right"
+                  size="small"
+                  style={{ marginRight: 1, marginLeft: 1 }}
+                />
+              </Fragment>
+            );
+          })}
+          {category.name}
+        </Table.Cell>
         <Table.Cell textAlign="center">{category.sort_order}</Table.Cell>
         <Table.Cell singleLine>
           <Link href={`/admin/kategoriler/duzenle/${category.id}`}>
@@ -53,13 +77,30 @@ export default function AdminDashboard() {
               </Button>
             </a>
           </Link>
-          <Button icon="trash" size="tiny" color="red"></Button>
+          <Button
+            icon="trash"
+            size="tiny"
+            color="red"
+            onClick={() => handleDeleteCategory(category.id)}
+          ></Button>
         </Table.Cell>
       </Table.Row>
     );
   };
 
-  if (loading) {
+  const handleDeleteCategory = async (categoryId) => {
+    await deleteCategoryRun({
+      variables: {
+        input: {
+          id: categoryId,
+        },
+      },
+    });
+
+    getCategories();
+  };
+
+  if (loading || deleteCategoryLoading) {
     return (
       <Segment className="page-loader">
         <Dimmer active>
@@ -109,9 +150,11 @@ export default function AdminDashboard() {
 
           <Table.Body>
             {categories && categories.length > 0 ? (
-              categories.map((category) => {
-                return renderCategory(category);
-              })
+              [...categories]
+                .sort((a, b) => a.sort_order - b.sort_order)
+                .map((category) => {
+                  return renderCategory(category);
+                })
             ) : (
               <Table.Row>
                 <Table.HeaderCell colSpan="3" textAlign="center">

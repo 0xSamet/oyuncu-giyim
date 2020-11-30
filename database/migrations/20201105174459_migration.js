@@ -45,6 +45,8 @@ exports.up = async function (knex) {
       table.increments();
       table.integer("parent_id").references("id").inTable(tableNames.category);
       table.string("name").notNullable();
+      table.string("slug").notNullable().unique();
+      table.boolean("status").defaultTo(true);
       table.integer("sort_order");
     });
 };

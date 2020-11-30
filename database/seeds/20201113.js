@@ -135,10 +135,12 @@ exports.seed = async function (knex) {
     {
       name: "Sweatshirt",
       sort_order: 1,
+      slug: "/sweatshirt",
     },
     {
       name: "T-shirt",
       sort_order: 2,
+      slug: "/t-shirt",
     },
   ]);
   await knex(tableNames.category).insert([
@@ -146,11 +148,13 @@ exports.seed = async function (knex) {
       name: "Baskılı SweatShirt",
       parent_id: 1,
       sort_order: 3,
+      slug: "/baskili-sweatshirt",
     },
     {
       name: "Baskılı T-shirt",
       parent_id: 2,
       sort_order: 4,
+      slug: "/baskili-t-shirt",
     },
   ]);
 };

@@ -1,25 +1,41 @@
 import SEO from "../../../components/Seo";
-import { Button, Checkbox, Form, Icon, Select } from "semantic-ui-react";
+import {
+  Button,
+  Checkbox,
+  Form,
+  Icon,
+  Select,
+  Input,
+  Label,
+  Flag,
+  Segment,
+  Dimmer,
+  Loader,
+} from "semantic-ui-react";
 import { useEffect, useState } from "react";
 import { useLazyQuery, useMutation } from "@apollo/client";
 import { GET_CATEGORIES } from "../../../apollo/gql/query/category";
 import { ADD_CATEGORY } from "../../../apollo/gql/mutations/category";
 import { useRouter } from "next/router";
 
+import { Tab } from "semantic-ui-react";
+
 export default function AddCategory() {
   const [fields, setFields] = useState({
     name: "",
     parent_id: null,
     sort_order: null,
+    status: true,
+    slug: "",
   });
   const [categories, setCategories] = useState([]);
   const router = useRouter();
-  const [
-    getCategories,
-    { data: data, loading: loading, error: error },
-  ] = useLazyQuery(GET_CATEGORIES, {
-    fetchPolicy: "no-cache",
-  });
+  const [getCategories, { data, loading, error }] = useLazyQuery(
+    GET_CATEGORIES,
+    {
+      fetchPolicy: "no-cache",
+    }
+  );
 
   const [
     addCategoryRun,
@@ -76,6 +92,8 @@ export default function AddCategory() {
           name: fields.name,
           parent_id: parentId,
           sort_order: sortOrder,
+          status: fields.status,
+          slug: fields.slug,
         },
       },
     });
@@ -89,13 +107,18 @@ export default function AddCategory() {
   };
 
   const getCategoriesForOption = () => {
-    const a = categories.map((c) => {
-      return {
-        key: c.id,
-        value: c.id,
-        text: c.name,
-      };
-    });
+    const a = [...categories]
+      .sort((a, b) => a.sort_order - b.sort_order)
+      .map((c) => {
+        const parentCategoriesAsArray = c.parents.reverse().map((a) => a.name);
+        const categoryName =
+          parentCategoriesAsArray.length > 0 ? ` > ${c.name}` : c.name;
+        return {
+          key: c.id,
+          value: c.id,
+          text: parentCategoriesAsArray.join(" > ") + categoryName,
+        };
+      });
     return [
       {
         key: -1,
@@ -106,24 +129,15 @@ export default function AddCategory() {
     ];
   };
 
-  return (
-    <SEO
-      seo={{
-        meta_title: "Kategoriler - Oyuncu Giyim",
-        meta_description: "",
-        meta_keyword: "",
-      }}
-    >
-      <section className="admin-categories-page add-category-page">
-        <Form
-          onSubmit={(e) => {
-            e.preventDefault();
-            handleFormSubmit();
-          }}
-        >
+  const panes = [
+    {
+      menuItem: "Genel",
+      render: () => (
+        <Tab.Pane attached={false}>
           <Form.Field>
             <label>Kategori Adı</label>
             <input
+              type="text"
               name="name"
               value={fields.name || ""}
               onChange={handleInputChange}
@@ -147,12 +161,83 @@ export default function AddCategory() {
           <Form.Field>
             <label>Sıralama</label>
             <input
+              type="number"
               name="sort_order"
               value={fields.sort_order || ""}
               onChange={handleInputChange}
             />
           </Form.Field>
-          <Button fluid icon size="tiny" color="blue">
+          <Form.Field
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+            }}
+          >
+            <label>Durum</label>
+            <Checkbox
+              toggle
+              checked={fields.status}
+              onChange={() => {
+                return setFields({
+                  ...fields,
+                  status: !fields.status,
+                });
+              }}
+            />
+          </Form.Field>
+        </Tab.Pane>
+      ),
+    },
+    {
+      menuItem: "SEO",
+      render: () => (
+        <Tab.Pane attached={false}>
+          <Form.Field>
+            <label>Slug</label>
+            <Input labelPosition="left" type="text">
+              <Label basic>
+                <Flag name="tr" />
+              </Label>
+              <input
+                name="slug"
+                value={fields.slug}
+                onChange={handleInputChange}
+              />
+            </Input>
+          </Form.Field>
+        </Tab.Pane>
+      ),
+    },
+  ];
+
+  if (loading || addCategoryLoading) {
+    return (
+      <Segment className="page-loader">
+        <Dimmer active>
+          <Loader size="medium">Yükleniyor</Loader>
+        </Dimmer>
+      </Segment>
+    );
+  }
+
+  return (
+    <SEO
+      seo={{
+        meta_title: "Kategoriler - Oyuncu Giyim",
+        meta_description: "",
+        meta_keyword: "",
+      }}
+    >
+      <section className="admin-categories-page category-sub-page">
+        <Form
+          onSubmit={(e) => {
+            e.preventDefault();
+            handleFormSubmit();
+          }}
+        >
+          <Tab className="tabs" menu={{ pointing: true }} panes={panes} />
+          <Button type="submit" fluid icon size="tiny" color="blue">
             <Icon name="add square" />
             Ekle
           </Button>
