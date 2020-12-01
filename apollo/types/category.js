@@ -15,9 +15,6 @@ export default `
     status: Boolean
     slug: String
   }
-  type addCategoryResponse {
-    success: Boolean!
-  }
   input updateCategoryInput {
     id: ID!
     name: String!
@@ -39,8 +36,8 @@ export default `
     categories: [Category!]!
   }
   type Mutation {
-    addCategory(input: addCategoryInput!): addCategoryResponse!
-    updateCategory(input: updateCategoryInput!): updateCategoryResponse!
+    addCategory(input: addCategoryInput!): Category!
+    updateCategory(input: updateCategoryInput!): Category!
     deleteCategory(input: deleteCategoryInput!): deleteCategoryResponse!
   }
 `;

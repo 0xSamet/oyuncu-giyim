@@ -68,7 +68,7 @@ export default function AddCategory() {
     if (
       addCategoryResponse &&
       addCategoryResponse.addCategory &&
-      addCategoryResponse.addCategory.success
+      addCategoryResponse.addCategory.name
     ) {
       router.push("/admin/kategoriler");
     }
@@ -103,11 +103,12 @@ export default function AddCategory() {
         },
       });
     } catch (err) {
-      dispatch(
-        putAdminRequestError({
-          error: err.graphQLErrors[0],
-        })
-      );
+      console.log(err);
+      // dispatch(
+      //   putAdminRequestError({
+      //     error: err.graphQLErrors[0],
+      //   })
+      // );
     }
   };
 

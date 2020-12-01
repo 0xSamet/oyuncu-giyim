@@ -10,11 +10,22 @@ import {
   Dimmer,
   Loader,
 } from "semantic-ui-react";
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useCallback, useEffect, useMemo, useState } from "react";
 import { GET_CATEGORIES } from "../../../apollo/gql/query/category";
 import { DELETE_CATEGORY } from "../../../apollo/gql/mutations/category";
 import { useLazyQuery, useMutation } from "@apollo/client";
 import Link from "next/link";
+
+interface Category {
+  id: string;
+  name: string;
+  sort_order: number;
+  parents: Category[];
+}
+
+interface CategoryRowType {
+  category: Category;
+}
 
 export default function AdminDashboard() {
   const [categories, setCategories] = useState([]);
@@ -45,15 +56,22 @@ export default function AdminDashboard() {
 
   useEffect(() => {
     if (data && data.categories && data.categories.length > 0) {
-      setCategories(data.categories);
+      setCategories(
+        data.categories.map((category) => {
+          return {
+            ...category,
+            parents: category.parents.reverse(),
+          };
+        })
+      );
     }
   }, [data]);
 
-  const renderCategory = (category) => {
+  const CategoryRow: React.FC<CategoryRowType> = ({ category }) => {
     return (
       <Table.Row key={category.id}>
         <Table.Cell>
-          {category.parents.reverse().map((category) => {
+          {category.parents.map((category) => {
             return (
               <Fragment key={category.id}>
                 {category.name}
@@ -153,7 +171,7 @@ export default function AdminDashboard() {
               [...categories]
                 .sort((a, b) => a.sort_order - b.sort_order)
                 .map((category) => {
-                  return renderCategory(category);
+                  return <CategoryRow category={category} />;
                 })
             ) : (
               <Table.Row>

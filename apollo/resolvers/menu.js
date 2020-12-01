@@ -4,12 +4,12 @@ export default {
   Query: {
     desktopMenu: async (_parent, _args, { db }, _info) => {
       const result = await DesktopMenu.query();
-      db.destroy();
+
       return result;
     },
     mobileMenu: async (_parent, _args, { db }, _info) => {
       const result = await MobileMenu.query();
-      db.destroy();
+
       return result;
     },
   },
@@ -32,7 +32,6 @@ export default {
           is_divider,
         });
 
-        db.destroy();
         return {
           success: true,
         };
@@ -55,7 +54,6 @@ export default {
           is_divider,
         });
 
-        db.destroy();
         return {
           success: true,
         };
@@ -69,7 +67,7 @@ export default {
     deleteDesktopMenu: async (_parent, { input }, { db }, _info) => {
       try {
         await DesktopMenu.query().deleteById(input.id);
-        db.destroy();
+
         return {
           success: true,
         };
@@ -90,7 +88,6 @@ export default {
             .where("id", menu.id);
         }
 
-        db.destroy();
         return {
           success: true,
         };
@@ -118,7 +115,6 @@ export default {
           sort_order: biggestSortOrder.sort_order + 1,
         });
 
-        db.destroy();
         return {
           success: true,
         };
@@ -140,8 +136,6 @@ export default {
           icon_url,
         });
 
-        db.destroy();
-
         return {
           success: true,
         };
@@ -155,7 +149,7 @@ export default {
     deleteMobileMenu: async (_parent, { input }, { db }, _info) => {
       try {
         await MobileMenu.query().deleteById(input.id);
-        db.destroy();
+
         return {
           success: true,
         };
@@ -175,7 +169,7 @@ export default {
             })
             .where("id", menu.id);
         }
-        db.destroy();
+
         return {
           success: true,
         };

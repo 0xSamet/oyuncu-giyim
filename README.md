@@ -1,1 +1,1 @@
-## Hello World
+- [ ] updateCategory - parent kategori kendi alt kategorilerine güncellenemez

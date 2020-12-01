@@ -1,12 +1,17 @@
-import { UserInputError } from "apollo-server-micro";
-import { Category } from "../../database/models/category";
+import { UserInputError, ValidationError } from "apollo-server-micro";
+import {
+  Category,
+  addCategoryValidate,
+  updateCategoryValidate,
+  deleteCategoryValidate,
+} from "../../database/models/category";
 
 export default {
   Category: {
     parents: async (
       parent,
       _params,
-      { db, loaders: { parentCategoriesLoader } },
+      { loaders: { parentCategoriesLoader } },
       _info
     ) => {
       return parentCategoriesLoader.load(parent);
@@ -16,17 +21,20 @@ export default {
     categories: async (_parent, _params, { db }, _info) => {
       const result = await Category.query();
 
-      //console.log(result);
-
-      db.destroy();
-      //console.log(result);
-
       return result;
     },
   },
   Mutation: {
     addCategory: async (_parent, { input }, { db }, _info) => {
-      let { name, parent_id, sort_order, status, slug } = input;
+      let validatedCategory;
+      try {
+        validatedCategory = await addCategoryValidate.validateAsync(input);
+      } catch (err) {
+        throw new UserInputError(err.details[0].message);
+      }
+
+      let { name, parent_id, sort_order, status, slug } = validatedCategory;
+
       let biggestSortOrder;
 
       if (!sort_order && sort_order != 0) {
@@ -36,7 +44,23 @@ export default {
           .first();
       }
 
-      await Category.query().insert({
+      const isSlugExists = await Category.query().where("slug", slug).first();
+
+      if (isSlugExists) {
+        throw new ValidationError(
+          `Slug ${isSlugExists.name} kategorisinde kullanılıyor.`
+        );
+      }
+
+      const isParentExists = await Category.query()
+        .where("id", parent_id)
+        .first();
+
+      if (!isParentExists) {
+        throw new ValidationError(`Üst Kategori Bulunamadı`);
+      }
+
+      const categoryAdded = await Category.query().insert({
         name,
         parent_id,
         sort_order: biggestSortOrder
@@ -46,13 +70,17 @@ export default {
         slug,
       });
 
-      db.destroy();
-      return {
-        success: true,
-      };
+      return categoryAdded;
     },
     updateCategory: async (_parent, { input }, { db }, _info) => {
-      let { id, name, parent_id, sort_order, status, slug } = input;
+      let validatedCategory;
+      try {
+        validatedCategory = await updateCategoryValidate.validateAsync(input);
+      } catch (err) {
+        throw new UserInputError(err.details[0].message);
+      }
+
+      let { id, name, parent_id, sort_order, status, slug } = validatedCategory;
       let biggestSortOrder;
 
       if (!sort_order && sort_order != 0) {
@@ -62,7 +90,23 @@ export default {
           .first();
       }
 
-      await Category.query()
+      const isSlugExists = await Category.query().where("slug", slug).first();
+
+      if (isSlugExists && isSlugExists.slug != validatedCategory.slug) {
+        throw new ValidationError(
+          `Slug ${isSlugExists.name} kategorisinde kullanılıyor.`
+        );
+      }
+
+      const isParentExists = await Category.query()
+        .where("id", parent_id)
+        .first();
+
+      if (!isParentExists) {
+        throw new ValidationError(`Üst Kategori Bulunamadı.`);
+      }
+
+      const updatedCategory = await Category.query()
         .where("id", id)
         .first()
         .update({
@@ -73,29 +117,32 @@ export default {
             : sort_order,
           status,
           slug,
-        });
+        })
+        .returning("*");
 
-      db.destroy();
+      return updatedCategory;
+    },
+    deleteCategory: async (_parent, { input }, { db }, _info) => {
+      let validatedCategory;
+      try {
+        validatedCategory = await deleteCategoryValidate.validateAsync(input);
+      } catch (err) {
+        throw new UserInputError(err.details[0].message);
+      }
+
+      let { id } = validatedCategory;
+
+      const deletedCategory = await Category.query()
+        .deleteById(id)
+        .returning("*");
+
+      if (!deletedCategory) {
+        throw new ValidationError(`Kategori Bulunamadı.`);
+      }
+
       return {
         success: true,
       };
-    },
-    deleteCategory: async (_parent, { input }, { db }, _info) => {
-      try {
-        let { id } = input;
-
-        await Category.query().deleteById(id);
-
-        db.destroy();
-        return {
-          success: true,
-        };
-      } catch (err) {
-        console.log(err);
-        return {
-          success: false,
-        };
-      }
     },
   },
 };

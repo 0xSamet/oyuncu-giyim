@@ -82,7 +82,7 @@ export default function AddCategory() {
     if (
       updateCategoryResponse &&
       updateCategoryResponse.updateCategory &&
-      updateCategoryResponse.updateCategory.success
+      updateCategoryResponse.updateCategory.name
     ) {
       router.push("/admin/kategoriler");
     }
