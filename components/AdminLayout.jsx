@@ -17,25 +17,39 @@ const AdminLayout = ({ children }) => {
   const dispatch = useDispatch();
 
   function ErrorBox({ error }) {
+    const [visible, setVisible] = useState(true);
     useEffect(() => {
-      setTimeout(
-        () =>
-          dispatch(
-            deleteAdminRequestError({
-              id: error.id,
-            })
-          ),
-        5000
-      );
+      const timer = setTimeout(() => {
+        //console.log("deleted", error.id);
+        setVisible(false);
+      }, 3000);
+      return () => {
+        clearTimeout(timer);
+      };
     }, []);
+
+    useEffect(() => {
+      if (!visible) {
+        console.log("sil", error.id);
+        dispatch(deleteAdminRequestError({ id: error.id }));
+      }
+    }, [visible]);
     return (
-      <Message icon error onDismiss={() => {}}>
-        <Icon name="exclamation circle" />
-        <Message.Content>
-          <Message.Header>{error.id}Hata</Message.Header>
-          {error.message}
-        </Message.Content>
-      </Message>
+      visible && (
+        <Message
+          icon
+          error
+          onDismiss={() => {
+            setVisible(false);
+          }}
+        >
+          <Icon name="exclamation circle" />
+          <Message.Content>
+            <Message.Header>Hata</Message.Header>
+            {error.message}
+          </Message.Content>
+        </Message>
+      )
     );
   }
 
@@ -54,7 +68,7 @@ const AdminLayout = ({ children }) => {
       <div className="error-box">
         {errors.length > 0 &&
           errors.map((error, index) => {
-            return <ErrorBox error={error} />;
+            return <ErrorBox key={error.id} error={error} />;
           })}
       </div>
     );

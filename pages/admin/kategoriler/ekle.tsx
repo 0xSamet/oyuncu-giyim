@@ -104,11 +104,7 @@ export default function AddCategory() {
       });
     } catch (err) {
       console.log(err);
-      // dispatch(
-      //   putAdminRequestError({
-      //     error: err.graphQLErrors[0],
-      //   })
-      // );
+      dispatch(putAdminRequestError(err.message));
     }
   };
 

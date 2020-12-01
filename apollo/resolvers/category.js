@@ -52,12 +52,14 @@ export default {
         );
       }
 
-      const isParentExists = await Category.query()
-        .where("id", parent_id)
-        .first();
+      if (parent_id) {
+        const isParentExists = await Category.query()
+          .where("id", parent_id)
+          .first();
 
-      if (!isParentExists) {
-        throw new ValidationError(`Üst Kategori Bulunamadı`);
+        if (!isParentExists) {
+          throw new ValidationError(`Üst Kategori Bulunamadı`);
+        }
       }
 
       const categoryAdded = await Category.query().insert({
@@ -98,12 +100,14 @@ export default {
         );
       }
 
-      const isParentExists = await Category.query()
-        .where("id", parent_id)
-        .first();
+      if (parent_id) {
+        const isParentExists = await Category.query()
+          .where("id", parent_id)
+          .first();
 
-      if (!isParentExists) {
-        throw new ValidationError(`Üst Kategori Bulunamadı.`);
+        if (!isParentExists) {
+          throw new ValidationError(`Üst Kategori Bulunamadı.`);
+        }
       }
 
       const updatedCategory = await Category.query()

@@ -171,7 +171,7 @@ export default function AdminDashboard() {
               [...categories]
                 .sort((a, b) => a.sort_order - b.sort_order)
                 .map((category) => {
-                  return <CategoryRow category={category} />;
+                  return <CategoryRow key={category.id} category={category} />;
                 })
             ) : (
               <Table.Row>

@@ -40,9 +40,13 @@ export const toggleAdminLoginForm = () => ({
 export const toggleAdminMobileMenu = () => ({
   type: ADMIN_TOGGLE_MOBILE_MENU,
 });
-export const putAdminRequestError = (payload) => ({
+export const putAdminRequestError = (message) => ({
   type: ADMIN_PUT_REQUEST_ERROR,
-  payload,
+  payload: {
+    error: {
+      message,
+    },
+  },
 });
 export const deleteAdminRequestError = (payload) => ({
   type: ADMIN_DELETE_REQUEST_ERROR,
@@ -76,7 +80,6 @@ const adminReducer = (state = initialState, action) => {
       });
     case ADMIN_PUT_REQUEST_ERROR:
       return produce(state, (draft) => {
-        console.log(action);
         draft.requestErrors = [
           ...draft.requestErrors,
           {

@@ -17,8 +17,9 @@ import { useLazyQuery, useMutation } from "@apollo/client";
 import { GET_CATEGORIES } from "../../../../apollo/gql/query/category";
 import { UPDATE_CATEGORY } from "../../../../apollo/gql/mutations/category";
 import { useRouter } from "next/router";
-
 import { Tab } from "semantic-ui-react";
+import { useDispatch } from "react-redux";
+import { putAdminRequestError } from "../../../../store/reducers/admin";
 
 export default function AddCategory() {
   const [fields, setFields] = useState({
@@ -31,6 +32,7 @@ export default function AddCategory() {
   });
   const [categories, setCategories] = useState([]);
   const router = useRouter();
+  const dispatch = useDispatch();
   const [getCategories, { data, loading, error }] = useLazyQuery(
     GET_CATEGORIES,
     {
@@ -104,18 +106,23 @@ export default function AddCategory() {
       sortOrder = null;
     }
 
-    await updateCategoryRun({
-      variables: {
-        input: {
-          id: fields.id,
-          name: fields.name,
-          parent_id: parentId,
-          sort_order: sortOrder,
-          status: fields.status,
-          slug: fields.slug,
+    try {
+      await updateCategoryRun({
+        variables: {
+          input: {
+            id: fields.id,
+            name: fields.name,
+            parent_id: parentId,
+            sort_order: sortOrder,
+            status: fields.status,
+            slug: fields.slug,
+          },
         },
-      },
-    });
+      });
+    } catch (err) {
+      console.log(err);
+      dispatch(putAdminRequestError(err.message));
+    }
   };
 
   const handleInputChange = (e) => {
