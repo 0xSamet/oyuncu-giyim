@@ -73,6 +73,41 @@ body .main-wrapper.admin-layout {
       height: 100%;
       border-radius: 0;
     }
+    .admin-results-table {
+      max-width: 90%;
+      margin: 0 auto;
+      border-top-width: 0px;
+      border-top-left-radius: 0;
+      border-top-right-radius: 0;
+      &-top {
+        margin-top: 40px;
+        border-bottom: none;
+        border-top-width: 1px;
+        border-top-left-radius: 0.28571429rem;
+        border-top-right-radius: 0.28571429rem;
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+      }
+    }
+    .admin-sub-page {
+      .tabs {
+        max-width: 700px;
+        margin: 45px auto 15px auto;
+        .segment {
+          background: #e0ecf7;
+        }
+      }
+      .button {
+        max-width: 700px;
+        margin: 0 auto 45px auto;
+      }
+      i.flag {
+        margin: 0;
+      }
+      .category-select * {
+        font-size: 13px;
+      }
+    }
     .admin-menu-page {
       .menu-accordion {
         margin: 40px auto;
@@ -132,43 +167,6 @@ body .main-wrapper.admin-layout {
               }
             }
           }
-        }
-      }
-    }
-    .admin-categories-page {
-      .categories-table {
-        max-width: 90%;
-        margin: 0 auto;
-        border-top-width: 0px;
-        border-top-left-radius: 0;
-        border-top-right-radius: 0;
-        &.add-category {
-          margin-top: 40px;
-          border-bottom: none;
-          border-top-width: 1px;
-          border-top-left-radius: 0.28571429rem;
-          border-top-right-radius: 0.28571429rem;
-          border-bottom-left-radius: 0;
-          border-bottom-right-radius: 0;
-        }
-      }
-      &.category-sub-page {
-        .tabs {
-          max-width: 700px;
-          margin: 45px auto 15px auto;
-          .segment {
-            background: #e0ecf7;
-          }
-        }
-        .button {
-          max-width: 700px;
-          margin: 0 auto;
-        }
-        i.flag {
-          margin: 0;
-        }
-        .category-select * {
-          font-size: 13px;
         }
       }
     }

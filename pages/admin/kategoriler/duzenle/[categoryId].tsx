@@ -11,6 +11,7 @@ import {
   Segment,
   Dimmer,
   Loader,
+  TextArea,
 } from "semantic-ui-react";
 import { useCallback, useEffect, useState } from "react";
 import { useLazyQuery, useMutation } from "@apollo/client";
@@ -25,6 +26,9 @@ export default function AddCategory() {
   const [fields, setFields] = useState({
     id: null,
     name: "",
+    meta_title: "",
+    meta_description: "",
+    meta_keyword: "",
     parent_id: null,
     sort_order: null,
     status: true,
@@ -59,6 +63,8 @@ export default function AddCategory() {
 
   useEffect(() => {
     if (data && data.categories && data.categories.length > 0) {
+      console.log(data.categories);
+
       const categoryId = router.query.categoryId;
       const foundCategory = data.categories.find((c) => c.id == categoryId);
       if (foundCategory) {
@@ -67,6 +73,9 @@ export default function AddCategory() {
           ...fields,
           id: foundCategory.id,
           name: foundCategory.name,
+          meta_title: foundCategory.meta_title,
+          meta_description: foundCategory.meta_description,
+          meta_keyword: foundCategory.meta_keyword,
           parent_id: foundCategory.parent_id
             ? String(foundCategory.parent_id)
             : null,
@@ -112,6 +121,9 @@ export default function AddCategory() {
           input: {
             id: fields.id,
             name: fields.name,
+            meta_title: fields.meta_title,
+            meta_description: fields.meta_description,
+            meta_keyword: fields.meta_keyword,
             parent_id: parentId,
             sort_order: sortOrder,
             status: fields.status,
@@ -171,6 +183,25 @@ export default function AddCategory() {
       menuItem: "Genel",
       render: () => (
         <Tab.Pane attached={false}>
+          <Form.Field
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "flex-end",
+            }}
+          >
+            <label>Açık/Kapalı</label>
+            <Checkbox
+              toggle
+              checked={fields.status}
+              onChange={() => {
+                return setFields({
+                  ...fields,
+                  status: !fields.status,
+                });
+              }}
+            />
+          </Form.Field>
           <Form.Field>
             <label>Kategori Adı</label>
             <input
@@ -204,23 +235,31 @@ export default function AddCategory() {
               onChange={handleInputChange}
             />
           </Form.Field>
-          <Form.Field
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-            }}
-          >
-            <label>Durum</label>
-            <Checkbox
-              toggle
-              checked={fields.status}
-              onChange={() => {
-                return setFields({
-                  ...fields,
-                  status: !fields.status,
-                });
-              }}
+          <Form.Field>
+            <label>Meta Title</label>
+            <input
+              type="text"
+              name="meta_title"
+              value={fields.meta_title || ""}
+              onChange={handleInputChange}
+            />
+          </Form.Field>
+          <Form.Field>
+            <label>Meta Description</label>
+            <TextArea
+              name="meta_description"
+              value={fields.meta_description || ""}
+              onChange={handleInputChange}
+              style={{ minHeight: 100 }}
+            />
+          </Form.Field>
+          <Form.Field>
+            <label>Meta Keywords</label>
+            <TextArea
+              name="meta_keyword"
+              value={fields.meta_keyword || ""}
+              onChange={handleInputChange}
+              style={{ minHeight: 30 }}
             />
           </Form.Field>
         </Tab.Pane>
@@ -266,7 +305,7 @@ export default function AddCategory() {
         meta_keyword: "",
       }}
     >
-      <section className="admin-categories-page category-sub-page">
+      <section className="admin-categories-page admin-sub-page">
         <Form
           onSubmit={(e) => {
             e.preventDefault();

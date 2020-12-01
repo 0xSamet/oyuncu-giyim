@@ -5,6 +5,9 @@ export const GET_CATEGORIES = gql`
     categories {
       id
       name
+      meta_title
+      meta_description
+      meta_keyword
       sort_order
       parent_id
       status

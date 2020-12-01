@@ -33,7 +33,16 @@ export default {
         throw new UserInputError(err.details[0].message);
       }
 
-      let { name, parent_id, sort_order, status, slug } = validatedCategory;
+      let {
+        name,
+        meta_title,
+        meta_description,
+        meta_keyword,
+        parent_id,
+        sort_order,
+        status,
+        slug,
+      } = validatedCategory;
 
       let biggestSortOrder;
 
@@ -64,6 +73,9 @@ export default {
 
       const categoryAdded = await Category.query().insert({
         name,
+        meta_title,
+        meta_description,
+        meta_keyword,
         parent_id,
         sort_order: biggestSortOrder
           ? biggestSortOrder.sort_order + 1
@@ -82,7 +94,18 @@ export default {
         throw new UserInputError(err.details[0].message);
       }
 
-      let { id, name, parent_id, sort_order, status, slug } = validatedCategory;
+      let {
+        id,
+        name,
+        meta_title,
+        meta_description,
+        meta_keyword,
+        parent_id,
+        sort_order,
+        status,
+        slug,
+      } = validatedCategory;
+
       let biggestSortOrder;
 
       if (!sort_order && sort_order != 0) {
@@ -115,6 +138,9 @@ export default {
         .first()
         .update({
           name,
+          meta_title,
+          meta_description,
+          meta_keyword,
           parent_id,
           sort_order: biggestSortOrder
             ? biggestSortOrder.sort_order + 1

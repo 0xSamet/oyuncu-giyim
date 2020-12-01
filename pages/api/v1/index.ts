@@ -42,6 +42,7 @@ const apolloServer = new ApolloServer({
 
     const errorId = uuidv4();
     console.log("Internal Error");
+    console.log(error);
     return new GraphQLError("Internal Error : " + errorId);
   },
 });

@@ -1,15 +1,21 @@
 export default `
   type Category {
     id: ID!
-    name: String!
-    sort_order: Int!
     parent_id: Int
+    name: String!
+    meta_title: String
+    meta_description: String
+    meta_keyword: String
+    sort_order: Int!
     status: Boolean
     slug: String
     parents : [Category]
   }
   input addCategoryInput {
     name: String!
+    meta_title: String!
+    meta_description: String!
+    meta_keyword: String!
     parent_id: Int
     sort_order: Int
     status: Boolean
@@ -18,6 +24,9 @@ export default `
   input updateCategoryInput {
     id: ID!
     name: String!
+    meta_title: String!
+    meta_description: String!
+    meta_keyword: String!
     parent_id: Int
     sort_order: Int
     status: Boolean

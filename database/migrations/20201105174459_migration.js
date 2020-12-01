@@ -25,6 +25,11 @@ exports.up = async function (knex) {
     })
     .createTable(tableNames.page, (table) => {
       table.increments();
+      table
+        .integer("parent_id")
+        .references("id")
+        .inTable(tableNames.page)
+        .onDelete("cascade");
       table.string("name").notNullable();
       table
         .integer("desktop_menu_id")
@@ -49,6 +54,9 @@ exports.up = async function (knex) {
         .inTable(tableNames.category)
         .onDelete("cascade");
       table.string("name").notNullable();
+      table.string("meta_title");
+      table.string("meta_description", 500);
+      table.string("meta_keyword", 500);
       table.string("slug").notNullable().unique();
       table.boolean("status").defaultTo(true);
       table.integer("sort_order");

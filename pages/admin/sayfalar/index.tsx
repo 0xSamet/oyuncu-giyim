@@ -10,84 +10,78 @@ import {
   Dimmer,
   Loader,
 } from "semantic-ui-react";
-import { Fragment, useCallback, useEffect, useMemo, useState } from "react";
-import { GET_CATEGORIES } from "../../../apollo/gql/query/category";
-import { DELETE_CATEGORY } from "../../../apollo/gql/mutations/category";
-import { useLazyQuery, useMutation } from "@apollo/client";
+import { useState, useEffect, Fragment } from "react";
+import { useLazyQuery } from "@apollo/client";
+import { GET_PAGES } from "../../../apollo/gql/query/page";
+import clsx from "clsx";
+import produce from "immer";
 import Link from "next/link";
 
-interface Category {
+interface Page {
   id: string;
   name: string;
-  sort_order: number;
-  parents: Category[];
+  desktop_menu_id: number;
+  mobile_menu_id: number;
+  meta_title: string;
+  meta_description: string;
+  meta_keyword: string;
+  slug: string;
 }
 
-interface CategoryRowType {
-  category: Category;
+interface PageRowType {
+  page: Page;
 }
 
-export default function AdminDashboard() {
-  const [categories, setCategories] = useState([]);
-
-  const [getCategories, { data, loading, error }] = useLazyQuery(
-    GET_CATEGORIES,
-    {
-      fetchPolicy: "no-cache",
-    }
-  );
-
-  const [
-    deleteCategoryRun,
-    {
-      loading: deleteCategoryLoading,
-      error: deleteCategoryError,
-      data: deleteCategoryResponse,
+export default function AdminDashboard({ page }) {
+  const [pagesAccordion, setPagesAccordion] = useState({
+    rootAccordionVisible: true,
+    activeIndex: 0,
+    addPagesForm: {
+      visible: false,
+      fields: {
+        name: "",
+        desktop_menu_id: null,
+        mobile_menu_id: -1,
+        meta_title: "",
+        meta_description: "",
+        meta_keywords: "",
+        slug: "",
+      },
     },
-  ] = useMutation(DELETE_CATEGORY);
+  });
+  const [pages, setPages] = useState([]);
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  const [getPages, { data, loading, error }] = useLazyQuery(GET_PAGES, {
+    fetchPolicy: "no-cache",
+  });
 
   useEffect(() => {
-    getCategories();
+    getPages();
 
     return () => {
-      setCategories([]);
+      setPages([]);
     };
   }, []);
 
   useEffect(() => {
-    if (data && data.categories && data.categories.length > 0) {
-      setCategories(
-        data.categories.map((category) => {
-          return {
-            ...category,
-            parents: category.parents.reverse(),
-          };
-        })
-      );
+    if (data && data.pages && data.pages.length > 0) {
+      setPages(data.pages);
     }
   }, [data]);
 
-  const CategoryRow: React.FC<CategoryRowType> = ({ category }) => {
+  const handleClick = (index) => {
+    const newIndex = activeIndex === index ? -1 : index;
+    return setActiveIndex(newIndex);
+  };
+
+  const PageRow: React.FC<PageRowType> = ({ page }) => {
     return (
-      <Table.Row key={category.id}>
-        <Table.Cell>
-          {category.parents.map((category) => {
-            return (
-              <Fragment key={category.id}>
-                {category.name}
-                <Icon
-                  name="chevron right"
-                  size="small"
-                  style={{ marginRight: 1, marginLeft: 1 }}
-                />
-              </Fragment>
-            );
-          })}
-          {category.name}
-        </Table.Cell>
-        <Table.Cell textAlign="center">{category.sort_order}</Table.Cell>
+      <Table.Row key={page.id}>
+        <Table.Cell>{page.name}</Table.Cell>
+        <Table.Cell textAlign="center">0</Table.Cell>
         <Table.Cell singleLine>
-          <Link href={`/admin/kategoriler/duzenle/${category.id}`}>
+          <Link href={`/admin/sayfalar/duzenle/${page.id}`}>
             <a>
               <Button icon labelPosition="left" size="tiny" color="teal">
                 <Icon name="edit" />
@@ -99,26 +93,14 @@ export default function AdminDashboard() {
             icon="trash"
             size="tiny"
             color="red"
-            onClick={() => handleDeleteCategory(category.id)}
+            // onClick={() => handleDeletePage(category.id)}
           ></Button>
         </Table.Cell>
       </Table.Row>
     );
   };
 
-  const handleDeleteCategory = async (categoryId) => {
-    await deleteCategoryRun({
-      variables: {
-        input: {
-          id: categoryId,
-        },
-      },
-    });
-
-    getCategories();
-  };
-
-  if (loading || deleteCategoryLoading) {
+  if (loading) {
     return (
       <Segment className="page-loader">
         <Dimmer active>
@@ -128,15 +110,19 @@ export default function AdminDashboard() {
     );
   }
 
+  if (error) {
+    console.log(error);
+  }
+
   return (
     <SEO
       seo={{
-        meta_title: "Kategoriler - Oyuncu Giyim",
+        meta_title: "Sayfalar - Oyuncu Giyim",
         meta_description: "",
         meta_keyword: "",
       }}
     >
-      <section className="admin-categories-page">
+      <section className="admin-pages-page">
         <Table
           celled
           compact
@@ -149,7 +135,7 @@ export default function AdminDashboard() {
                   <a>
                     <Button icon labelPosition="left" size="tiny" color="blue">
                       <Icon name="add square" />
-                      Kategori Ekle
+                      Sayfa Ekle
                     </Button>
                   </a>
                 </Link>
@@ -160,7 +146,7 @@ export default function AdminDashboard() {
         <Table celled compact className="admin-results-table">
           <Table.Header>
             <Table.Row>
-              <Table.HeaderCell>Kategoriler</Table.HeaderCell>
+              <Table.HeaderCell>Sayfalar</Table.HeaderCell>
               <Table.HeaderCell collapsing textAlign="center">
                 Sıralama
               </Table.HeaderCell>
@@ -171,16 +157,16 @@ export default function AdminDashboard() {
           </Table.Header>
 
           <Table.Body>
-            {categories && categories.length > 0 ? (
-              [...categories]
+            {pages && pages.length > 0 ? (
+              [...pages]
                 .sort((a, b) => a.sort_order - b.sort_order)
-                .map((category) => {
-                  return <CategoryRow key={category.id} category={category} />;
+                .map((page) => {
+                  return <PageRow key={page.id} page={page} />;
                 })
             ) : (
               <Table.Row>
                 <Table.HeaderCell colSpan="3" textAlign="center">
-                  Kategori Bulunamadı
+                  Sayfa Bulunamadı
                 </Table.HeaderCell>
               </Table.Row>
             )}
