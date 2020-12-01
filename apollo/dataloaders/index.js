@@ -2,7 +2,7 @@ import DataLoader from "dataloader";
 //import db from "../../database/connect";
 import { Category } from "../../database/models/category";
 
-function getParentCategories(categories, category, result) {
+export function getParentCategories(categories, category, result = []) {
   const parent = categories.find((a) => a.id == category.parent_id);
   if (parent) {
     result.push(parent);
@@ -17,7 +17,7 @@ export const parentCategoriesLoader = new DataLoader(async (keys) => {
 
   const parentCategories = {};
   keys.forEach((category) => {
-    const c = getParentCategories(allCategories, category, []);
+    const c = getParentCategories(allCategories, category);
     parentCategories[category.id] = c;
   });
 

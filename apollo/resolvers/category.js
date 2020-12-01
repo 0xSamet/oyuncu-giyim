@@ -5,6 +5,7 @@ import {
   updateCategoryValidate,
   deleteCategoryValidate,
 } from "../../database/models/category";
+import { getParentCategories } from "../dataloaders";
 
 export default {
   Category: {
@@ -124,6 +125,11 @@ export default {
       }
 
       if (parent_id) {
+        // const allCategories = await Category.query();
+
+        // const parents = getParentCategories(allCategories, validatedCategory);
+        // console.log(parents);
+
         const isParentExists = await Category.query()
           .where("id", parent_id)
           .first();

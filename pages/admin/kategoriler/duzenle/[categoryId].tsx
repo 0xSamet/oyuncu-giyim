@@ -73,9 +73,9 @@ export default function AddCategory() {
           ...fields,
           id: foundCategory.id,
           name: foundCategory.name,
-          meta_title: foundCategory.meta_title,
-          meta_description: foundCategory.meta_description,
-          meta_keyword: foundCategory.meta_keyword,
+          meta_title: foundCategory.meta_title || "",
+          meta_description: foundCategory.meta_description || "",
+          meta_keyword: foundCategory.meta_keyword || "",
           parent_id: foundCategory.parent_id
             ? String(foundCategory.parent_id)
             : null,
