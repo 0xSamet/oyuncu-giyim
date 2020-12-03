@@ -29,7 +29,12 @@ function LeftMenuListItem({
       })}
     >
       <Link href={href}>
-        <a onClick={() => setToggle(!toggle)}>
+        <a
+          onClick={(e) => {
+            if (submenu.length > 0) e.preventDefault();
+            setToggle(!toggle);
+          }}
+        >
           <span className="main-menu-icon-wrapper">
             <img src={icon} />
           </span>
@@ -95,7 +100,7 @@ export default function LeftMenu() {
       />
       <li className="divider"></li>
       <LeftMenuListItem
-        index={4}
+        index={3}
         text="Ürünler"
         link={{
           href: "/admin/urunler",
@@ -111,7 +116,7 @@ export default function LeftMenu() {
         icon="/icons/categories.svg"
       />
       <LeftMenuListItem
-        index={3}
+        index={5}
         text="Seçenekler"
         link={{
           href: "/admin/secenekler",
@@ -120,7 +125,7 @@ export default function LeftMenu() {
       />
       <li className="divider"></li>
       <LeftMenuListItem
-        index={4}
+        index={6}
         text="Menü"
         link={{
           href: "/admin/menu",
@@ -128,7 +133,7 @@ export default function LeftMenu() {
         icon="/icons/admin/hamburger.svg"
       />
       <LeftMenuListItem
-        index={4}
+        index={7}
         text="Sayfalar"
         link={{
           href: "/admin/sayfalar",
@@ -136,12 +141,22 @@ export default function LeftMenu() {
         icon="/icons/admin/pages.svg"
       />
       <LeftMenuListItem
-        index={4}
+        index={8}
         text="Ayarlar"
         link={{
           href: "/admin/ayarlar",
         }}
         icon="/icons/admin/settings.svg"
+        submenu={[
+          {
+            index: 9,
+            text: "Dil",
+            link: {
+              href: "/admin/ayarlar/diller",
+            },
+            icon: "/icons/admin/language.svg",
+          },
+        ]}
       />
     </ul>
   );

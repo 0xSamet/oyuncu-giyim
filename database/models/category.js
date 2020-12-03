@@ -2,9 +2,50 @@ import { Model } from "objection";
 import { tableNames } from "../tableNames";
 import Joi from "joi";
 
+export class CategoryDescription extends Model {
+  static get tableName() {
+    return tableNames.category_description;
+  }
+
+  static get relationMappings() {
+    const { Language } = require("./language");
+    return {
+      category: {
+        relation: Model.BelongsToOneRelation,
+        modelClass: Category,
+        join: {
+          from: `${tableNames.category_description}.category_id`,
+          to: `${tableNames.category}.id`,
+        },
+      },
+      language: {
+        relation: Model.BelongsToOneRelation,
+        modelClass: Language,
+        join: {
+          from: `${tableNames.category_description}.language_id`,
+          to: `${tableNames.language}.id`,
+        },
+      },
+    };
+  }
+}
+
 export class Category extends Model {
   static get tableName() {
     return tableNames.category;
+  }
+
+  static get relationMappings() {
+    return {
+      category_description: {
+        relation: Model.HasManyRelation,
+        modelClass: CategoryDescription,
+        join: {
+          from: `${tableNames.category}.id`,
+          to: `${tableNames.category_description}.category_id`,
+        },
+      },
+    };
   }
 }
 

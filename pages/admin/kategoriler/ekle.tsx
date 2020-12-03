@@ -157,7 +157,7 @@ export default function AddCategory() {
               alignItems: "flex-end",
             }}
           >
-            <label>Durum</label>
+            <label>Açık/Kapalı</label>
             <Checkbox
               toggle
               checked={fields.status}

@@ -1,14 +1,18 @@
 export default `
+  type CategoryDescription {
+    name: String
+    description: String
+    meta_title: String
+    meta_description: String
+    meta_keywords: String
+    slug: String
+  }
   type Category {
     id: ID!
     parent_id: Int
-    name: String!
-    meta_title: String
-    meta_description: String
-    meta_keyword: String
+    description: CategoryDescription
     sort_order: Int!
     status: Boolean
-    slug: String
     parents : [Category]
   }
   input addCategoryInput {
@@ -42,7 +46,7 @@ export default `
     success: Boolean!
   }
   type Query {
-    categories: [Category!]!
+    categories(language: String): [Category!]!
   }
   type Mutation {
     addCategory(input: addCategoryInput!): Category!

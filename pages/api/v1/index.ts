@@ -6,22 +6,36 @@ import {
   ValidationError,
 } from "apollo-server-micro";
 import { schema } from "../../../apollo/schema";
-import { parentCategoriesLoader } from "../../../apollo/dataloaders";
+import { parentCategoriesLoader } from "../../../apollo/dataloaders/category";
 import { GraphQLError } from "graphql";
 import { v4 as uuidv4 } from "uuid";
 import db from "../../../database/connect";
+import { categoriesDescriptionLoader } from "../../../apollo/dataloaders/category";
 
 const apolloServer = new ApolloServer({
   schema,
-  context: () => {
+  context: ({ req, res }) => {
     return {
+      req,
+      res,
       db,
       loaders: {
         parentCategoriesLoader,
+        categoriesDescriptionLoader,
       },
     };
   },
-  formatError: (error: GraphQLError) => {
+});
+
+export const config = {
+  api: {
+    bodyParser: false,
+  },
+};
+
+export default apolloServer.createHandler({ path: "/api/v1" });
+
+/*  formatError: (error: GraphQLError) => {
     if (
       error.originalError instanceof ValidationError ||
       error instanceof ValidationError
@@ -44,13 +58,4 @@ const apolloServer = new ApolloServer({
     console.log("Internal Error");
     console.log(error);
     return new GraphQLError("Internal Error : " + errorId);
-  },
-});
-
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
-
-export default apolloServer.createHandler({ path: "/api/v1" });
+  }, */

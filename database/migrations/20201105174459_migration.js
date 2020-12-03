@@ -6,6 +6,62 @@ const { tableNames } = require("../tableNames");
  */
 exports.up = async function (knex) {
   await knex.schema
+    .createTable(tableNames.language, (table) => {
+      table.increments();
+      table.string("name");
+      table.string("code");
+      table.integer("sort_order");
+      table.boolean("status").defaultTo(true);
+    })
+    .createTable(tableNames.category, (table) => {
+      table.increments();
+      table
+        .integer("parent_id")
+        .references("id")
+        .inTable(tableNames.category)
+        .onDelete("cascade")
+        .defaultTo(null);
+      table.integer("sort_order");
+      table.boolean("status").defaultTo(true);
+    })
+    .createTable(tableNames.category_description, (table) => {
+      table.increments();
+      table
+        .integer("category_id")
+        .references("id")
+        .inTable(tableNames.category)
+        .onDelete("cascade");
+      table
+        .integer("language_id")
+        .references("id")
+        .inTable(tableNames.language)
+        .onDelete("cascade");
+      table.string("name").notNullable();
+      table.text("description");
+      table.string("meta_title");
+      table.string("meta_description", 500);
+      table.string("meta_keywords", 500);
+      table.string("slug").notNullable();
+    });
+};
+
+/**
+ * @param {Knex} knex
+ */
+exports.down = async function (knex) {
+  await knex.schema.dropTable(tableNames.category_description);
+  await knex.schema.dropTable(tableNames.category);
+  await knex.schema.dropTable(tableNames.language);
+};
+
+/*
+
+    .dropTable(tableNames.page)
+    .dropTable(tableNames.desktop_menu)
+    .dropTable(tableNames.mobile_menu)
+
+
+    
     .createTable(tableNames.desktop_menu, (table) => {
       table.increments();
       table.string("name").notNullable();
@@ -46,30 +102,5 @@ exports.up = async function (knex) {
       table.string("meta_keyword", 500);
       table.string("slug").notNullable();
     })
-    .createTable(tableNames.category, (table) => {
-      table.increments();
-      table
-        .integer("parent_id")
-        .references("id")
-        .inTable(tableNames.category)
-        .onDelete("cascade");
-      table.string("name").notNullable();
-      table.string("meta_title");
-      table.string("meta_description", 500);
-      table.string("meta_keyword", 500);
-      table.string("slug").notNullable().unique();
-      table.boolean("status").defaultTo(true);
-      table.integer("sort_order");
-    });
-};
 
-/**
- * @param {Knex} knex
- */
-exports.down = async function (knex) {
-  return await knex.schema
-    .dropTable(tableNames.page)
-    .dropTable(tableNames.desktop_menu)
-    .dropTable(tableNames.mobile_menu)
-    .dropTable(tableNames.category);
-};
+*/

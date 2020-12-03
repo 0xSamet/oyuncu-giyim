@@ -11,42 +11,42 @@ export default function Iletisim({ page }) {
   const dispatch = useDispatch();
 
   return (
-    <SEO seo={page} >
+    <SEO seo={{ meta_title: "", meta_description: "", meta_keyword: "" }}>
       <h1>İletişim</h1>
     </SEO>
   );
 }
 
-export const getServerSideProps = wrapper.getServerSideProps(
-  async ({ store, req, res, ...etc }) => {
-    handleIconMode(store, req);
-    
-    const apolloClient: ApolloClient<NormalizedCacheObject> = initializeApollo();
+// export const getServerSideProps = wrapper.getServerSideProps(
+//   async ({ store, req, res, ...etc }) => {
+//     handleIconMode(store, req);
 
-    await apolloClient.query({
-      query: GET_DESKTOP_MENU,
-    });
+//     const apolloClient: ApolloClient<NormalizedCacheObject> = initializeApollo();
 
-    await apolloClient.query({
-      query: GET_MOBILE_MENU,
-    });
+//     await apolloClient.query({
+//       query: GET_DESKTOP_MENU,
+//     });
 
-    const { data } = await apolloClient.query({
-      query: GET_PAGE,
-      variables: {
-        slug: "/iletisim",
-      },
-    });
+//     await apolloClient.query({
+//       query: GET_MOBILE_MENU,
+//     });
 
-    if (!data.error) {
-      handleMenuIndex(store, data);
-    }
+//     const { data } = await apolloClient.query({
+//       query: GET_PAGE,
+//       variables: {
+//         slug: "/iletisim",
+//       },
+//     });
 
-    return {
-      props: {
-        initialApolloState: apolloClient.cache.extract(),
-        page: data.page
-      },
-    };
-  }
-);
+//     if (!data.error) {
+//       handleMenuIndex(store, data);
+//     }
+
+//     return {
+//       props: {
+//         initialApolloState: apolloClient.cache.extract(),
+//         page: data.page
+//       },
+//     };
+//   }
+// );

@@ -5,7 +5,8 @@ import {
   updateCategoryValidate,
   deleteCategoryValidate,
 } from "../../database/models/category";
-import { getParentCategories } from "../dataloaders";
+import { getParentCategories } from "../dataloaders/category";
+import { getLanguage } from "./helpers";
 
 export default {
   Category: {
@@ -17,10 +18,36 @@ export default {
     ) => {
       return parentCategoriesLoader.load(parent);
     },
+    description: async (
+      parent,
+      params,
+      { loaders: { categoriesDescriptionLoader }, req },
+      _info
+    ) => {
+      return categoriesDescriptionLoader.load({
+        id: parent.id,
+        language: req.language,
+      });
+    },
   },
   Query: {
-    categories: async (_parent, _params, { db }, _info) => {
+    categories: async (_parent, params, { db, req }, _info) => {
       const result = await Category.query();
+
+      req.language = await getLanguage(params);
+
+      //console.log(req.language);
+
+      /*        .withGraphJoined(
+          "category:category_description.[language(selectLanguage)]"
+        )
+        .modifiers({
+          selectLanguage(builder) {
+            builder.where("code", "en");
+          },
+        });
+
+      console.log(result[0].category_description); */
 
       return result;
     },
@@ -125,10 +152,9 @@ export default {
       }
 
       if (parent_id) {
-        // const allCategories = await Category.query();
-
-        // const parents = getParentCategories(allCategories, validatedCategory);
-        // console.log(parents);
+        const allCategories = await Category.query();
+        const parents = getParentCategories(allCategories, validatedCategory);
+        console.log(parents);
 
         const isParentExists = await Category.query()
           .where("id", parent_id)
