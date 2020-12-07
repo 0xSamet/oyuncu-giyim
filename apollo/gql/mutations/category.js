@@ -3,7 +3,9 @@ import { gql } from "@apollo/client";
 export const ADD_CATEGORY = gql`
   mutation addCategory($input: addCategoryInput!) {
     addCategory(input: $input) {
-      name
+      description {
+        name
+      }
     }
   }
 `;
@@ -11,7 +13,9 @@ export const ADD_CATEGORY = gql`
 export const UPDATE_CATEGORY = gql`
   mutation updateCategory($input: updateCategoryInput!) {
     updateCategory(input: $input) {
-      name
+      description {
+        name
+      }
     }
   }
 `;

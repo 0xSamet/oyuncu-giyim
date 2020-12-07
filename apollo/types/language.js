@@ -1,12 +1,38 @@
 export default `
   type Language {
-    id: ID
+    id: ID!
     name: String
     code: String
     sort_order: Int
     status: Boolean
+    is_default: Boolean
+  }
+  input deleteLanguageInput {
+    id: ID!
+  }
+  input addLanguageInput {
+    name: String
+    code: String!
+    sort_order: Int
+    status: Boolean
+  }
+  input updateLanguageInput {
+    id: ID!
+    name: String
+    code: String!
+    sort_order: Int
+    status: Boolean
+  }
+  type deleteLanguageResponse {
+    success: Boolean!
   }
   type Query {
-    languages: [Language]!
+    languages: [Language]
+    language(id: Int): Language
+  }
+  type Mutation {
+    addLanguage(input: addLanguageInput!): Language
+    updateLanguage(input: updateLanguageInput!): Language
+    deleteLanguage(input: deleteLanguageInput!): deleteLanguageResponse!
   }
 `;

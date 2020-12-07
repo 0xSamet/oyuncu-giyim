@@ -8,6 +8,20 @@ export const GET_LANGUAGES = gql`
       code
       sort_order
       status
+      is_default
+    }
+  }
+`;
+
+export const GET_LANGUAGE = gql`
+  query getLanguage($id: Int) {
+    language(id: $id) {
+      name
+      id
+      code
+      sort_order
+      status
+      is_default
     }
   }
 `;

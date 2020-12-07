@@ -12,6 +12,8 @@ import {
   Dimmer,
   Loader,
   TextArea,
+  Menu,
+  Divider,
 } from "semantic-ui-react";
 import { useCallback, useEffect, useState } from "react";
 import { useLazyQuery, useMutation } from "@apollo/client";
@@ -21,19 +23,30 @@ import { useRouter } from "next/router";
 import { Tab } from "semantic-ui-react";
 import { useDispatch } from "react-redux";
 import { putAdminRequestError } from "../../../../store/reducers/admin";
+import dynamic from "next/dynamic";
 
-export default function AddCategory() {
+const Editor = dynamic(() => import("../../../../components/Editor"), {
+  ssr: false,
+});
+
+export default function EditCategory() {
   const [fields, setFields] = useState({
     id: null,
-    name: "",
-    meta_title: "",
-    meta_description: "",
-    meta_keyword: "",
+    informations: {
+      tr: {
+        name: "",
+        description: "",
+        meta_title: "",
+        meta_description: "",
+        meta_keyword: "",
+        slug: "",
+      },
+    },
     parent_id: null,
     sort_order: null,
     status: true,
-    slug: "",
   });
+  const [editor, setEditor] = useState("deneme");
   const [categories, setCategories] = useState([]);
   const router = useRouter();
   const dispatch = useDispatch();
@@ -63,7 +76,7 @@ export default function AddCategory() {
 
   useEffect(() => {
     if (data && data.categories && data.categories.length > 0) {
-      console.log(data.categories);
+      console.log("78", data.categories);
 
       const categoryId = router.query.categoryId;
       const foundCategory = data.categories.find((c) => c.id == categoryId);
@@ -203,15 +216,6 @@ export default function AddCategory() {
             />
           </Form.Field>
           <Form.Field>
-            <label>Kategori Adı</label>
-            <input
-              type="text"
-              name="name"
-              value={fields.name || ""}
-              onChange={handleInputChange}
-            />
-          </Form.Field>
-          <Form.Field>
             <label>Üst Kategori</label>
             <Select
               className="category-select"
@@ -235,6 +239,37 @@ export default function AddCategory() {
               onChange={handleInputChange}
             />
           </Form.Field>
+          <Tab
+            menu={{ pointing: true }}
+            panes={[
+              {
+                menuItem: <Menu.Item key="tr" content="Türkçe"></Menu.Item>,
+                render: () => {
+                  return <div>tr</div>;
+                },
+              },
+              {
+                menuItem: <Menu.Item key="en" content="İngilizce"></Menu.Item>,
+                render: () => {
+                  return <div>en</div>;
+                },
+              },
+            ]}
+          />
+          <Form.Field>
+            <label>Kategori Adı</label>
+            <input
+              type="text"
+              name="name"
+              value={fields.name || ""}
+              onChange={handleInputChange}
+            />
+          </Form.Field>
+          <Form.Field>
+            <label>Kategori Açıklaması</label>
+            <Editor value={editor} onChange={(c) => console.log(c)} />
+          </Form.Field>
+          <Divider />
           <Form.Field>
             <label>Meta Title</label>
             <input

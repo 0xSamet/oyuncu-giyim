@@ -33,21 +33,7 @@ export default {
   Query: {
     categories: async (_parent, params, { db, req }, _info) => {
       const result = await Category.query();
-
       req.language = await getLanguage(params);
-
-      //console.log(req.language);
-
-      /*        .withGraphJoined(
-          "category:category_description.[language(selectLanguage)]"
-        )
-        .modifiers({
-          selectLanguage(builder) {
-            builder.where("code", "en");
-          },
-        });
-
-      console.log(result[0].category_description); */
 
       return result;
     },

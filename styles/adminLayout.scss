@@ -11,6 +11,12 @@ body .main-wrapper.admin-layout {
       z-index: 6;
     }
   }
+  .quill {
+    background: #fff;
+    .ql-editor {
+      min-height: 150px;
+    }
+  }
   header {
     .mobile-hamburger {
       padding: 0px 10px;

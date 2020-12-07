@@ -46,6 +46,7 @@ function LeftMenuListItem({
           {submenu.map((menu) => {
             return (
               <LeftMenuListItem
+                key={menu.index}
                 index={menu.index}
                 text={menu.text}
                 link={menu.link}

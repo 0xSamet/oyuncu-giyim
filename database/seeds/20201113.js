@@ -17,6 +17,7 @@ exports.seed = async function (knex) {
       name: "Türkçe",
       code: "tr",
       sort_order: 0,
+      is_default: true,
     },
     {
       name: "English",

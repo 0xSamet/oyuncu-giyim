@@ -10,17 +10,35 @@ import {
   Dimmer,
   Loader,
 } from "semantic-ui-react";
-import { Fragment, useCallback, useEffect, useMemo, useState } from "react";
+import {
+  Fragment,
+  ReactText,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import { GET_CATEGORIES } from "../../../apollo/gql/query/category";
 import { DELETE_CATEGORY } from "../../../apollo/gql/mutations/category";
 import { useLazyQuery, useMutation } from "@apollo/client";
 import Link from "next/link";
 
-interface Category {
-  id: string;
+export interface CategoryDescription {
   name: string;
+  description: string;
+  meta_title: string;
+  meta_description: string;
+  meta_keywords: string;
+  slug: string;
+}
+
+export interface Category {
+  id?: ReactText;
+  description: CategoryDescription | null;
+  parent_id: number | string | null;
+  status: boolean;
   sort_order: number;
-  parents: Category[];
+  parents?: Category[];
 }
 
 interface CategoryRowType {
@@ -47,7 +65,11 @@ export default function AdminDashboard() {
   ] = useMutation(DELETE_CATEGORY);
 
   useEffect(() => {
-    getCategories();
+    getCategories({
+      variables: {
+        language: "tr",
+      },
+    });
 
     return () => {
       setCategories([]);
@@ -74,7 +96,7 @@ export default function AdminDashboard() {
           {category.parents.map((category) => {
             return (
               <Fragment key={category.id}>
-                {category.name}
+                {category.description?.name}
                 <Icon
                   name="chevron right"
                   size="small"
@@ -83,7 +105,9 @@ export default function AdminDashboard() {
               </Fragment>
             );
           })}
-          {category.name}
+          {category.description?.name
+            ? category.description.name
+            : "[Kategorinin Türkçe Adı Yok]"}
         </Table.Cell>
         <Table.Cell textAlign="center">{category.sort_order}</Table.Cell>
         <Table.Cell singleLine>

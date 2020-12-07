@@ -1,20 +1,25 @@
 import { gql } from "@apollo/client";
 
 export const GET_CATEGORIES = gql`
-  query getCategories {
-    categories {
+  query getCategories($language: String!) {
+    categories(language: $language) {
       id
-      name
-      meta_title
-      meta_description
-      meta_keyword
       sort_order
       parent_id
       status
-      slug
+      description {
+        name
+        description
+        meta_title
+        meta_description
+        meta_keywords
+        slug
+      }
       parents {
         id
-        name
+        description {
+          name
+        }
       }
     }
   }

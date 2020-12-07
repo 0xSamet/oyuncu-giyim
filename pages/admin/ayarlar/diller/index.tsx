@@ -1,15 +1,22 @@
 import Link from "next/link";
-import { Button, Icon, Table } from "semantic-ui-react";
-import SEO from "../../../components/Seo";
-//import { GET_LANGUAGES } from "../../../apollo/gql/query/language";
+import {
+  Button,
+  Dimmer,
+  Icon,
+  Loader,
+  Segment,
+  Table,
+} from "semantic-ui-react";
+import SEO from "../../../../components/Seo";
 import { useEffect, useState } from "react";
-import { useLazyQuery } from "@apollo/client";
-import { GET_LANGUAGES } from "../../../apollo/gql/query/language";
+import { useLazyQuery, useMutation } from "@apollo/client";
+import { GET_LANGUAGES } from "../../../../apollo/gql/query/language";
+import { DELETE_LANGUAGE } from "../../../../apollo/gql/mutations/language";
 
-interface Language {
+export interface Language {
   id: string;
   name: string;
-  code: number;
+  code: string;
   sort_order: number;
   status: boolean;
 }
@@ -25,6 +32,15 @@ export default function AdminSettingsLanguages() {
     fetchPolicy: "no-cache",
   });
 
+  const [
+    deleteLanguageRun,
+    {
+      loading: deleteLanguageLoading,
+      error: deleteLanguageError,
+      data: deleteLanguageResponse,
+    },
+  ] = useMutation(DELETE_LANGUAGE);
+
   useEffect(() => {
     getLanguages();
 
@@ -39,13 +55,25 @@ export default function AdminSettingsLanguages() {
     }
   }, [data]);
 
+  const handleDeleteLanguage = async (languageId) => {
+    await deleteLanguageRun({
+      variables: {
+        input: {
+          id: languageId,
+        },
+      },
+    });
+
+    getLanguages();
+  };
+
   const CategoryRow: React.FC<LanguageRowType> = ({ language }) => {
     return (
       <Table.Row key={language.id}>
         <Table.Cell>{`${language.name} - ${language.code}`}</Table.Cell>
         <Table.Cell textAlign="center">{language.sort_order}</Table.Cell>
         <Table.Cell singleLine>
-          <Link href={`/admin/kategoriler/duzenle/${language.id}`}>
+          <Link href={`/admin/ayarlar/diller/duzenle/${language.id}`}>
             <a>
               <Button icon labelPosition="left" size="tiny" color="teal">
                 <Icon name="edit" />
@@ -57,12 +85,22 @@ export default function AdminSettingsLanguages() {
             icon="trash"
             size="tiny"
             color="red"
-            // onClick={() => handleDeleteCategory(category.id)}
+            onClick={() => handleDeleteLanguage(language.id)}
           ></Button>
         </Table.Cell>
       </Table.Row>
     );
   };
+
+  if (loading) {
+    return (
+      <Segment className="page-loader">
+        <Dimmer active>
+          <Loader size="medium">Yükleniyor</Loader>
+        </Dimmer>
+      </Segment>
+    );
+  }
 
   return (
     <SEO
@@ -81,7 +119,7 @@ export default function AdminSettingsLanguages() {
           <Table.Header>
             <Table.Row>
               <Table.HeaderCell colSpan="3" textAlign="right">
-                <Link href="/admin/kategoriler/ekle">
+                <Link href="/admin/ayarlar/diller/ekle">
                   <a>
                     <Button icon labelPosition="left" size="tiny" color="blue">
                       <Icon name="add square" />

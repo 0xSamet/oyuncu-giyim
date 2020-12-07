@@ -9,9 +9,10 @@ exports.up = async function (knex) {
     .createTable(tableNames.language, (table) => {
       table.increments();
       table.string("name");
-      table.string("code");
+      table.string("code").unique();
       table.integer("sort_order");
       table.boolean("status").defaultTo(true);
+      table.boolean("is_default").defaultTo(false);
     })
     .createTable(tableNames.category, (table) => {
       table.increments();

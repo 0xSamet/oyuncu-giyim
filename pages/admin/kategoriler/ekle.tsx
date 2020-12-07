@@ -13,37 +13,67 @@ import {
   Loader,
   Message,
   TextArea,
+  Menu,
+  FlagNameValues,
 } from "semantic-ui-react";
 import { useCallback, useEffect, useState } from "react";
-import { useLazyQuery, useMutation } from "@apollo/client";
+import { useApolloClient, useLazyQuery, useMutation } from "@apollo/client";
 import { GET_CATEGORIES } from "../../../apollo/gql/query/category";
 import { ADD_CATEGORY } from "../../../apollo/gql/mutations/category";
 import { useRouter } from "next/router";
 import { useDispatch } from "react-redux";
+import produce from "immer";
 
 import { Tab } from "semantic-ui-react";
 import { putAdminRequestError } from "../../../store/reducers/admin";
+import { GET_LANGUAGES } from "../../../apollo/gql/query/language";
+import { Category, CategoryDescription } from "./index";
+import { Language } from "../ayarlar/diller";
+
+interface AddCategoryFormFields extends Omit<Category, "description"> {
+  description: {
+    [key: string]: CategoryDescription;
+  };
+}
 
 export default function AddCategory() {
-  const [fields, setFields] = useState({
-    name: "",
-    meta_title: "",
-    meta_description: "",
-    meta_keyword: "",
+  const [fields, setFields] = useState<AddCategoryFormFields>({
     parent_id: null,
     sort_order: null,
     status: true,
-    slug: "",
+    description: {
+      tr: {
+        name: "",
+        description: "",
+        meta_title: "",
+        meta_description: "",
+        meta_keywords: "",
+        slug: "",
+      },
+    },
   });
-  const [categories, setCategories] = useState([]);
+  const [categories, setCategories] = useState<Category[] | undefined[]>([]);
+  const [languages, setLanguages] = useState<Language[] | undefined[]>([]);
+  const [activeLanguage, setActiveLanguage] = useState<string | null>(null);
   const router = useRouter();
   const dispatch = useDispatch();
-  const [getCategories, { data, loading, error }] = useLazyQuery(
-    GET_CATEGORIES,
+  const [
+    getCategories,
     {
-      fetchPolicy: "no-cache",
-    }
-  );
+      data: categoriesData,
+      loading: categoriesLoading,
+      error: categoriesError,
+    },
+  ] = useLazyQuery(GET_CATEGORIES, {
+    fetchPolicy: "no-cache",
+  });
+
+  const [
+    getLanguages,
+    { data: languagesData, loading: languagesLoading, error: languagesError },
+  ] = useLazyQuery(GET_LANGUAGES, {
+    fetchPolicy: "no-cache",
+  });
 
   const [
     addCategoryRun,
@@ -55,7 +85,12 @@ export default function AddCategory() {
   ] = useMutation(ADD_CATEGORY);
 
   useEffect(() => {
-    getCategories();
+    getCategories({
+      variables: {
+        language: "tr",
+      },
+    });
+    getLanguages();
 
     return () => {
       setCategories([]);
@@ -63,10 +98,37 @@ export default function AddCategory() {
   }, []);
 
   useEffect(() => {
-    if (data && data.categories && data.categories.length > 0) {
-      setCategories(data.categories);
+    if (
+      categoriesData &&
+      categoriesData.categories &&
+      categoriesData.categories.length > 0
+    ) {
+      setCategories(categoriesData.categories);
     }
-  }, [data]);
+  }, [categoriesData]);
+
+  useEffect(() => {
+    if (
+      languagesData &&
+      languagesData.languages &&
+      languagesData.languages.length > 0
+    ) {
+      let fieldsDescription = {};
+      languagesData.languages.forEach((language) => {
+        fieldsDescription[language.code] = { ...fields.description.tr };
+      });
+      setFields({
+        ...fields,
+        description: fieldsDescription,
+      });
+
+      const { code: activeLanguageCode } = languagesData.languages.find(
+        (language) => language.is_default === true
+      );
+      setLanguages(languagesData.languages);
+      setActiveLanguage(activeLanguageCode);
+    }
+  }, [languagesData]);
 
   useEffect(() => {
     if (
@@ -79,56 +141,92 @@ export default function AddCategory() {
   }, [addCategoryResponse]);
 
   const handleFormSubmit = async () => {
-    let parentId;
-    let sortOrder;
+    console.log("submitted");
+    // let parentId;
+    // let sortOrder;
 
-    if (fields.parent_id) {
-      parentId = Number(fields.parent_id);
-    } else {
-      parentId = null;
-    }
+    // if (fields.parent_id) {
+    //   parentId = Number(fields.parent_id);
+    // } else {
+    //   parentId = null;
+    // }
 
-    if (!isNaN(fields.sort_order) && fields.sort_order) {
-      sortOrder = Number(fields.sort_order);
-    } else {
-      sortOrder = null;
-    }
+    // if (!isNaN(fields.sort_order) && fields.sort_order) {
+    //   sortOrder = Number(fields.sort_order);
+    // } else {
+    //   sortOrder = null;
+    // }
 
-    try {
-      await addCategoryRun({
-        variables: {
-          input: {
-            name: fields.name,
-            meta_title: fields.meta_title,
-            meta_description: fields.meta_description,
-            meta_keyword: fields.meta_keyword,
-            parent_id: parentId,
-            sort_order: sortOrder,
-            status: fields.status,
-            slug: fields.slug,
-          },
-        },
-      });
-    } catch (err) {
-      console.log(err);
-      dispatch(putAdminRequestError(err.message));
-    }
+    // try {
+    //   await addCategoryRun({
+    //     variables: {
+    //       input: {
+    //         name: fields.name,
+    //         meta_title: fields.meta_title,
+    //         meta_description: fields.meta_description,
+    //         meta_keyword: fields.meta_keyword,
+    //         parent_id: parentId,
+    //         sort_order: sortOrder,
+    //         status: fields.status,
+    //         slug: fields.slug,
+    //       },
+    //     },
+    //   });
+    // } catch (err) {
+    //   console.log(err);
+    //   dispatch(putAdminRequestError(err.message));
+    // }
   };
 
-  const handleInputChange = (e) => {
-    return setFields({
-      ...fields,
-      [e.target.name]: e.target.value,
-    });
+  // {
+  //   parent_id: null,
+  //   sort_order: null,
+  //   status: true,
+  //   description: {
+  //     tr: {
+  //       name: "",
+  //       description: "",
+  //       meta_title: "",
+  //       meta_description: "",
+  //       meta_keywords: "",
+  //       slug: "",
+  //     },
+  //   },
+  // }
+
+  const handleNormalInputChange = (e) => {
+    return setFields(
+      produce(fields, (draft) => {
+        draft[e.target.name] = e.target.value;
+      })
+    );
+  };
+
+  const handleLanguageInputChange = (e) => {
+    return setFields(
+      produce(fields, (draft) => {
+        draft.description[activeLanguage][e.target.name] = e.target.value;
+      })
+    );
   };
 
   const getCategoriesForOption = useCallback(() => {
     const a = [...categories]
       .sort((a, b) => a.sort_order - b.sort_order)
       .map((c) => {
-        const parentCategoriesAsArray = c.parents.reverse().map((a) => a.name);
+        const parentCategoriesAsArray = c.parents
+          .reverse()
+          .map((a) => a.description?.name);
         const categoryName =
-          parentCategoriesAsArray.length > 0 ? ` > ${c.name}` : c.name;
+          parentCategoriesAsArray.length > 0
+            ? ` > ${
+                c.description?.name
+                  ? c.description.name
+                  : "[Kategorinin Türkçe Adı Yok]"
+              }`
+            : c.description?.name
+            ? c.description.name
+            : "[Kategorinin Türkçe Adı Yok]";
         return {
           key: c.id,
           value: c.id,
@@ -144,6 +242,20 @@ export default function AddCategory() {
       ...a,
     ];
   }, [categories]);
+
+  const getLanguagesForMenu = useCallback(() => {
+    return (languages as Language[]).map((language) => {
+      return {
+        menuItem: (
+          <Menu.Item
+            key={language.code}
+            content={language.name}
+            onClick={() => setActiveLanguage(language.code)}
+          ></Menu.Item>
+        ),
+      };
+    });
+  }, [languages]);
 
   const panes = [
     {
@@ -170,15 +282,6 @@ export default function AddCategory() {
             />
           </Form.Field>
           <Form.Field>
-            <label>Kategori Adı</label>
-            <input
-              type="text"
-              name="name"
-              value={fields.name || ""}
-              onChange={handleInputChange}
-            />
-          </Form.Field>
-          <Form.Field>
             <label>Üst Kategori</label>
             <Select
               className="category-select"
@@ -199,7 +302,19 @@ export default function AddCategory() {
               type="number"
               name="sort_order"
               value={fields.sort_order || ""}
-              onChange={handleInputChange}
+              onChange={handleNormalInputChange}
+            />
+          </Form.Field>
+          <Form.Field>
+            <Tab menu={{ pointing: true }} panes={getLanguagesForMenu()} />
+          </Form.Field>
+          <Form.Field>
+            <label>Kategori Adı</label>
+            <input
+              type="text"
+              name="name"
+              value={fields.description[activeLanguage]?.name || ""}
+              onChange={handleLanguageInputChange}
             />
           </Form.Field>
           <Form.Field>
@@ -207,16 +322,16 @@ export default function AddCategory() {
             <input
               type="text"
               name="meta_title"
-              value={fields.meta_title || ""}
-              onChange={handleInputChange}
+              value={fields.description[activeLanguage]?.meta_title || ""}
+              onChange={handleLanguageInputChange}
             />
           </Form.Field>
           <Form.Field>
             <label>Meta Description</label>
             <TextArea
               name="meta_description"
-              value={fields.meta_description || ""}
-              onChange={handleInputChange}
+              value={fields.description[activeLanguage]?.meta_description || ""}
+              onChange={handleLanguageInputChange}
               style={{ minHeight: 100 }}
             />
           </Form.Field>
@@ -224,8 +339,8 @@ export default function AddCategory() {
             <label>Meta Keywords</label>
             <TextArea
               name="meta_keyword"
-              value={fields.meta_keyword || ""}
-              onChange={handleInputChange}
+              value={fields.description[activeLanguage]?.meta_keywords || ""}
+              onChange={handleLanguageInputChange}
               style={{ minHeight: 30 }}
             />
           </Form.Field>
@@ -238,23 +353,27 @@ export default function AddCategory() {
         <Tab.Pane attached={false}>
           <Form.Field>
             <label>Slug</label>
-            <Input labelPosition="left" type="text">
-              <Label basic>
-                <Flag name="tr" />
-              </Label>
-              <input
-                name="slug"
-                value={fields.slug}
-                onChange={handleInputChange}
-              />
-            </Input>
+            {(languages as Language[]).map((language) => {
+              return (
+                <Input labelPosition="left" type="text">
+                  <Label basic>
+                    <Flag name={language.code as FlagNameValues} />
+                  </Label>
+                  <input
+                    name="slug"
+                    value={fields.description[activeLanguage]?.slug || ""}
+                    onChange={handleLanguageInputChange}
+                  />
+                </Input>
+              );
+            })}
           </Form.Field>
         </Tab.Pane>
       ),
     },
   ];
 
-  if (loading || addCategoryLoading) {
+  if (categoriesLoading || addCategoryLoading || languagesLoading) {
     return (
       <Segment className="page-loader">
         <Dimmer active>
