@@ -18,7 +18,10 @@ import {
   useMemo,
   useState,
 } from "react";
-import { GET_CATEGORIES } from "../../../apollo/gql/query/category";
+import {
+  GET_CATEGORIES,
+  GET_CATEGORIES_ADMIN,
+} from "../../../apollo/gql/query/category";
 import { DELETE_CATEGORY } from "../../../apollo/gql/mutations/category";
 import { useLazyQuery, useMutation } from "@apollo/client";
 import Link from "next/link";
@@ -30,11 +33,12 @@ export interface CategoryDescription {
   meta_description: string;
   meta_keywords: string;
   slug: string;
+  language: string;
 }
 
 export interface Category {
   id?: ReactText;
-  description: CategoryDescription | null;
+  description: [CategoryDescription] | null;
   parent_id: number | string | null;
   status: boolean;
   sort_order: number;
@@ -49,7 +53,7 @@ export default function AdminDashboard() {
   const [categories, setCategories] = useState([]);
 
   const [getCategories, { data, loading, error }] = useLazyQuery(
-    GET_CATEGORIES,
+    GET_CATEGORIES_ADMIN,
     {
       fetchPolicy: "no-cache",
     }
@@ -65,11 +69,7 @@ export default function AdminDashboard() {
   ] = useMutation(DELETE_CATEGORY);
 
   useEffect(() => {
-    getCategories({
-      variables: {
-        language: "tr",
-      },
-    });
+    getCategories();
 
     return () => {
       setCategories([]);
@@ -77,9 +77,9 @@ export default function AdminDashboard() {
   }, []);
 
   useEffect(() => {
-    if (data && data.categories && data.categories.length > 0) {
+    if (data && data.categoriesOnAdmin && data.categoriesOnAdmin.length > 0) {
       setCategories(
-        data.categories.map((category) => {
+        data.categoriesOnAdmin.map((category) => {
           return {
             ...category,
             parents: category.parents.reverse(),
@@ -90,13 +90,20 @@ export default function AdminDashboard() {
   }, [data]);
 
   const CategoryRow: React.FC<CategoryRowType> = ({ category }) => {
+    const { name } = category.description.find(
+      (category) => category.language === "tr"
+    );
+
     return (
       <Table.Row key={category.id}>
         <Table.Cell>
           {category.parents.map((category) => {
+            const { name } = category.description.find(
+              (category) => category.language === "tr"
+            );
             return (
               <Fragment key={category.id}>
-                {category.description?.name}
+                {name}
                 <Icon
                   name="chevron right"
                   size="small"
@@ -105,9 +112,16 @@ export default function AdminDashboard() {
               </Fragment>
             );
           })}
-          {category.description?.name
-            ? category.description.name
-            : "[Kategorinin Türkçe Adı Yok]"}
+          <span
+            style={{
+              background: "#1a69a4",
+              color: "#fff",
+              padding: 5,
+              borderRadius: ".28571429rem",
+            }}
+          >
+            {name}
+          </span>
         </Table.Cell>
         <Table.Cell textAlign="center">{category.sort_order}</Table.Cell>
         <Table.Cell singleLine>

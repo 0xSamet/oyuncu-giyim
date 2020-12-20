@@ -7,6 +7,15 @@ export default `
     meta_keywords: String
     slug: String
   }
+  type CategoryDescriptionOnAdmin {
+    name: String
+    description: String
+    meta_title: String
+    meta_description: String
+    meta_keywords: String
+    slug: String
+    language: String
+  }
   type Category {
     id: ID!
     parent_id: Int
@@ -15,26 +24,35 @@ export default `
     status: Boolean
     parents : [Category]
   }
-  input addCategoryInput {
+  type CategoryOnAdmin {
+    id: ID!
+    parent_id: Int
+    description: [CategoryDescriptionOnAdmin]
+    sort_order: Int!
+    status: Boolean
+    parents : [CategoryOnAdmin]
+  }
+  input CategoryInputLocalizedFields {
     name: String!
-    meta_title: String!
-    meta_description: String!
-    meta_keyword: String!
+    description: String
+    meta_title: String
+    meta_description: String
+    meta_keywords: String
+    slug: String!
+    language: String!
+  }
+  input addCategoryInput {
     parent_id: Int
     sort_order: Int
     status: Boolean
-    slug: String
+    description: [CategoryInputLocalizedFields!]!
   }
   input updateCategoryInput {
     id: ID!
-    name: String!
-    meta_title: String!
-    meta_description: String!
-    meta_keyword: String!
     parent_id: Int
     sort_order: Int
     status: Boolean
-    slug: String
+    description: [CategoryInputLocalizedFields!]!
   }
   type updateCategoryResponse {
     success: Boolean!
@@ -46,11 +64,12 @@ export default `
     success: Boolean!
   }
   type Query {
-    categories(language: String): [Category!]!
+    categories(language: String!): [Category!]!
+    categoriesOnAdmin: [CategoryOnAdmin!]!
   }
   type Mutation {
-    addCategory(input: addCategoryInput!): Category!
-    updateCategory(input: updateCategoryInput!): Category!
+    addCategory(input: addCategoryInput!): CategoryOnAdmin!
+    updateCategory(input: updateCategoryInput!): CategoryOnAdmin!
     deleteCategory(input: deleteCategoryInput!): deleteCategoryResponse!
   }
 `;

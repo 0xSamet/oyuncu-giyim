@@ -7,6 +7,8 @@ import {
   Segment,
   Dimmer,
   Loader,
+  Input,
+  Label,
 } from "semantic-ui-react";
 import { useEffect, useState } from "react";
 import { useLazyQuery, useMutation } from "@apollo/client";
@@ -26,6 +28,7 @@ export default function AdminSettingsAddLanguage() {
     id: null,
     name: "",
     code: "",
+    flag_code: "",
     sort_order: null,
     status: true,
   });
@@ -61,11 +64,11 @@ export default function AdminSettingsAddLanguage() {
   useEffect(() => {
     if (getLanguageResponse) {
       if (getLanguageResponse.language) {
-        console.log(getLanguageResponse.language);
         const {
           id,
           name,
           code,
+          flag_code,
           sort_order,
           status,
         } = getLanguageResponse.language;
@@ -74,6 +77,7 @@ export default function AdminSettingsAddLanguage() {
           id,
           name,
           code,
+          flag_code,
           sort_order,
           status,
         });
@@ -109,6 +113,7 @@ export default function AdminSettingsAddLanguage() {
             id: fields.id,
             name: fields.name,
             code: fields.code,
+            flag_code: fields.flag_code,
             sort_order: sortOrder,
             status: fields.status,
           },
@@ -171,10 +176,22 @@ export default function AdminSettingsAddLanguage() {
           </Form.Field>
           <Form.Field>
             <label>Bayrak Kodu</label>
-            <input
+            <Input
+              labelPosition="right"
+              label={
+                <Label basic>
+                  <a
+                    href="https://react.semantic-ui.com/elements/flag/"
+                    target="_blank"
+                    title="Semantic ui Flag"
+                  >
+                    <Icon name="info circle" link style={{ margin: 0 }} />
+                  </a>
+                </Label>
+              }
               type="text"
-              name="code"
-              value={fields.code || ""}
+              name="flag_code"
+              value={fields.flag_code || ""}
               onChange={handleInputChange}
             />
           </Form.Field>

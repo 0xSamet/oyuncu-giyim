@@ -1,6 +1,7 @@
 import DataLoader from "dataloader";
 //import db from "../../database/connect";
 import { Category, CategoryDescription } from "../../database/models/category";
+import { tableNames } from "../../database/tableNames";
 
 export function getParentCategories(categories, category, result = []) {
   const parent = categories.find((a) => a.id == category.parent_id);
@@ -21,12 +22,8 @@ export const parentCategoriesLoader = new DataLoader(async (keys) => {
     parentCategories[category.id] = c;
   });
 
-  return new Promise((r, j) => {
-    return r(
-      keys.map((category) => {
-        return parentCategories[category.id];
-      })
-    );
+  return keys.map((category) => {
+    return parentCategories[category.id];
   });
 });
 
@@ -40,18 +37,53 @@ export const categoriesDescriptionLoader = new DataLoader(async (keys) => {
   const descriptions = await CategoryDescription.query()
     .select(
       "category_id",
-      "category_description.name",
+      `${tableNames.category_description}.name`,
       "description",
       "meta_title",
       "meta_description",
       "meta_keywords",
       "slug"
     )
-    .joinRelated("language")
+    .joinRelated(tableNames.language)
     .where("code", language);
 
   descriptions.forEach((description) => {
     response[description.category_id] = description;
+  });
+
+  return keys.map((category) => {
+    return response[category.id];
+  });
+});
+
+export const categoriesDescriptionAdminLoader = new DataLoader(async (keys) => {
+  //console.log("keys", keys[0].language);
+
+  // const language = keys[0].language;
+
+  let response = {};
+
+  const descriptions = await CategoryDescription.query()
+    .select(
+      "category_id",
+      `${tableNames.category_description}.name`,
+      "description",
+      "meta_title",
+      "meta_description",
+      "meta_keywords",
+      "slug",
+      "code as language"
+    )
+    .joinRelated(tableNames.language)
+    .whereIn(
+      "category_id",
+      keys.map((category) => category.id)
+    );
+
+  keys.forEach((category) => {
+    response[category.id] = descriptions.filter((description) => {
+      return description.category_id === category.id;
+    });
   });
 
   return keys.map((category) => {

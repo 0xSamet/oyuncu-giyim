@@ -3,6 +3,7 @@ export default `
     id: ID!
     name: String
     code: String
+    flag_code: String
     sort_order: Int
     status: Boolean
     is_default: Boolean
@@ -11,15 +12,17 @@ export default `
     id: ID!
   }
   input addLanguageInput {
-    name: String
+    name: String!
     code: String!
+    flag_code: String!
     sort_order: Int
     status: Boolean
   }
   input updateLanguageInput {
     id: ID!
-    name: String
+    name: String!
     code: String!
+    flag_code: String!
     sort_order: Int
     status: Boolean
   }

@@ -17,6 +17,7 @@ export interface Language {
   id: string;
   name: string;
   code: string;
+  flag_code: string;
   sort_order: number;
   status: boolean;
 }

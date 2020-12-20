@@ -10,6 +10,7 @@ exports.up = async function (knex) {
       table.increments();
       table.string("name");
       table.string("code").unique();
+      table.string("flag_code");
       table.integer("sort_order");
       table.boolean("status").defaultTo(true);
       table.boolean("is_default").defaultTo(false);

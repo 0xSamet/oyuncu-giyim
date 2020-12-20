@@ -10,7 +10,10 @@ import { parentCategoriesLoader } from "../../../apollo/dataloaders/category";
 import { GraphQLError } from "graphql";
 import { v4 as uuidv4 } from "uuid";
 import db from "../../../database/connect";
-import { categoriesDescriptionLoader } from "../../../apollo/dataloaders/category";
+import {
+  categoriesDescriptionLoader,
+  categoriesDescriptionAdminLoader,
+} from "../../../apollo/dataloaders/category";
 
 const apolloServer = new ApolloServer({
   schema,
@@ -22,6 +25,7 @@ const apolloServer = new ApolloServer({
       loaders: {
         parentCategoriesLoader,
         categoriesDescriptionLoader,
+        categoriesDescriptionAdminLoader,
       },
     };
   },

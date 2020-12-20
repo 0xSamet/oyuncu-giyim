@@ -6,6 +6,7 @@ export const GET_LANGUAGES = gql`
       name
       id
       code
+      flag_code
       sort_order
       status
       is_default
@@ -19,6 +20,7 @@ export const GET_LANGUAGE = gql`
       name
       id
       code
+      flag_code
       sort_order
       status
       is_default

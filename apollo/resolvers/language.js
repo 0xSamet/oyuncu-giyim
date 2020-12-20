@@ -25,7 +25,7 @@ export default {
       } catch (err) {
         throw new UserInputError(err.details[0].message);
       }
-      let { name, code, sort_order, status } = validatedLanguage;
+      let { name, code, flag_code, sort_order, status } = validatedLanguage;
       let biggestSortOrder;
 
       if (!sort_order && sort_order != 0) {
@@ -48,6 +48,7 @@ export default {
       const languageAdded = await Language.query().insertAndFetch({
         name,
         code,
+        flag_code,
         sort_order: biggestSortOrder
           ? biggestSortOrder.sort_order + 1
           : sort_order,
@@ -63,7 +64,7 @@ export default {
       } catch (err) {
         throw new UserInputError(err.details[0].message);
       }
-      let { id, name, code, sort_order, status } = validatedLanguage;
+      let { id, name, code, flag_code, sort_order, status } = validatedLanguage;
       let biggestSortOrder;
 
       if (!sort_order && sort_order != 0) {
@@ -92,6 +93,7 @@ export default {
         .update({
           name,
           code,
+          flag_code,
           sort_order: biggestSortOrder
             ? biggestSortOrder.sort_order + 1
             : sort_order,

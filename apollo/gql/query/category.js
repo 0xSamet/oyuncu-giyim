@@ -24,3 +24,29 @@ export const GET_CATEGORIES = gql`
     }
   }
 `;
+
+export const GET_CATEGORIES_ADMIN = gql`
+  query getCategoriesAdmin {
+    categoriesOnAdmin {
+      id
+      parent_id
+      status
+      description {
+        name
+        description
+        meta_title
+        meta_description
+        meta_keywords
+        slug
+        language
+      }
+      parents {
+        id
+        description {
+          name
+          language
+        }
+      }
+    }
+  }
+`;
