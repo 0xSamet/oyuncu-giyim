@@ -8,17 +8,23 @@ const QuillNoSSRWrapper = dynamic(import("react-quill"), {
 
 const modules = {
   toolbar: [
-    [{ header: "1" }, { header: "2" }, { font: [] }],
-    [{ size: [] }],
-    ["bold", "italic", "underline", "strike", "blockquote"],
-    [
-      { list: "ordered" },
-      { list: "bullet" },
-      { indent: "-1" },
-      { indent: "+1" },
-    ],
-    ["link", "image", "video"],
-    ["clean"],
+    ["bold", "italic", "underline", "strike"], // toggled buttons
+    ["blockquote", "code-block"],
+
+    [{ header: 1 }, { header: 2 }], // custom button values
+    [{ list: "ordered" }, { list: "bullet" }],
+    [{ script: "sub" }, { script: "super" }], // superscript/subscript
+    [{ indent: "-1" }, { indent: "+1" }], // outdent/indent
+    [{ direction: "rtl" }], // text direction
+
+    [{ size: ["small", false, "large", "huge"] }], // custom dropdown
+    [{ header: [1, 2, 3, 4, 5, 6, false] }],
+
+    [{ color: [] }, { background: [] }], // dropdown with defaults from theme
+    [{ font: [] }],
+    [{ align: [] }],
+
+    ["clean"], // remove formatting button
   ],
   clipboard: {
     // toggle to add extra line breaks when pasting HTML:
@@ -38,12 +44,17 @@ const formats = [
   "underline",
   "strike",
   "blockquote",
+  "code-block",
   "list",
   "bullet",
   "indent",
   "link",
   "image",
   "video",
+  "color",
+  "background",
+  "script",
+  "align",
 ];
 
 interface EditorTypes {
@@ -61,7 +72,7 @@ export default function Editor({ value, onChange }: EditorTypes) {
   return (
     <QuillNoSSRWrapper
       onChange={(c, d, s, e) => onChange(c, d, s, e)}
-      value={value || ""}
+      defaultValue={value || ""}
       modules={modules}
       formats={formats}
       theme="snow"

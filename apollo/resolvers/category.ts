@@ -241,17 +241,33 @@ export default {
           .first();
 
         if (getLanguage) {
-          await CategoryDescription.query()
-            .update({
+          const isDescriptionExists = await CategoryDescription.query()
+            .where("category_id", id)
+            .andWhere("language_id", getLanguage.id);
+          if (isDescriptionExists) {
+            await CategoryDescription.query()
+              .update({
+                name: description.name,
+                description: description.description,
+                meta_title: description.meta_title,
+                meta_description: description.meta_description,
+                meta_keywords: description.meta_keywords,
+                slug: description.slug,
+              } as any)
+              .where("category_id", id)
+              .andWhere("language_id", getLanguage.id);
+          } else {
+            await CategoryDescription.query().insert({
               name: description.name,
               description: description.description,
               meta_title: description.meta_title,
               meta_description: description.meta_description,
               meta_keywords: description.meta_keywords,
               slug: description.slug,
-            } as any)
-            .where("category_id", id)
-            .andWhere("language_id", getLanguage.id);
+              category_id: id,
+              language_id: getLanguage.id,
+            } as any);
+          }
         }
       }
 

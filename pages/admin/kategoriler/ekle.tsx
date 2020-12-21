@@ -32,6 +32,7 @@ import { putAdminRequestError } from "../../../store/reducers/admin";
 import { GET_LANGUAGES } from "../../../apollo/gql/query/language";
 import { Category, CategoryDescription } from "./index";
 import { Language } from "../ayarlar/diller";
+import Editor from "../../../components/Editor";
 
 export default function AddCategory() {
   const [fields, setFields] = useState<Category>({
@@ -140,40 +141,36 @@ export default function AddCategory() {
   const handleFormSubmit = async () => {
     console.log("submitted", fields);
 
-    // let parentId;
-    // let sortOrder;
+    let parentId;
+    let sortOrder;
 
-    // if (fields.parent_id) {
-    //   parentId = Number(fields.parent_id);
-    // } else {
-    //   parentId = null;
-    // }
+    if (fields.parent_id) {
+      parentId = Number(fields.parent_id);
+    } else {
+      parentId = null;
+    }
 
-    // if (!isNaN(fields.sort_order) && fields.sort_order) {
-    //   sortOrder = Number(fields.sort_order);
-    // } else {
-    //   sortOrder = null;
-    // }
+    if (!isNaN(fields.sort_order) && fields.sort_order) {
+      sortOrder = Number(fields.sort_order);
+    } else {
+      sortOrder = null;
+    }
 
-    // try {
-    //   await addCategoryRun({
-    //     variables: {
-    //       input: {
-    //         name: fields.name,
-    //         meta_title: fields.meta_title,
-    //         meta_description: fields.meta_description,
-    //         meta_keyword: fields.meta_keyword,
-    //         parent_id: parentId,
-    //         sort_order: sortOrder,
-    //         status: fields.status,
-    //         slug: fields.slug,
-    //       },
-    //     },
-    //   });
-    // } catch (err) {
-    //   console.log(err);
-    //   dispatch(putAdminRequestError(err.message));
-    // }
+    try {
+      await addCategoryRun({
+        variables: {
+          input: {
+            parent_id: parentId,
+            sort_order: sortOrder,
+            status: fields.status,
+            description: fields.description,
+          },
+        },
+      });
+    } catch (err) {
+      console.log(err);
+      dispatch(putAdminRequestError(err.message));
+    }
   };
 
   const handleNormalInputChange = (e) => {
@@ -306,6 +303,15 @@ export default function AddCategory() {
                 name="name"
                 value={fieldsToUse?.name || ""}
                 onChange={handleLanguageInputChange}
+              />
+            </Form.Field>
+            <Form.Field>
+              <label>Kategori Açıklaması</label>
+              <Editor
+                value={fieldsToUse?.description || ""}
+                onChange={(c) => {
+                  console.log(c);
+                }}
               />
             </Form.Field>
             <Form.Field>

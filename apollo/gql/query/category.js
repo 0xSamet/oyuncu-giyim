@@ -31,6 +31,7 @@ export const GET_CATEGORIES_ADMIN = gql`
       id
       parent_id
       status
+      sort_order
       description {
         name
         description

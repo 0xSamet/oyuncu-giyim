@@ -38,7 +38,7 @@ export interface CategoryDescription {
 
 export interface Category {
   id?: ReactText;
-  description: [CategoryDescription] | null;
+  description: CategoryDescription[] | null;
   parent_id: number | string | null;
   status: boolean;
   sort_order: number;
@@ -93,6 +93,8 @@ export default function AdminDashboard() {
     const { name } = category.description.find(
       (category) => category.language === "tr"
     );
+
+    console.log(category);
 
     return (
       <Table.Row key={category.id}>

@@ -8,13 +8,13 @@ export default `
     slug: String
   }
   type CategoryDescriptionOnAdmin {
-    name: String
+    name: String!
     description: String
     meta_title: String
     meta_description: String
     meta_keywords: String
-    slug: String
-    language: String
+    slug: String!
+    language: String!
   }
   type Category {
     id: ID!
