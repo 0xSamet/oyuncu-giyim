@@ -9,9 +9,11 @@ import {
 } from "semantic-ui-react";
 import SEO from "../../../../components/Seo";
 import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import { useLazyQuery, useMutation } from "@apollo/client";
 import { GET_LANGUAGES } from "../../../../apollo/gql/query/language";
 import { DELETE_LANGUAGE } from "../../../../apollo/gql/mutations/language";
+import { putAdminRequestError } from "../../../../store/reducers/admin";
 
 export interface Language {
   id: string;
@@ -28,7 +30,7 @@ interface LanguageRowType {
 
 export default function AdminSettingsLanguages() {
   const [languages, setLanguages] = useState([]);
-
+  const dispatch = useDispatch();
   const [getLanguages, { data, loading, error }] = useLazyQuery(GET_LANGUAGES, {
     fetchPolicy: "no-cache",
   });
@@ -57,15 +59,19 @@ export default function AdminSettingsLanguages() {
   }, [data]);
 
   const handleDeleteLanguage = async (languageId) => {
-    await deleteLanguageRun({
-      variables: {
-        input: {
-          id: languageId,
+    try {
+      await deleteLanguageRun({
+        variables: {
+          input: {
+            id: languageId,
+          },
         },
-      },
-    });
-
-    getLanguages();
+      });
+      getLanguages();
+    } catch (err) {
+      console.log(err);
+      dispatch(putAdminRequestError(err.message));
+    }
   };
 
   const CategoryRow: React.FC<LanguageRowType> = ({ language }) => {

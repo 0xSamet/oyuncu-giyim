@@ -14,6 +14,12 @@ import {
   categoriesDescriptionLoader,
   categoriesDescriptionAdminLoader,
 } from "../../../apollo/dataloaders/category";
+import {
+  desktopMenuDescriptionLoader,
+  desktopMenuDescriptionAdminLoader,
+  mobileMenuDescriptionLoader,
+  mobileMenuDescriptionAdminLoader,
+} from "../../../apollo/dataloaders/menu";
 
 const apolloServer = new ApolloServer({
   schema,
@@ -26,6 +32,10 @@ const apolloServer = new ApolloServer({
         parentCategoriesLoader,
         categoriesDescriptionLoader,
         categoriesDescriptionAdminLoader,
+        desktopMenuDescriptionLoader,
+        desktopMenuDescriptionAdminLoader,
+        mobileMenuDescriptionLoader,
+        mobileMenuDescriptionAdminLoader,
       },
     };
   },

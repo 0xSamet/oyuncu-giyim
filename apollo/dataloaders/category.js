@@ -28,8 +28,6 @@ export const parentCategoriesLoader = new DataLoader(async (keys) => {
 });
 
 export const categoriesDescriptionLoader = new DataLoader(async (keys) => {
-  //console.log("keys", keys[0].language);
-
   const language = keys[0].language;
 
   let response = {};
@@ -57,10 +55,6 @@ export const categoriesDescriptionLoader = new DataLoader(async (keys) => {
 });
 
 export const categoriesDescriptionAdminLoader = new DataLoader(async (keys) => {
-  //console.log("keys", keys[0].language);
-
-  // const language = keys[0].language;
-
   let response = {};
 
   const descriptions = await CategoryDescription.query()

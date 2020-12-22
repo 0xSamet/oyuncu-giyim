@@ -18,10 +18,18 @@ function LeftMenuListItem({
     menu: {
       desktopMenu: { index: indexFromStore },
     },
+    theme: { iconMode },
   } = useSelector((state) => state);
 
   const [toggle, setToggle] = useState(false);
-  const props = useSpring({ height: toggle ? submenu.length * 45 : 0 });
+  const getHeight = () => {
+    if (iconMode) {
+      return submenu.length * 55;
+    } else {
+      return submenu.length * 45;
+    }
+  };
+  const props = useSpring({ height: toggle ? getHeight() : 0 });
   return (
     <li
       className={clsx({

@@ -1,20 +1,57 @@
-export default `
-  type DesktopMenu {
-    id: ID
+import { gql } from "apollo-server-micro";
+
+export default gql`
+  type DesktopMenuDescription {
     name: String
     href: String
     target: String
     icon_url: String
+  }
+  type DesktopMenuDescriptionOndmin {
+    name: String
+    href: String
+    target: String
+    icon_url: String
+    language: String!
+  }
+  type DesktopMenu {
+    id: ID!
     sort_order: Int
     is_divider: Boolean
+    status: Boolean
+    description: DesktopMenuDescription
   }
-  type MobileMenu {
-    id: ID
+  type DesktopMenuOnAdmin {
+    id: ID!
+    sort_order: Int
+    is_divider: Boolean
+    status: Boolean
+    description: [DesktopMenuDescriptionOndmin]
+  }
+  type MobileMenuDescription {
     name: String
     href: String
     target: String
     icon_url: String
+  }
+  type MobileMenuDescriptionOnAdmin {
+    name: String
+    href: String
+    target: String
+    icon_url: String
+    language: String!
+  }
+  type MobileMenu {
+    id: ID!
     sort_order: Int
+    status: Boolean
+    description: MobileMenuDescription
+  }
+  type MobileMenuOnAdmin {
+    id: ID!
+    sort_order: Int
+    status: Boolean
+    description: [MobileMenuDescriptionOnAdmin]
   }
   input addDesktopMenuInput {
     name: String!
@@ -83,13 +120,19 @@ export default `
     success: Boolean!
   }
   type Query {
-    desktopMenu: [DesktopMenu!]!
-    mobileMenu: [MobileMenu!]!
+    desktopMenu(language: String!): [DesktopMenu!]!
+    desktopMenuOnAdmin: [DesktopMenuOnAdmin!]!
+    mobileMenu(language: String!): [MobileMenu!]!
+    mobileMenuOnAdmin: [MobileMenuOnAdmin!]!
   }
   type Mutation {
     addDesktopMenu(input: addDesktopMenuInput!): addDesktopMenuResponse!
-    updateDesktopMenu(input: updateDesktopMenuInput!): updateDesktopMenuResponse!
-    deleteDesktopMenu(input: deleteDesktopMenuInput!): deleteDesktopMenuResponse!
+    updateDesktopMenu(
+      input: updateDesktopMenuInput!
+    ): updateDesktopMenuResponse!
+    deleteDesktopMenu(
+      input: deleteDesktopMenuInput!
+    ): deleteDesktopMenuResponse!
     sortDesktopMenu(input: [sortDesktopMenuInput!]!): sortDesktopMenuResponse!
     addMobileMenu(input: addMobileMenuInput!): addMobileMenuResponse!
     updateMobileMenu(input: updateMobileMenuInput!): updateMobileMenuResponse!

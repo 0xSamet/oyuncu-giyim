@@ -1,5 +1,5 @@
 import { GetStaticProps } from "next";
-import SEO from "../../components/Seo";
+import SEO from "../../../components/Seo";
 import {
   Accordion,
   Icon,
@@ -14,7 +14,10 @@ import {
 } from "semantic-ui-react";
 import { useEffect, useState } from "react";
 import { useLazyQuery, useMutation } from "@apollo/client";
-import { GET_DESKTOP_MENU, GET_MOBILE_MENU } from "../../apollo/gql/query/menu";
+import {
+  GET_DESKTOP_MENU,
+  GET_MOBILE_MENU,
+} from "../../../apollo/gql/query/menu";
 import {
   ADD_DESKTOP_MENU,
   UPDATE_DESKTOP_MENU,
@@ -24,7 +27,7 @@ import {
   UPDATE_MOBILE_MENU,
   DELETE_MOBILE_MENU,
   SORT_MOBILE_MENU,
-} from "../../apollo/gql/mutations/menu";
+} from "../../../apollo/gql/mutations/menu";
 import clsx from "clsx";
 import produce from "immer";
 import {
@@ -33,7 +36,6 @@ import {
   SortableHandle,
 } from "react-sortable-hoc";
 import arrayMove from "array-move";
-import { initializeApollo } from "../../apollo/client";
 
 const DragHandle = SortableHandle(() => (
   <Icon name="arrows alternate vertical" style={{ marginRight: 12 }} />

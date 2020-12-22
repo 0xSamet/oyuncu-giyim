@@ -1,15 +1,74 @@
 import { DesktopMenu, MobileMenu } from "../../database/models/menu";
+import { getLanguage } from "./helpers";
 
 export default {
+  DesktopMenu: {
+    description: async (
+      parent,
+      params,
+      { loaders: { desktopMenuDescriptionLoader }, req },
+      _info
+    ) => {
+      return desktopMenuDescriptionLoader.load({
+        id: parent.id,
+        language: req.language,
+      });
+    },
+  },
+  DesktopMenuOnAdmin: {
+    description: async (
+      parent,
+      params,
+      { loaders: { desktopMenuDescriptionAdminLoader } },
+      _info
+    ) => {
+      return desktopMenuDescriptionAdminLoader.load({
+        id: parent.id,
+      });
+    },
+  },
+  MobileMenu: {
+    description: async (
+      parent,
+      params,
+      { loaders: { mobileMenuDescriptionLoader }, req },
+      _info
+    ) => {
+      return mobileMenuDescriptionLoader.load({
+        id: parent.id,
+        language: req.language,
+      });
+    },
+  },
+  MobileMenuOnAdmin: {
+    description: async (
+      parent,
+      params,
+      { loaders: { mobileMenuDescriptionAdminLoader } },
+      _info
+    ) => {
+      return mobileMenuDescriptionAdminLoader.load({
+        id: parent.id,
+      });
+    },
+  },
   Query: {
-    desktopMenu: async (_parent, _args, { db }, _info) => {
+    desktopMenu: async (_parent, params, { req }, _info) => {
       const result = await DesktopMenu.query();
-
+      req.language = await getLanguage(params);
       return result;
     },
-    mobileMenu: async (_parent, _args, { db }, _info) => {
+    desktopMenuOnAdmin: async (_parent, params, { db, req }, _info) => {
+      const result = await DesktopMenu.query();
+      return result;
+    },
+    mobileMenu: async (_parent, params, { req }, _info) => {
       const result = await MobileMenu.query();
-
+      req.language = await getLanguage(params);
+      return result;
+    },
+    mobileMenuOnAdmin: async (_parent, params, { req }, _info) => {
+      const result = await MobileMenu.query();
       return result;
     },
   },
@@ -18,7 +77,7 @@ export default {
       try {
         const { name, href, target, icon_url, is_divider } = input;
 
-        const biggestSortOrder = await DesktopMenu.query()
+        const biggestSortOrder: any = await DesktopMenu.query()
           .select("sort_order")
           .orderBy([{ column: "sort_order", order: "DESC" }])
           .first();

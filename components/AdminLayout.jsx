@@ -30,7 +30,7 @@ const AdminLayout = ({ children }) => {
 
     useEffect(() => {
       if (!visible) {
-        console.log("sil", error.id);
+        //console.log("sil", error.id);
         dispatch(deleteAdminRequestError({ id: error.id }));
       }
     }, [visible]);

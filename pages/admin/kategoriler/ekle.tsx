@@ -130,17 +130,13 @@ export default function AddCategory() {
     if (
       addCategoryResponse &&
       addCategoryResponse.addCategory &&
-      addCategoryResponse.addCategory.name
+      addCategoryResponse.addCategory.id
     ) {
       router.push("/admin/kategoriler");
     }
   }, [addCategoryResponse]);
 
-  console.log(activeLanguage);
-
   const handleFormSubmit = async () => {
-    console.log("submitted", fields);
-
     let parentId;
     let sortOrder;
 

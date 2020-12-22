@@ -8,7 +8,7 @@ exports.up = async function (knex) {
   await knex.schema
     .createTable(tableNames.language, (table) => {
       table.increments();
-      table.string("name");
+      table.string("name").notNullable();
       table.string("code").unique();
       table.string("flag_code");
       table.integer("sort_order");
@@ -44,6 +44,51 @@ exports.up = async function (knex) {
       table.string("meta_description", 500);
       table.string("meta_keywords", 500);
       table.string("slug").notNullable();
+    })
+    .createTable(tableNames.desktop_menu, (table) => {
+      table.increments();
+      table.integer("sort_order");
+      table.boolean("is_divider").defaultTo(false);
+      table.boolean("status").defaultTo(true);
+    })
+    .createTable(tableNames.desktop_menu_description, (table) => {
+      table.increments();
+      table
+        .integer("desktop_menu_id")
+        .references("id")
+        .inTable(tableNames.desktop_menu)
+        .onDelete("cascade");
+      table
+        .integer("language_id")
+        .references("id")
+        .inTable(tableNames.language)
+        .onDelete("cascade");
+      table.string("name").notNullable();
+      table.string("href");
+      table.string("target").defaultTo("_self");
+      table.string("icon_url");
+    })
+    .createTable(tableNames.mobile_menu, (table) => {
+      table.increments();
+      table.integer("sort_order");
+      table.boolean("status").defaultTo(true);
+    })
+    .createTable(tableNames.mobile_menu_description, (table) => {
+      table.increments();
+      table
+        .integer("mobile_menu_id")
+        .references("id")
+        .inTable(tableNames.mobile_menu)
+        .onDelete("cascade");
+      table
+        .integer("language_id")
+        .references("id")
+        .inTable(tableNames.language)
+        .onDelete("cascade");
+      table.string("name").notNullable();
+      table.string("href");
+      table.string("target").defaultTo("_self");
+      table.string("icon_url");
     });
 };
 
@@ -51,58 +96,11 @@ exports.up = async function (knex) {
  * @param {Knex} knex
  */
 exports.down = async function (knex) {
-  await knex.schema.dropTable(tableNames.category_description);
-  await knex.schema.dropTable(tableNames.category);
-  await knex.schema.dropTable(tableNames.language);
+  await knex.schema.dropTableIfExists(tableNames.category_description);
+  await knex.schema.dropTableIfExists(tableNames.category);
+  await knex.schema.dropTableIfExists(tableNames.desktop_menu_description);
+  await knex.schema.dropTableIfExists(tableNames.desktop_menu);
+  await knex.schema.dropTableIfExists(tableNames.mobile_menu_description);
+  await knex.schema.dropTableIfExists(tableNames.mobile_menu);
+  await knex.schema.dropTableIfExists(tableNames.language);
 };
-
-/*
-
-    .dropTable(tableNames.page)
-    .dropTable(tableNames.desktop_menu)
-    .dropTable(tableNames.mobile_menu)
-
-
-    
-    .createTable(tableNames.desktop_menu, (table) => {
-      table.increments();
-      table.string("name").notNullable();
-      table.string("href");
-      table.string("target").defaultTo("_self");
-      table.string("icon_url");
-      table.integer("sort_order");
-      table.boolean("is_divider").defaultTo(false);
-    })
-    .createTable(tableNames.mobile_menu, (table) => {
-      table.increments();
-      table.string("name").notNullable();
-      table.string("href");
-      table.string("target").defaultTo("_self");
-      table.string("icon_url");
-      table.integer("sort_order");
-    })
-    .createTable(tableNames.page, (table) => {
-      table.increments();
-      table
-        .integer("parent_id")
-        .references("id")
-        .inTable(tableNames.page)
-        .onDelete("cascade");
-      table.string("name").notNullable();
-      table
-        .integer("desktop_menu_id")
-        .references("id")
-        .inTable(tableNames.desktop_menu)
-        .onDelete("cascade");
-      table
-        .integer("mobile_menu_id")
-        .references("id")
-        .inTable(tableNames.mobile_menu)
-        .onDelete("cascade");
-      table.string("meta_title");
-      table.string("meta_description", 500);
-      table.string("meta_keyword", 500);
-      table.string("slug").notNullable();
-    })
-
-*/

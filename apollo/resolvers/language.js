@@ -111,7 +111,16 @@ export default {
         throw new UserInputError(err.details[0].message);
       }
       let { id } = validatedLanguage;
-      const result = await Language.query().deleteById(id);
+      let result;
+
+      const checkDefaultLanguage = await Language.query().findById(id);
+
+      if (checkDefaultLanguage.is_default) {
+        throw new Error("Ana Dil Silinemez");
+      } else {
+        result = await Language.query().deleteById(id);
+      }
+
       if (result) {
         return {
           success: true,

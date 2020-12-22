@@ -105,8 +105,6 @@ export default function AddCategory() {
       );
       if (foundCategory) {
         setCategories(categoriesData.categoriesOnAdmin);
-
-        //console.log("FOUND", foundCategory.description);
       } else {
         router.push("/admin/kategoriler");
       }
@@ -122,8 +120,6 @@ export default function AddCategory() {
     ) {
       const categoryId = router.query.categoryId;
       const foundCategory = categories.find((c) => c.id == categoryId);
-
-      console.log(foundCategory.parent_id, String(foundCategory.parent_id));
 
       if (foundCategory) {
         setFields({
@@ -165,14 +161,13 @@ export default function AddCategory() {
     if (
       updateCategoryResponse &&
       updateCategoryResponse.updateCategory &&
-      updateCategoryResponse.updateCategory.status
+      updateCategoryResponse.updateCategory.id
     ) {
       router.push("/admin/kategoriler");
     }
   }, [updateCategoryResponse]);
 
   const handleFormSubmit = async () => {
-    console.log("submitted", fields);
     let parentId;
     let sortOrder;
 
@@ -189,7 +184,6 @@ export default function AddCategory() {
     }
 
     try {
-      console.log(fields);
       await updateCategoryRun({
         variables: {
           input: {
@@ -304,7 +298,7 @@ export default function AddCategory() {
               />
             </Form.Field>
             <Form.Field>
-              <label>{activeLanguage} - Üst Kategori</label>
+              <label>Üst Kategori</label>
               <Select
                 className="category-select"
                 options={getCategoriesForOption()}
@@ -364,7 +358,6 @@ export default function AddCategory() {
                               draft.description[foundIndex]["description"] = c;
                             })
                           );
-                          console.log("CHANGED TO ", c);
                         }}
                       />
                     </span>

@@ -60,7 +60,6 @@ export default {
     },
     categoriesOnAdmin: async (_parent, params, { db, req }, _info) => {
       const result = await Category.query();
-      req.language = await getLanguage(params);
 
       return result;
     },
@@ -212,7 +211,7 @@ export default {
       if (parent_id) {
         const allCategories = await Category.query();
         const parents = getParentCategories(allCategories, validatedCategory);
-        console.log(parents);
+        //console.log(parents);
 
         const isParentExists = await Category.query()
           .where("id", parent_id)
@@ -235,6 +234,8 @@ export default {
         .first()
         .returning("*");
 
+      console.log(updatedCategory);
+
       for (const description of validatedCategory.description) {
         const getLanguage: any = await Language.query()
           .where("code", description.language)
@@ -243,7 +244,8 @@ export default {
         if (getLanguage) {
           const isDescriptionExists = await CategoryDescription.query()
             .where("category_id", id)
-            .andWhere("language_id", getLanguage.id);
+            .andWhere("language_id", getLanguage.id)
+            .first();
           if (isDescriptionExists) {
             await CategoryDescription.query()
               .update({

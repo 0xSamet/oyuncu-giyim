@@ -1,4 +1,6 @@
-export default `
+import { gql } from "apollo-server-micro";
+
+export default gql`
   type CategoryDescription {
     name: String
     description: String
@@ -22,7 +24,7 @@ export default `
     description: CategoryDescription
     sort_order: Int!
     status: Boolean
-    parents : [Category]
+    parents: [Category]
   }
   type CategoryOnAdmin {
     id: ID!
@@ -30,7 +32,7 @@ export default `
     description: [CategoryDescriptionOnAdmin]
     sort_order: Int!
     status: Boolean
-    parents : [CategoryOnAdmin]
+    parents: [CategoryOnAdmin]
   }
   input CategoryInputLocalizedFields {
     name: String!

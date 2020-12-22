@@ -1,4 +1,6 @@
-export default `
+import { gql } from "apollo-server-micro";
+
+export default gql`
   type Page {
     id: ID
     name: String

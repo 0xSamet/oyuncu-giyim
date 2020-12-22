@@ -11,6 +11,10 @@ exports.seed = async function (knex) {
   await knex(tableNames.language).del();
   await knex(tableNames.category).del();
   await knex(tableNames.category_description).del();
+  await knex(tableNames.desktop_menu).del();
+  await knex(tableNames.desktop_menu_description).del();
+  await knex(tableNames.mobile_menu).del();
+  await knex(tableNames.mobile_menu_description).del();
 
   await knex(tableNames.language).insert([
     {
@@ -47,18 +51,6 @@ exports.seed = async function (knex) {
     {
       sort_order: 3,
       parent_id: 2,
-    },
-  ]);
-
-  //subcategory/subcategory
-  await knex(tableNames.category).insert([
-    {
-      sort_order: 4,
-      parent_id: 3,
-    },
-    {
-      sort_order: 5,
-      parent_id: 4,
     },
   ]);
 
@@ -137,6 +129,53 @@ exports.seed = async function (knex) {
       slug: "/baskili-t-shirt",
       category_id: 4,
       language_id: 2,
+    },
+  ]);
+
+  await knex(tableNames.desktop_menu).insert([
+    {
+      sort_order: 0,
+      is_divider: false,
+    },
+  ]);
+
+  await knex(tableNames.desktop_menu_description).insert([
+    {
+      desktop_menu_id: 1,
+      language_id: 1,
+      name: "Anasayfa",
+      href: "/",
+      icon_url: "/icons/home.svg",
+    },
+    {
+      desktop_menu_id: 1,
+      language_id: 2,
+      name: "Homepage",
+      href: "/",
+      icon_url: "/icons/home.svg",
+    },
+  ]);
+
+  await knex(tableNames.mobile_menu).insert([
+    {
+      sort_order: 0,
+    },
+  ]);
+
+  await knex(tableNames.mobile_menu_description).insert([
+    {
+      mobile_menu_id: 1,
+      language_id: 1,
+      name: "Anasayfa",
+      href: "/",
+      icon_url: "/icons/home.svg",
+    },
+    {
+      mobile_menu_id: 1,
+      language_id: 2,
+      name: "Homepage",
+      href: "/",
+      icon_url: "/icons/home.svg",
     },
   ]);
 };
