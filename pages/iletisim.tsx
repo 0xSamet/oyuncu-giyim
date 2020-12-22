@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux";
 import { wrapper } from "../store";
 import { handleIconMode, handleMenuIndex } from "../utils";
 import { GET_PAGE } from "../apollo/gql/query/page";
-import { GET_DESKTOP_MENU, GET_MOBILE_MENU } from "../apollo/gql/query/menu";
+// import { GET_DESKTOP_MENU, GET_MOBILE_MENU } from "../apollo/gql/query/menu.ts";
 import { ApolloClient, NormalizedCacheObject, useQuery } from "@apollo/client";
 import { initializeApollo } from "../apollo/client";
 

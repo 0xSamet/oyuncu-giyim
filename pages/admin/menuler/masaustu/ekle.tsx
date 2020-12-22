@@ -1,4 +1,4 @@
-import SEO from "../../../components/Seo";
+import SEO from "../../../../components/Seo";
 import {
   Button,
   Checkbox,
@@ -18,49 +18,35 @@ import {
 } from "semantic-ui-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useLazyQuery, useMutation } from "@apollo/client";
-import { GET_CATEGORIES_ADMIN } from "../../../apollo/gql/query/category";
-import { ADD_CATEGORY } from "../../../apollo/gql/mutations/category";
+import { GET_CATEGORIES_ADMIN } from "../../../../apollo/gql/query/category";
+import { ADD_CATEGORY } from "../../../../apollo/gql/mutations/category";
 import { useRouter } from "next/router";
 import { useDispatch } from "react-redux";
 import produce from "immer";
-import { putAdminRequestError } from "../../../store/reducers/admin";
-import { GET_LANGUAGES } from "../../../apollo/gql/query/language";
-import { Category } from "./index";
-import { Language } from "../ayarlar/diller";
-import Editor from "../../../components/Editor";
+import { putAdminRequestError } from "../../../../store/reducers/admin";
+import { GET_LANGUAGES } from "../../../../apollo/gql/query/language";
+import { DesktopMenu, DesktopMenuDescription } from "../index";
+import { Language } from "../../ayarlar/diller";
+import Editor from "../../../../components/Editor";
 
 export default function AddCategory() {
-  const [sampleDesc] = useState({
+  const [sampleDesc] = useState<DesktopMenuDescription>({
     name: "",
-    description: "",
-    meta_title: "",
-    meta_description: "",
-    meta_keywords: "",
+    href: "",
+    icon_url: "",
+    target: "",
     language: "",
-    slug: "",
   });
-  const [fields, setFields] = useState<Category>({
-    parent_id: null,
+  const [fields, setFields] = useState<DesktopMenu>({
     sort_order: null,
     status: true,
+    is_divider: false,
     description: [sampleDesc],
   });
-  const [categories, setCategories] = useState<Category[] | undefined[]>([]);
   const [languages, setLanguages] = useState<Language[] | undefined[]>([]);
   const [activeLanguage, setActiveLanguage] = useState<string | null>(null);
   const router = useRouter();
   const dispatch = useDispatch();
-  const [
-    getCategories,
-    {
-      data: categoriesData,
-      loading: categoriesLoading,
-      error: categoriesError,
-    },
-  ] = useLazyQuery(GET_CATEGORIES_ADMIN, {
-    fetchPolicy: "no-cache",
-  });
-
   const [
     getLanguages,
     { data: languagesData, loading: languagesLoading, error: languagesError },
@@ -78,23 +64,8 @@ export default function AddCategory() {
   ] = useMutation(ADD_CATEGORY);
 
   useEffect(() => {
-    getCategories();
     getLanguages();
-
-    return () => {
-      setCategories([]);
-    };
   }, []);
-
-  useEffect(() => {
-    if (
-      categoriesData &&
-      categoriesData.categoriesOnAdmin &&
-      categoriesData.categoriesOnAdmin.length > 0
-    ) {
-      setCategories(categoriesData.categoriesOnAdmin);
-    }
-  }, [categoriesData]);
 
   useEffect(() => {
     if (
@@ -131,14 +102,7 @@ export default function AddCategory() {
   }, [addCategoryResponse]);
 
   const handleFormSubmit = async () => {
-    let parentId;
     let sortOrder;
-
-    if (fields.parent_id) {
-      parentId = Number(fields.parent_id);
-    } else {
-      parentId = null;
-    }
 
     if (!isNaN(fields.sort_order) && fields.sort_order) {
       sortOrder = Number(fields.sort_order);
@@ -150,7 +114,6 @@ export default function AddCategory() {
       await addCategoryRun({
         variables: {
           input: {
-            parent_id: parentId,
             sort_order: sortOrder,
             status: fields.status,
             description: fields.description,
@@ -182,44 +145,6 @@ export default function AddCategory() {
       })
     );
   };
-
-  useEffect(() => {
-    console.log(categories);
-  }, [categories]);
-
-  const getCategoriesForOption = useMemo(() => {
-    const a = [...categories]
-      .sort((a, b) => a.sort_order - b.sort_order)
-      .map((c) => {
-        const { name } = c.description.find((c) => c.language === "tr");
-
-        const parentCategoriesAsArray = c.parents.reverse().map((a) => {
-          const { name } = a.description.find((c) => c.language === "tr");
-          return name;
-        });
-
-        const categoryName =
-          parentCategoriesAsArray.length > 0
-            ? ` > ${name ? name : "[Kategorinin Türkçe Adı Yok]"}`
-            : name
-            ? name
-            : "[Kategorinin Türkçe Adı Yok]";
-        return {
-          key: c.id,
-          value: c.id,
-          text: parentCategoriesAsArray.join(" > ") + categoryName,
-        };
-      });
-
-    return [
-      {
-        key: -1,
-        value: "-1",
-        text: "Üst Kategori Yok",
-      },
-      ...a,
-    ];
-  }, [categories]);
 
   const getLanguagesForMenu = useCallback(() => {
     return (languages as Language[]).map((language) => {
@@ -265,20 +190,6 @@ export default function AddCategory() {
               />
             </Form.Field>
             <Form.Field>
-              <label>Üst Kategori</label>
-              <Select
-                className="category-select"
-                options={getCategoriesForOption}
-                value={fields.parent_id ? fields.parent_id : "-1"}
-                onChange={(_, { value }) => {
-                  setFields({
-                    ...fields,
-                    parent_id: value === "-1" ? null : value,
-                  } as any);
-                }}
-              />
-            </Form.Field>
-            <Form.Field>
               <label>Sıralama</label>
               <input
                 type="number"
@@ -291,7 +202,7 @@ export default function AddCategory() {
               <Tab menu={{ pointing: true }} panes={getLanguagesForMenu()} />
             </Form.Field>
             <Form.Field>
-              <label>Kategori Adı</label>
+              <label>Menü Adı</label>
               <input
                 type="text"
                 name="name"
@@ -299,16 +210,51 @@ export default function AddCategory() {
                 onChange={handleLanguageInputChange}
               />
             </Form.Field>
-            <Form.Field>
-              <label>Kategori Açıklaması</label>
-              <Editor
-                value={fieldsToUse?.description || ""}
-                onChange={(c) => {
-                  console.log(c);
+            <Form.Group
+              widths="equal"
+              style={{
+                alignItems: "center",
+              }}
+            >
+              <Form.Field>
+                <label>Gideceği Link</label>
+                <Input
+                  name="href"
+                  value={fieldsToUse?.href || ""}
+                  onChange={handleLanguageInputChange}
+                />
+              </Form.Field>
+              <Select
+                style={{
+                  maxHeight: 40,
+                  marginTop: 17,
+                  marginRight: 7,
                 }}
+                options={[
+                  {
+                    key: "_self",
+                    value: "_self",
+                    text: "_self",
+                  },
+                  {
+                    key: "_blank",
+                    value: "_blank",
+                    text: "_blank",
+                  },
+                  {
+                    key: "_parent",
+                    value: "_parent",
+                    text: "_parent",
+                  },
+                  {
+                    key: "_top",
+                    value: "_top",
+                    text: "_top",
+                  },
+                ]}
               />
-            </Form.Field>
-            <Form.Field>
+            </Form.Group>
+            {/* <Form.Field>
               <label>Meta Title</label>
               <input
                 type="text"
@@ -334,47 +280,14 @@ export default function AddCategory() {
                 onChange={handleLanguageInputChange}
                 style={{ minHeight: 30 }}
               />
-            </Form.Field>
-          </Tab.Pane>
-        );
-      },
-    },
-    {
-      menuItem: "SEO",
-      render: () => {
-        return (
-          <Tab.Pane attached={false}>
-            {(languages as Language[]).map((language) => {
-              const fieldsToUse = fields.description.find(
-                (description) => description.language === language.code
-              );
-              return (
-                <Form.Field key={language.id}>
-                  <label>{`Slug (${language.name})`}</label>
-                  <Input
-                    labelPosition="left"
-                    type="text"
-                    onFocus={() => setActiveLanguage(language.code)}
-                  >
-                    <Label basic>
-                      <Flag name={language.flag_code as FlagNameValues} />
-                    </Label>
-                    <input
-                      name="slug"
-                      value={fieldsToUse.slug || ""}
-                      onChange={handleLanguageInputChange}
-                    />
-                  </Input>
-                </Form.Field>
-              );
-            })}
+            </Form.Field> */}
           </Tab.Pane>
         );
       },
     },
   ];
 
-  if (categoriesLoading || addCategoryLoading || languagesLoading) {
+  if (addCategoryLoading || languagesLoading) {
     return (
       <Segment className="page-loader">
         <Dimmer active>

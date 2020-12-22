@@ -17,7 +17,7 @@ import { useLazyQuery, useMutation } from "@apollo/client";
 import {
   GET_DESKTOP_MENU,
   GET_MOBILE_MENU,
-} from "../../../apollo/gql/query/menu";
+} from "../../../apollo/gql/query/menu.ts";
 import {
   ADD_DESKTOP_MENU,
   UPDATE_DESKTOP_MENU,

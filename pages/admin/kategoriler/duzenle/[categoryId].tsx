@@ -17,7 +17,7 @@ import {
   FlagNameValues,
   FormField,
 } from "semantic-ui-react";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useApolloClient, useLazyQuery, useMutation } from "@apollo/client";
 import {
   GET_CATEGORIES,
@@ -119,7 +119,9 @@ export default function AddCategory() {
       categories.length > 0
     ) {
       const categoryId = router.query.categoryId;
-      const foundCategory = categories.find((c) => c.id == categoryId);
+      const foundCategory: Category = categories.find(
+        (c) => c.id == categoryId
+      );
 
       if (foundCategory) {
         setFields({
@@ -220,7 +222,7 @@ export default function AddCategory() {
     );
   };
 
-  const getCategoriesForOption = useCallback(() => {
+  const getCategoriesForOption = useMemo(() => {
     const a = [...categories]
       .sort((a, b) => a.sort_order - b.sort_order)
       .map((c) => {
@@ -301,7 +303,7 @@ export default function AddCategory() {
               <label>Üst Kategori</label>
               <Select
                 className="category-select"
-                options={getCategoriesForOption()}
+                options={getCategoriesForOption}
                 value={fields.parent_id ? String(fields.parent_id) : "-1"}
                 onChange={(_, { value }) => {
                   setFields({

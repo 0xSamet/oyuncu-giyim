@@ -135,9 +135,9 @@ export default function LeftMenu() {
       <li className="divider"></li>
       <LeftMenuListItem
         index={6}
-        text="Menü"
+        text="Menüler"
         link={{
-          href: "/admin/menu",
+          href: "/admin/menuler",
         }}
         icon="/icons/admin/hamburger.svg"
       />

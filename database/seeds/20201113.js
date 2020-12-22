@@ -27,7 +27,7 @@ exports.seed = async function (knex) {
     {
       name: "English",
       code: "en",
-      flag_code: "en",
+      flag_code: "uk",
       sort_order: 1,
     },
   ]);

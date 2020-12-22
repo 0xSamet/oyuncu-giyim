@@ -4,7 +4,7 @@ import { handleIconMode, handleMenuIndex } from "../utils";
 import SEO from "../components/Seo";
 import { ApolloClient, NormalizedCacheObject } from "@apollo/client";
 import { initializeApollo } from "../apollo/client";
-import { GET_DESKTOP_MENU, GET_MOBILE_MENU } from "../apollo/gql/query/menu";
+// import { GET_DESKTOP_MENU, GET_MOBILE_MENU } from "../apollo/gql/query/menu";
 import { GET_PAGE } from "../apollo/gql/query/page";
 import NotFound from "../components/NotFound";
 

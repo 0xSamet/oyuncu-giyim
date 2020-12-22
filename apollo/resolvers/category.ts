@@ -73,8 +73,6 @@ export default {
         throw new UserInputError(err.details[0].message);
       }
 
-      console.log(validatedCategory);
-
       let { parent_id, sort_order, status } = validatedCategory;
 
       let biggestSortOrder;
@@ -166,6 +164,35 @@ export default {
         throw new UserInputError(`Kategori Bulunamadı.`);
       }
 
+      if (parent_id) {
+        const isParentExists: any = await Category.query()
+          .where("id", parent_id)
+          .first();
+
+        if (!isParentExists) {
+          throw new ValidationError(`Üst Kategori Bulunamadı.`);
+        }
+
+        if (isParentExists.id == id) {
+          throw new ValidationError(`Üst kategoriyi kontrol ediniz.`);
+        }
+
+        const childrenCategories = await Category.query().where(
+          "parent_id",
+          id
+        );
+
+        const findInChildrens = childrenCategories.find(
+          (category: any) => category.id == parent_id
+        );
+
+        if (findInChildrens) {
+          throw new ValidationError(
+            `Kategorinin Alt Kategorileri Üst Kategori olarak kaydedilemez.`
+          );
+        }
+      }
+
       let biggestSortOrder;
 
       if (!sort_order && sort_order != 0) {
@@ -174,14 +201,6 @@ export default {
           .orderBy([{ column: "sort_order", order: "DESC" }])
           .first();
       }
-
-      // const isSlugExists: any = await Category.query().where("slug", slug).first();
-
-      // if (isSlugExists && isSlugExists.slug != validatedCategory.slug) {
-      //   throw new ValidationError(
-      //     `Slug ${isSlugExists.name} kategorisinde kullanılıyor.`
-      //   );
-      // }
 
       let isSlugExists = {
         status: false,
@@ -193,7 +212,7 @@ export default {
           .where("slug", description.slug)
           .first();
 
-        if (isExists && isExists.slug !== description.slug) {
+        if (isExists && isExists.category_id != id) {
           isSlugExists = {
             status: true,
             usingBy: isExists.name,
@@ -208,20 +227,6 @@ export default {
         );
       }
 
-      if (parent_id) {
-        const allCategories = await Category.query();
-        const parents = getParentCategories(allCategories, validatedCategory);
-        //console.log(parents);
-
-        const isParentExists = await Category.query()
-          .where("id", parent_id)
-          .first();
-
-        if (!isParentExists) {
-          throw new ValidationError(`Üst Kategori Bulunamadı.`);
-        }
-      }
-
       const updatedCategory = await Category.query()
         .update({
           parent_id,
@@ -233,8 +238,6 @@ export default {
         .where("id", id)
         .first()
         .returning("*");
-
-      console.log(updatedCategory);
 
       for (const description of validatedCategory.description) {
         const getLanguage: any = await Language.query()

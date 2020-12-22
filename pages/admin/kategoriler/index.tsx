@@ -118,6 +118,7 @@ export default function AdminDashboard() {
               color: "#fff",
               padding: 5,
               borderRadius: ".28571429rem",
+              lineHeight: 2,
             }}
           >
             {name}

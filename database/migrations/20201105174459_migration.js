@@ -38,12 +38,12 @@ exports.up = async function (knex) {
         .references("id")
         .inTable(tableNames.language)
         .onDelete("cascade");
-      table.string("name").notNullable();
-      table.text("description");
-      table.string("meta_title");
-      table.string("meta_description", 500);
-      table.string("meta_keywords", 500);
-      table.string("slug").notNullable();
+      table.string("name").notNullable().defaultTo("");
+      table.text("description").defaultTo("");
+      table.string("meta_title").defaultTo("");
+      table.string("meta_description", 500).defaultTo("");
+      table.string("meta_keywords", 500).defaultTo("");
+      table.string("slug").notNullable().defaultTo("");
     })
     .createTable(tableNames.desktop_menu, (table) => {
       table.increments();
@@ -63,10 +63,10 @@ exports.up = async function (knex) {
         .references("id")
         .inTable(tableNames.language)
         .onDelete("cascade");
-      table.string("name").notNullable();
-      table.string("href");
+      table.string("name").notNullable().defaultTo("");
+      table.string("href").defaultTo("");
       table.string("target").defaultTo("_self");
-      table.string("icon_url");
+      table.string("icon_url").defaultTo("");
     })
     .createTable(tableNames.mobile_menu, (table) => {
       table.increments();
@@ -85,10 +85,10 @@ exports.up = async function (knex) {
         .references("id")
         .inTable(tableNames.language)
         .onDelete("cascade");
-      table.string("name").notNullable();
-      table.string("href");
+      table.string("name").notNullable().defaultTo("");
+      table.string("href").defaultTo("");
       table.string("target").defaultTo("_self");
-      table.string("icon_url");
+      table.string("icon_url").defaultTo("");
     });
 };
 
