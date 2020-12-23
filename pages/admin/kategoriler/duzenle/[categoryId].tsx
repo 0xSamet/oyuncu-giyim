@@ -120,7 +120,7 @@ export default function AddCategory() {
     ) {
       const categoryId = router.query.categoryId;
       const foundCategory: Category = categories.find(
-        (c) => c.id == categoryId
+        (c: Category) => c.id == categoryId
       );
 
       if (foundCategory) {
@@ -318,7 +318,11 @@ export default function AddCategory() {
               <input
                 type="number"
                 name="sort_order"
-                value={fields.sort_order || ""}
+                value={
+                  fields.sort_order || fields.sort_order == 0
+                    ? fields.sort_order
+                    : ""
+                }
                 onChange={handleNormalInputChange}
               />
             </Form.Field>

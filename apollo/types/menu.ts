@@ -28,6 +28,43 @@ export default gql`
     status: Boolean
     description: [DesktopMenuDescriptionOndmin]
   }
+  input DesktopMenuOnAdminOneInput {
+    id: ID!
+  }
+  input DesktopMenuLocalizedFields {
+    name: String!
+    href: String!
+    target: String!
+    icon_url: String!
+    language: String!
+  }
+  input addDesktopMenuInput {
+    sort_order: Int
+    status: Boolean!
+    is_divider: Boolean!
+    description: [DesktopMenuLocalizedFields!]!
+  }
+  input updateDesktopMenuInput {
+    id: ID!
+    sort_order: Int
+    status: Boolean!
+    is_divider: Boolean!
+    description: [DesktopMenuLocalizedFields!]!
+  }
+  input deleteDesktopMenuInput {
+    id: ID!
+  }
+  type deleteDesktopMenuResponse {
+    success: Boolean!
+  }
+  input sortDesktopMenuInput {
+    id: ID!
+    sort_order: Int!
+  }
+  type sortDesktopMenuResponse {
+    success: Boolean!
+  }
+
   type MobileMenuDescription {
     name: String
     href: String
@@ -52,40 +89,6 @@ export default gql`
     sort_order: Int
     status: Boolean
     description: [MobileMenuDescriptionOnAdmin]
-  }
-  input addDesktopMenuInput {
-    name: String!
-    href: String!
-    target: String!
-    icon_url: String!
-    is_divider: Boolean!
-  }
-  type addDesktopMenuResponse {
-    success: Boolean!
-  }
-  input updateDesktopMenuInput {
-    id: ID!
-    name: String
-    href: String
-    target: String
-    icon_url: String
-    is_divider: Boolean!
-  }
-  type updateDesktopMenuResponse {
-    success: Boolean!
-  }
-  input deleteDesktopMenuInput {
-    id: ID!
-  }
-  type deleteDesktopMenuResponse {
-    success: Boolean!
-  }
-  input sortDesktopMenuInput {
-    id: ID!
-    sort_order: Int!
-  }
-  type sortDesktopMenuResponse {
-    success: Boolean!
   }
   input addMobileMenuInput {
     name: String!
@@ -120,19 +123,18 @@ export default gql`
     success: Boolean!
   }
   type Query {
-    desktopMenu(language: String!): [DesktopMenu!]!
-    desktopMenuOnAdmin: [DesktopMenuOnAdmin!]!
-    mobileMenu(language: String!): [MobileMenu!]!
-    mobileMenuOnAdmin: [MobileMenuOnAdmin!]!
+    desktopMenu(language: String!): [DesktopMenu!]
+    desktopMenuOnAdmin: [DesktopMenuOnAdmin!]
+    desktopMenuOnAdminOne(
+      input: DesktopMenuOnAdminOneInput!
+    ): DesktopMenuOnAdmin
+    mobileMenu(language: String!): [MobileMenu!]
+    mobileMenuOnAdmin: [MobileMenuOnAdmin!]
   }
   type Mutation {
-    addDesktopMenu(input: addDesktopMenuInput!): addDesktopMenuResponse!
-    updateDesktopMenu(
-      input: updateDesktopMenuInput!
-    ): updateDesktopMenuResponse!
-    deleteDesktopMenu(
-      input: deleteDesktopMenuInput!
-    ): deleteDesktopMenuResponse!
+    addDesktopMenu(input: addDesktopMenuInput!): DesktopMenu
+    updateDesktopMenu(input: updateDesktopMenuInput!): DesktopMenu
+    deleteDesktopMenu(input: deleteDesktopMenuInput!): deleteDesktopMenuResponse
     sortDesktopMenu(input: [sortDesktopMenuInput!]!): sortDesktopMenuResponse!
     addMobileMenu(input: addMobileMenuInput!): addMobileMenuResponse!
     updateMobileMenu(input: updateMobileMenuInput!): updateMobileMenuResponse!

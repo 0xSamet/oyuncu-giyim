@@ -7,14 +7,20 @@ import {
   Dimmer,
   Loader,
 } from "semantic-ui-react";
-import { ReactText, useEffect, useState } from "react";
-import { DELETE_CATEGORY } from "../../../apollo/gql/mutations/category";
+import { ReactText, useEffect, useMemo, useState } from "react";
 import { useLazyQuery, useMutation } from "@apollo/client";
 import Link from "next/link";
 import {
   GET_DESKTOP_MENU_ADMIN,
   GET_MOBILE_MENU_ADMIN,
 } from "../../../apollo/gql/query/menu";
+import { DELETE_DESKTOP_MENU } from "../../../apollo/gql/mutations/menu";
+import {
+  SortableContainer,
+  SortableElement,
+  SortableHandle,
+} from "react-sortable-hoc";
+import arrayMove from "array-move";
 
 export interface DesktopMenuDescription {
   name: string;
@@ -58,6 +64,7 @@ interface MobileMenuRowType {
 export default function AdminDashboard() {
   const [desktopMenu, setDesktopMenu] = useState([]);
   const [mobileMenu, setMobileMenu] = useState([]);
+  const [desktopMenuMinWidth, setDesktopMenuMinWidth] = useState(null);
 
   const [
     getDesktopMenu,
@@ -82,13 +89,13 @@ export default function AdminDashboard() {
   });
 
   const [
-    deleteCategoryRun,
+    deleteDesktopMenuRun,
     {
-      loading: deleteCategoryLoading,
-      error: deleteCategoryError,
-      data: deleteCategoryResponse,
+      loading: deleteDesktopMenuLoading,
+      error: deleteDesktopMenuError,
+      data: deleteDesktopMenuResponse,
     },
-  ] = useMutation(DELETE_CATEGORY);
+  ] = useMutation(DELETE_DESKTOP_MENU);
 
   useEffect(() => {
     getDesktopMenu();
@@ -115,7 +122,7 @@ export default function AdminDashboard() {
     }
   }, [mobileMenuData]);
 
-  const DesktopMenuRow: React.FC<DesktopMenuRowType> = ({ desktopMenu }) => {
+  const DesktopMenuRow = SortableElement(({ desktopMenu }) => {
     const { name } = desktopMenu.description.find(
       (description: DesktopMenuDescription) => description.language === "tr"
     );
@@ -125,7 +132,7 @@ export default function AdminDashboard() {
         <Table.Cell>{name}</Table.Cell>
         <Table.Cell textAlign="center">{desktopMenu.sort_order}</Table.Cell>
         <Table.Cell singleLine>
-          <Link href={`/admin/menu/masaustu/duzenle/${desktopMenu.id}`}>
+          <Link href={`/admin/menuler/masaustu/duzenle/${desktopMenu.id}`}>
             <a>
               <Button icon labelPosition="left" size="tiny" color="teal">
                 <Icon name="edit" />
@@ -142,7 +149,21 @@ export default function AdminDashboard() {
         </Table.Cell>
       </Table.Row>
     );
-  };
+  });
+
+  const DesktopMenuSortableList = SortableContainer(({ desktopMenu }) => {
+    return (
+      <Table.Body id="desktop-appender">
+        {[...mobileMenu]
+          .sort((a, b) => a.sort_order - b.sort_order)
+          .map((menu, index) => {
+            return (
+              <DesktopMenuRow key={menu.id} index={index} desktopMenu={menu} />
+            );
+          })}
+      </Table.Body>
+    );
+  });
 
   const MobileMenuRow: React.FC<MobileMenuRowType> = ({ mobileMenu }) => {
     const { name } = mobileMenu.description.find(
@@ -154,7 +175,7 @@ export default function AdminDashboard() {
         <Table.Cell>{name}</Table.Cell>
         <Table.Cell textAlign="center">{mobileMenu.sort_order}</Table.Cell>
         <Table.Cell singleLine>
-          <Link href={`/admin/menu/mobil/duzenle/${mobileMenu.id}`}>
+          <Link href={`/admin/menuler/mobil/duzenle/${mobileMenu.id}`}>
             <a>
               <Button icon labelPosition="left" size="tiny" color="teal">
                 <Icon name="edit" />
@@ -173,11 +194,11 @@ export default function AdminDashboard() {
     );
   };
 
-  const handleDeleteCategory = async (categoryId) => {
-    await deleteCategoryRun({
+  const handleDeleteCategory = async (menuId) => {
+    await deleteDesktopMenuRun({
       variables: {
         input: {
-          id: categoryId,
+          id: menuId,
         },
       },
     });
@@ -185,7 +206,7 @@ export default function AdminDashboard() {
     getDesktopMenu();
   };
 
-  if (desktopMenuLoading || mobileMenuLoading || deleteCategoryLoading) {
+  if (desktopMenuLoading || mobileMenuLoading || deleteDesktopMenuLoading) {
     return (
       <Segment className="page-loader">
         <Dimmer active>
@@ -236,23 +257,29 @@ export default function AdminDashboard() {
               </Table.HeaderCell>
             </Table.Row>
           </Table.Header>
-
-          <Table.Body>
-            {desktopMenu && desktopMenu.length > 0 ? (
-              [...desktopMenu]
-                .sort((a, b) => a.sort_order - b.sort_order)
-                .map((menu) => {
-                  return <DesktopMenuRow key={menu.id} desktopMenu={menu} />;
-                })
-            ) : (
+          {desktopMenu && desktopMenu.length > 0 ? (
+            <>
+              <DesktopMenuSortableList
+                desktopMenu={desktopMenu}
+                helperClass="helper-row"
+                helperContainer={() => {
+                  if (typeof window === "undefined") {
+                    return null;
+                  } else {
+                    return document.querySelector("#desktop-appender");
+                  }
+                }}
+              />
+            </>
+          ) : (
+            <Table.Body>
               <Table.Row>
                 <Table.HeaderCell colSpan="3" textAlign="center">
                   Masaüstü Menü Bulunamadı
                 </Table.HeaderCell>
               </Table.Row>
-            )}
-          </Table.Body>
-
+            </Table.Body>
+          )}
           <Table.Footer>
             <Table.Row>
               <Table.HeaderCell colSpan="3" textAlign="right">

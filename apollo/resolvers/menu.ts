@@ -1,4 +1,13 @@
-import { DesktopMenu, MobileMenu } from "../../database/models/menu";
+import { UserInputError, ValidationError } from "apollo-server-micro";
+import { Language } from "../../database/models/language";
+import {
+  addDesktopMenuValidate,
+  deleteDesktopMenuValidate,
+  DesktopMenu,
+  DesktopMenuDescription,
+  MobileMenu,
+  updateDesktopMenuValidate,
+} from "../../database/models/menu";
 import { getLanguage } from "./helpers";
 
 export default {
@@ -58,8 +67,12 @@ export default {
       req.language = await getLanguage(params);
       return result;
     },
-    desktopMenuOnAdmin: async (_parent, params, { db, req }, _info) => {
+    desktopMenuOnAdmin: async (_parent, _params, _ctx, _info) => {
       const result = await DesktopMenu.query();
+      return result;
+    },
+    desktopMenuOnAdminOne: async (_parent, { input: { id } }, _ctx, _info) => {
+      const result = await DesktopMenu.query().first().where("id", id);
       return result;
     },
     mobileMenu: async (_parent, params, { req }, _info) => {
@@ -74,26 +87,51 @@ export default {
   },
   Mutation: {
     addDesktopMenu: async (_parent, { input }, { db }, _info) => {
+      let validatedMenu;
       try {
-        const { name, href, target, icon_url, is_divider } = input;
+        validatedMenu = await addDesktopMenuValidate.validateAsync(input);
+      } catch (err) {
+        throw new UserInputError(err.details[0].message);
+      }
 
-        const biggestSortOrder: any = await DesktopMenu.query()
-          .select("sort_order")
-          .orderBy([{ column: "sort_order", order: "DESC" }])
-          .first();
+      try {
+        const { status, sort_order, is_divider } = validatedMenu;
 
-        await DesktopMenu.query().insert({
-          name,
-          href,
-          target,
-          icon_url,
-          sort_order: biggestSortOrder.sort_order + 1,
+        let biggestSortOrder;
+
+        if (!sort_order && sort_order != 0) {
+          biggestSortOrder = await DesktopMenu.query()
+            .select("sort_order")
+            .orderBy([{ column: "sort_order", order: "DESC" }])
+            .first();
+        }
+
+        const menuAdded: any = await DesktopMenu.query().insert({
+          status,
+          sort_order: biggestSortOrder
+            ? biggestSortOrder.sort_order + 1
+            : sort_order,
           is_divider,
-        });
+        } as any);
 
-        return {
-          success: true,
-        };
+        for (const description of validatedMenu.description) {
+          const getLanguage: any = await Language.query()
+            .where("code", description.language)
+            .first();
+
+          if (getLanguage) {
+            await DesktopMenuDescription.query().insert({
+              desktop_menu_id: menuAdded.id,
+              language_id: getLanguage.id,
+              name: description.name,
+              href: description.href,
+              target: description.target,
+              icon_url: description.icon_url,
+            } as any);
+          }
+        }
+
+        return menuAdded;
       } catch (err) {
         console.log(err);
         return {
@@ -102,20 +140,77 @@ export default {
       }
     },
     updateDesktopMenu: async (_parent, { input }, { db }, _info) => {
+      let validatedMenu;
       try {
-        const { id, name, href, target, icon_url, is_divider } = input;
+        validatedMenu = await updateDesktopMenuValidate.validateAsync(input);
+      } catch (err) {
+        throw new UserInputError(err.details[0].message);
+      }
 
-        await DesktopMenu.query().where("id", id).first().update({
-          name,
-          href,
-          target,
-          icon_url,
-          is_divider,
-        });
+      try {
+        const { id, status, sort_order, is_divider } = validatedMenu;
 
-        return {
-          success: true,
-        };
+        const isMenuExists = await DesktopMenu.query().first().where("id", id);
+
+        if (!isMenuExists) {
+          throw new UserInputError(`Menü Bulunamadı.`);
+        }
+
+        let biggestSortOrder;
+
+        if (!sort_order && sort_order != 0) {
+          biggestSortOrder = await DesktopMenu.query()
+            .select("sort_order")
+            .orderBy([{ column: "sort_order", order: "DESC" }])
+            .first();
+        }
+
+        const updatedMenu = await DesktopMenu.query()
+          .update({
+            sort_order: biggestSortOrder
+              ? biggestSortOrder.sort_order + 1
+              : sort_order,
+            status,
+            is_divider,
+          } as any)
+          .where("id", id)
+          .first()
+          .returning("*");
+
+        for (const description of validatedMenu.description) {
+          const getLanguage: any = await Language.query()
+            .where("code", description.language)
+            .first();
+
+          if (getLanguage) {
+            const isDescriptionExists = await DesktopMenuDescription.query()
+              .where("desktop_menu_id", id)
+              .andWhere("language_id", getLanguage.id)
+              .first();
+            if (isDescriptionExists) {
+              await DesktopMenuDescription.query()
+                .update({
+                  name: description.name,
+                  href: description.href,
+                  target: description.target,
+                  icon_url: description.icon_url,
+                } as any)
+                .where("desktop_menu_id", id)
+                .andWhere("language_id", getLanguage.id);
+            } else {
+              await DesktopMenuDescription.query().insert({
+                name: description.name,
+                href: description.href,
+                target: description.target,
+                icon_url: description.icon_url,
+                desktop_menu_id: id,
+                language_id: getLanguage.id,
+              } as any);
+            }
+          }
+        }
+
+        return updatedMenu;
       } catch (err) {
         console.log(err);
         return {
@@ -124,18 +219,26 @@ export default {
       }
     },
     deleteDesktopMenu: async (_parent, { input }, { db }, _info) => {
+      let validatedMenu;
       try {
-        await DesktopMenu.query().deleteById(input.id);
-
-        return {
-          success: true,
-        };
+        validatedMenu = await deleteDesktopMenuValidate.validateAsync(input);
       } catch (err) {
-        console.log(err);
-        return {
-          success: false,
-        };
+        throw new UserInputError(err.details[0].message);
       }
+
+      let { id } = validatedMenu;
+
+      const deletedMenu = await DesktopMenu.query()
+        .deleteById(id)
+        .returning("*");
+
+      if (!deletedMenu) {
+        throw new ValidationError(`Menü Bulunamadı.`);
+      }
+
+      return {
+        success: true,
+      };
     },
     sortDesktopMenu: async (_parent, { input }, { db }, _info) => {
       try {

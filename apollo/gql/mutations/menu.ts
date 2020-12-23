@@ -3,7 +3,7 @@ import { gql } from "@apollo/client";
 export const ADD_DESKTOP_MENU = gql`
   mutation addDesktopMenu($input: addDesktopMenuInput!) {
     addDesktopMenu(input: $input) {
-      success
+      id
     }
   }
 `;
@@ -11,7 +11,7 @@ export const ADD_DESKTOP_MENU = gql`
 export const UPDATE_DESKTOP_MENU = gql`
   mutation updateDesktopMenu($input: updateDesktopMenuInput!) {
     updateDesktopMenu(input: $input) {
-      success
+      id
     }
   }
 `;

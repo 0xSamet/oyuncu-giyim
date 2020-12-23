@@ -37,7 +37,7 @@ export interface CategoryDescription {
 }
 
 export interface Category {
-  id?: ReactText;
+  id: ReactText;
   description: CategoryDescription[] | null;
   parent_id: number | string | null;
   status: boolean;

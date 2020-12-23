@@ -6,20 +6,14 @@ import {
   Icon,
   Select,
   Input,
-  Label,
-  Flag,
   Segment,
   Dimmer,
   Loader,
-  TextArea,
   Menu,
   Tab,
-  FlagNameValues,
 } from "semantic-ui-react";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useLazyQuery, useMutation } from "@apollo/client";
-import { GET_CATEGORIES_ADMIN } from "../../../../apollo/gql/query/category";
-import { ADD_CATEGORY } from "../../../../apollo/gql/mutations/category";
 import { useRouter } from "next/router";
 import { useDispatch } from "react-redux";
 import produce from "immer";
@@ -27,14 +21,14 @@ import { putAdminRequestError } from "../../../../store/reducers/admin";
 import { GET_LANGUAGES } from "../../../../apollo/gql/query/language";
 import { DesktopMenu, DesktopMenuDescription } from "../index";
 import { Language } from "../../ayarlar/diller";
-import Editor from "../../../../components/Editor";
+import { ADD_DESKTOP_MENU } from "../../../../apollo/gql/mutations/menu";
 
-export default function AddCategory() {
+export default function AddDesktopMenu() {
   const [sampleDesc] = useState<DesktopMenuDescription>({
     name: "",
     href: "",
+    target: "_self",
     icon_url: "",
-    target: "",
     language: "",
   });
   const [fields, setFields] = useState<DesktopMenu>({
@@ -55,13 +49,13 @@ export default function AddCategory() {
   });
 
   const [
-    addCategoryRun,
+    addDesktopMenuRun,
     {
-      loading: addCategoryLoading,
-      error: addCategoryError,
-      data: addCategoryResponse,
+      loading: addDesktopMenuLoading,
+      error: addDesktopMenuError,
+      data: addDesktopMenuResponse,
     },
-  ] = useMutation(ADD_CATEGORY);
+  ] = useMutation(ADD_DESKTOP_MENU);
 
   useEffect(() => {
     getLanguages();
@@ -93,13 +87,13 @@ export default function AddCategory() {
 
   useEffect(() => {
     if (
-      addCategoryResponse &&
-      addCategoryResponse.addCategory &&
-      addCategoryResponse.addCategory.id
+      addDesktopMenuResponse &&
+      addDesktopMenuResponse.addDesktopMenu &&
+      addDesktopMenuResponse.addDesktopMenu.id
     ) {
-      router.push("/admin/kategoriler");
+      router.push("/admin/menuler");
     }
-  }, [addCategoryResponse]);
+  }, [addDesktopMenuResponse]);
 
   const handleFormSubmit = async () => {
     let sortOrder;
@@ -110,12 +104,15 @@ export default function AddCategory() {
       sortOrder = null;
     }
 
+    console.log(fields);
+
     try {
-      await addCategoryRun({
+      await addDesktopMenuRun({
         variables: {
           input: {
             sort_order: sortOrder,
             status: fields.status,
+            is_divider: fields.is_divider,
             description: fields.description,
           },
         },
@@ -170,25 +167,34 @@ export default function AddCategory() {
         );
         return (
           <Tab.Pane attached={false}>
-            <Form.Field
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "flex-end",
-              }}
-            >
-              <label>Açık/Kapalı</label>
-              <Checkbox
-                toggle
-                checked={fields.status}
-                onChange={() => {
-                  return setFields({
-                    ...fields,
-                    status: !fields.status,
-                  });
-                }}
-              />
-            </Form.Field>
+            <Form.Group style={{ justifyContent: "flex-end" }}>
+              <Form.Field>
+                <label>Divider ?</label>
+                <Checkbox
+                  toggle
+                  checked={fields.is_divider}
+                  onChange={() => {
+                    return setFields({
+                      ...fields,
+                      is_divider: !fields.is_divider,
+                    });
+                  }}
+                />
+              </Form.Field>
+              <Form.Field>
+                <label>Açık/Kapalı</label>
+                <Checkbox
+                  toggle
+                  checked={fields.status}
+                  onChange={() => {
+                    return setFields({
+                      ...fields,
+                      status: !fields.status,
+                    });
+                  }}
+                />
+              </Form.Field>
+            </Form.Group>
             <Form.Field>
               <label>Sıralama</label>
               <input
@@ -211,12 +217,11 @@ export default function AddCategory() {
               />
             </Form.Field>
             <Form.Group
-              widths="equal"
               style={{
                 alignItems: "center",
               }}
             >
-              <Form.Field>
+              <Form.Field width={10}>
                 <label>Gideceği Link</label>
                 <Input
                   name="href"
@@ -224,70 +229,61 @@ export default function AddCategory() {
                   onChange={handleLanguageInputChange}
                 />
               </Form.Field>
-              <Select
-                style={{
-                  maxHeight: 40,
-                  marginTop: 17,
-                  marginRight: 7,
-                }}
-                options={[
-                  {
-                    key: "_self",
-                    value: "_self",
-                    text: "_self",
-                  },
-                  {
-                    key: "_blank",
-                    value: "_blank",
-                    text: "_blank",
-                  },
-                  {
-                    key: "_parent",
-                    value: "_parent",
-                    text: "_parent",
-                  },
-                  {
-                    key: "_top",
-                    value: "_top",
-                    text: "_top",
-                  },
-                ]}
-              />
+              <Form.Field width={6}>
+                <label>Target</label>
+                <Select
+                  options={[
+                    {
+                      key: "_self",
+                      value: "_self",
+                      text: "_self",
+                    },
+                    {
+                      key: "_blank",
+                      value: "_blank",
+                      text: "_blank",
+                    },
+                    {
+                      key: "_parent",
+                      value: "_parent",
+                      text: "_parent",
+                    },
+                    {
+                      key: "_top",
+                      value: "_top",
+                      text: "_top",
+                    },
+                  ]}
+                  value={fieldsToUse?.target || ""}
+                  onChange={(_e, { value }: { value: string }) => {
+                    setFields(
+                      produce(fields, (draft) => {
+                        const findIndex = fields.description.findIndex(
+                          (desc) => desc.language === activeLanguage
+                        );
+                        draft.description[findIndex].target = value;
+                      })
+                    );
+                  }}
+                />
+              </Form.Field>
             </Form.Group>
-            {/* <Form.Field>
-              <label>Meta Title</label>
+            <Form.Field>
+              <label>İcon Linki</label>
               <input
                 type="text"
-                name="meta_title"
-                value={fieldsToUse?.meta_title || ""}
+                name="icon_url"
+                value={fieldsToUse?.icon_url || ""}
                 onChange={handleLanguageInputChange}
               />
             </Form.Field>
-            <Form.Field>
-              <label>Meta Description</label>
-              <TextArea
-                name="meta_description"
-                value={fieldsToUse?.meta_description || ""}
-                onChange={handleLanguageInputChange}
-                style={{ minHeight: 100 }}
-              />
-            </Form.Field>
-            <Form.Field>
-              <label>Meta Keywords</label>
-              <TextArea
-                name="meta_keywords"
-                value={fieldsToUse?.meta_keywords || ""}
-                onChange={handleLanguageInputChange}
-                style={{ minHeight: 30 }}
-              />
-            </Form.Field> */}
           </Tab.Pane>
         );
       },
     },
   ];
 
-  if (addCategoryLoading || languagesLoading) {
+  if (addDesktopMenuLoading || languagesLoading) {
     return (
       <Segment className="page-loader">
         <Dimmer active>
@@ -315,7 +311,7 @@ export default function AddCategory() {
           <Tab className="tabs" menu={{ pointing: true }} panes={panes} />
           <Button type="submit" fluid icon size="tiny" color="blue">
             <Icon name="add square" />
-            Ekle
+            Menü Ekle
           </Button>
         </Form>
       </section>

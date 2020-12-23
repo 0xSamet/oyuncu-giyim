@@ -1,3 +1,4 @@
+import Joi from "joi";
 import { Model } from "objection";
 import { tableNames } from "../tableNames";
 
@@ -47,6 +48,45 @@ export class DesktopMenu extends Model {
     };
   }
 }
+
+export const addDesktopMenuValidate = Joi.object({
+  sort_order: Joi.number().integer().required().allow(null),
+  status: Joi.boolean().required(),
+  is_divider: Joi.boolean().required(),
+  description: Joi.array()
+    .items(
+      Joi.object({
+        name: Joi.string().trim().required(),
+        href: Joi.string().trim().required().allow(""),
+        target: Joi.string().trim().required().allow(""),
+        icon_url: Joi.string().trim().required().allow(""),
+        language: Joi.string().trim().required(),
+      })
+    )
+    .unique((a, b) => a.language === b.language),
+});
+
+export const updateDesktopMenuValidate = Joi.object({
+  id: Joi.string().trim().required(),
+  sort_order: Joi.number().integer().required().allow(null),
+  status: Joi.boolean().required(),
+  is_divider: Joi.boolean().required(),
+  description: Joi.array()
+    .items(
+      Joi.object({
+        name: Joi.string().trim().required(),
+        href: Joi.string().trim().required().allow(""),
+        target: Joi.string().trim().required().allow(""),
+        icon_url: Joi.string().trim().required().allow(""),
+        language: Joi.string().trim().required(),
+      })
+    )
+    .unique((a, b) => a.language === b.language),
+});
+
+export const deleteDesktopMenuValidate = Joi.object({
+  id: Joi.string().trim().required(),
+});
 
 export class MobileMenuDescription extends Model {
   static get tableName() {

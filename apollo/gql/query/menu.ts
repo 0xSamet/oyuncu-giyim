@@ -32,6 +32,24 @@ export const GET_DESKTOP_MENU_ADMIN = gql`
   }
 `;
 
+export const GET_DESKTOP_MENU_ADMIN_ONE = gql`
+  query getDesktopMenuOnAdminOne($input: DesktopMenuOnAdminOneInput!) {
+    desktopMenuOnAdminOne(input: $input) {
+      id
+      sort_order
+      is_divider
+      status
+      description {
+        name
+        href
+        target
+        icon_url
+        language
+      }
+    }
+  }
+`;
+
 export const GET_MOBILE_MENU = gql`
   query getMobileMenu {
     mobileMenu {

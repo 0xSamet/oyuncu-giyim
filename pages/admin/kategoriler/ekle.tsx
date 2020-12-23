@@ -40,6 +40,7 @@ export default function AddCategory() {
     slug: "",
   });
   const [fields, setFields] = useState<Category>({
+    id: null,
     parent_id: null,
     sort_order: null,
     status: true,

@@ -60,7 +60,6 @@ const AdminLayout = ({ children }) => {
     const [errors, setErrors] = useState([]);
 
     useEffect(() => {
-      console.log(requestErrors);
       setErrors(requestErrors);
     }, [requestErrors]);
 
