@@ -79,3 +79,20 @@ export const GET_MOBILE_MENU_ADMIN = gql`
     }
   }
 `;
+
+export const GET_MOBILE_MENU_ADMIN_ONE = gql`
+  query getMobileMenuOnAdminOne($input: MobileMenuOnAdminOneInput!) {
+    mobileMenuOnAdminOne(input: $input) {
+      id
+      sort_order
+      status
+      description {
+        name
+        href
+        target
+        icon_url
+        language
+      }
+    }
+  }
+`;

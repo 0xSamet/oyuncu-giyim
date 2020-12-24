@@ -4,12 +4,13 @@ import { Model } from "objection";
 
 const environment = process.env.NODE_ENV || "development";
 const connectionConfig = knexConfig[environment];
+let connection = null;
 
-const connection = knex({
-  ...connectionConfig,
-  debug: false,
-});
+if (!connection) {
+  connection = knex({
+    ...connectionConfig,
+    debug: false,
+  });
+}
 
-Model.knex(connection);
-
-export default connection;
+export default Model.knex(connection);

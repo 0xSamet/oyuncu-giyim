@@ -21,10 +21,7 @@ import { putAdminRequestError } from "../../../../../store/reducers/admin";
 import { GET_LANGUAGES } from "../../../../../apollo/gql/query/language";
 import { DesktopMenu, DesktopMenuDescription } from "../../index";
 import { Language } from "../../../ayarlar/diller";
-import {
-  ADD_DESKTOP_MENU,
-  UPDATE_DESKTOP_MENU,
-} from "../../../../../apollo/gql/mutations/menu";
+import { UPDATE_DESKTOP_MENU } from "../../../../../apollo/gql/mutations/menu";
 import { GET_DESKTOP_MENU_ADMIN_ONE } from "../../../../../apollo/gql/query/menu";
 
 export default function AddCategory() {
@@ -346,12 +343,12 @@ export default function AddCategory() {
   return (
     <SEO
       seo={{
-        meta_title: "Kategoriler - Oyuncu Giyim",
+        meta_title: "Masaüstü Menü Düzenle - Oyuncu Giyim",
         meta_description: "",
         meta_keyword: "",
       }}
     >
-      <section className="admin-categories-page admin-sub-page">
+      <section className="admin-menu-update-page admin-sub-page">
         <Form
           onSubmit={(e) => {
             e.preventDefault();

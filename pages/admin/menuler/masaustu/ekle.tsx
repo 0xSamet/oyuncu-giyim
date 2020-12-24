@@ -168,7 +168,13 @@ export default function AddDesktopMenu() {
         return (
           <Tab.Pane attached={false}>
             <Form.Group style={{ justifyContent: "flex-end" }}>
-              <Form.Field>
+              <Form.Field
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                }}
+              >
                 <label>Divider ?</label>
                 <Checkbox
                   toggle
@@ -181,7 +187,13 @@ export default function AddDesktopMenu() {
                   }}
                 />
               </Form.Field>
-              <Form.Field>
+              <Form.Field
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                }}
+              >
                 <label>Açık/Kapalı</label>
                 <Checkbox
                   toggle

@@ -64,7 +64,6 @@ export default gql`
   type sortDesktopMenuResponse {
     success: Boolean!
   }
-
   type MobileMenuDescription {
     name: String
     href: String
@@ -90,24 +89,26 @@ export default gql`
     status: Boolean
     description: [MobileMenuDescriptionOnAdmin]
   }
-  input addMobileMenuInput {
+  input MobileMenuOnAdminOneInput {
+    id: ID!
+  }
+  input MobileMenuLocalizedFields {
     name: String!
     href: String!
     target: String!
     icon_url: String!
+    language: String!
   }
-  type addMobileMenuResponse {
-    success: Boolean!
+  input addMobileMenuInput {
+    sort_order: Int
+    status: Boolean!
+    description: [MobileMenuLocalizedFields!]!
   }
   input updateMobileMenuInput {
     id: ID!
-    name: String
-    href: String
-    target: String
-    icon_url: String
-  }
-  type updateMobileMenuResponse {
-    success: Boolean!
+    sort_order: Int
+    status: Boolean!
+    description: [MobileMenuLocalizedFields!]!
   }
   input deleteMobileMenuInput {
     id: ID!
@@ -130,14 +131,17 @@ export default gql`
     ): DesktopMenuOnAdmin
     mobileMenu(language: String!): [MobileMenu!]
     mobileMenuOnAdmin: [MobileMenuOnAdmin!]
+    mobileMenuOnAdminOne(input: MobileMenuOnAdminOneInput!): MobileMenuOnAdmin
   }
   type Mutation {
-    addDesktopMenu(input: addDesktopMenuInput!): DesktopMenu
-    updateDesktopMenu(input: updateDesktopMenuInput!): DesktopMenu
-    deleteDesktopMenu(input: deleteDesktopMenuInput!): deleteDesktopMenuResponse
+    addDesktopMenu(input: addDesktopMenuInput!): DesktopMenuOnAdmin
+    updateDesktopMenu(input: updateDesktopMenuInput!): DesktopMenuOnAdmin
+    deleteDesktopMenu(
+      input: deleteDesktopMenuInput!
+    ): deleteDesktopMenuResponse!
     sortDesktopMenu(input: [sortDesktopMenuInput!]!): sortDesktopMenuResponse!
-    addMobileMenu(input: addMobileMenuInput!): addMobileMenuResponse!
-    updateMobileMenu(input: updateMobileMenuInput!): updateMobileMenuResponse!
+    addMobileMenu(input: addMobileMenuInput!): MobileMenuOnAdmin
+    updateMobileMenu(input: updateMobileMenuInput!): MobileMenuOnAdmin
     deleteMobileMenu(input: deleteMobileMenuInput!): deleteMobileMenuResponse!
     sortMobileMenu(input: [sortMobileMenuInput!]!): sortMobileMenuResponse!
   }

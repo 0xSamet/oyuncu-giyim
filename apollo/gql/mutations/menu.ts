@@ -35,7 +35,7 @@ export const SORT_DESKTOP_MENU = gql`
 export const ADD_MOBILE_MENU = gql`
   mutation addMobileMenu($input: addMobileMenuInput!) {
     addMobileMenu(input: $input) {
-      success
+      id
     }
   }
 `;
@@ -43,7 +43,7 @@ export const ADD_MOBILE_MENU = gql`
 export const UPDATE_MOBILE_MENU = gql`
   mutation updateMobileMenu($input: updateMobileMenuInput!) {
     updateMobileMenu(input: $input) {
-      success
+      id
     }
   }
 `;

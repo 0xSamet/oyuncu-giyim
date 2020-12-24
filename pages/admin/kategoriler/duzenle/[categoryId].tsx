@@ -223,7 +223,16 @@ export default function AddCategory() {
   };
 
   const getCategoriesForOption = useMemo(() => {
+    if (!fields.id) {
+      return [];
+    }
     const a = [...categories]
+      .filter((a) => {
+        if (a.id == fields.id || a.parent_id == fields.id) {
+          return false;
+        }
+        return true;
+      })
       .sort((a, b) => a.sort_order - b.sort_order)
       .map((c) => {
         const { name } = c.description.find((c) => c.language === "tr");
@@ -254,7 +263,7 @@ export default function AddCategory() {
       },
       ...a,
     ];
-  }, [categories]);
+  }, [categories, fields.id]);
 
   const getLanguagesForMenu = useCallback(() => {
     return (languages as Language[]).map((language) => {

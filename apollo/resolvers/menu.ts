@@ -2,11 +2,17 @@ import { UserInputError, ValidationError } from "apollo-server-micro";
 import { Language } from "../../database/models/language";
 import {
   addDesktopMenuValidate,
+  addMobileMenuValidate,
   deleteDesktopMenuValidate,
+  deleteMobileMenuValidate,
   DesktopMenu,
   DesktopMenuDescription,
   MobileMenu,
+  MobileMenuDescription,
+  sortDesktopMenuValidate,
+  sortMobileMenuValidate,
   updateDesktopMenuValidate,
+  updateMobileMenuValidate,
 } from "../../database/models/menu";
 import { getLanguage } from "./helpers";
 
@@ -84,6 +90,10 @@ export default {
       const result = await MobileMenu.query();
       return result;
     },
+    mobileMenuOnAdminOne: async (_parent, { input: { id } }, _ctx, _info) => {
+      const result = await MobileMenu.query().first().where("id", id);
+      return result;
+    },
   },
   Mutation: {
     addDesktopMenu: async (_parent, { input }, { db }, _info) => {
@@ -134,9 +144,7 @@ export default {
         return menuAdded;
       } catch (err) {
         console.log(err);
-        return {
-          success: false,
-        };
+        return null;
       }
     },
     updateDesktopMenu: async (_parent, { input }, { db }, _info) => {
@@ -213,9 +221,7 @@ export default {
         return updatedMenu;
       } catch (err) {
         console.log(err);
-        return {
-          success: false,
-        };
+        return null;
       }
     },
     deleteDesktopMenu: async (_parent, { input }, { db }, _info) => {
@@ -241,106 +247,192 @@ export default {
       };
     },
     sortDesktopMenu: async (_parent, { input }, { db }, _info) => {
+      let validatedMenu;
       try {
-        for (const menu of input) {
-          await DesktopMenu.query()
-            .update({
-              sort_order: menu.sort_order,
-            })
-            .where("id", menu.id);
-        }
-
-        return {
-          success: true,
-        };
+        validatedMenu = await sortDesktopMenuValidate.validateAsync(input);
       } catch (err) {
-        console.log(err);
-        return {
-          success: false,
-        };
+        throw new UserInputError(err.details[0].message);
       }
+
+      for (const menu of validatedMenu) {
+        await DesktopMenu.query()
+          .update({
+            sort_order: menu.sort_order,
+          } as any)
+          .where("id", menu.id);
+      }
+
+      return {
+        success: true,
+      };
     },
     addMobileMenu: async (_parent, { input }, { db }, _info) => {
+      let validatedMenu;
       try {
-        const { name, href, target, icon_url } = input;
+        validatedMenu = await addMobileMenuValidate.validateAsync(input);
+      } catch (err) {
+        throw new UserInputError(err.details[0].message);
+      }
 
-        const biggestSortOrder = await MobileMenu.query()
-          .select("sort_order")
-          .orderBy([{ column: "sort_order", order: "DESC" }])
-          .first();
+      try {
+        const { status, sort_order } = validatedMenu;
 
-        await MobileMenu.query().insert({
-          name,
-          href,
-          target,
-          icon_url,
-          sort_order: biggestSortOrder.sort_order + 1,
-        });
+        let biggestSortOrder;
 
-        return {
-          success: true,
-        };
+        if (!sort_order && sort_order != 0) {
+          biggestSortOrder = await MobileMenu.query()
+            .select("sort_order")
+            .orderBy([{ column: "sort_order", order: "DESC" }])
+            .first();
+        }
+
+        const menuAdded: any = await MobileMenu.query().insert({
+          status,
+          sort_order: biggestSortOrder
+            ? biggestSortOrder.sort_order + 1
+            : sort_order,
+        } as any);
+
+        for (const description of validatedMenu.description) {
+          const getLanguage: any = await Language.query()
+            .where("code", description.language)
+            .first();
+
+          if (getLanguage) {
+            await MobileMenuDescription.query().insert({
+              mobile_menu_id: menuAdded.id,
+              language_id: getLanguage.id,
+              name: description.name,
+              href: description.href,
+              target: description.target,
+              icon_url: description.icon_url,
+            } as any);
+          }
+        }
+
+        return menuAdded;
       } catch (err) {
         console.log(err);
-        return {
-          success: false,
-        };
+        return null;
       }
     },
     updateMobileMenu: async (_parent, { input }, { db }, _info) => {
+      let validatedMenu;
       try {
-        const { id, name, href, target, icon_url } = input;
+        validatedMenu = await updateMobileMenuValidate.validateAsync(input);
+      } catch (err) {
+        throw new UserInputError(err.details[0].message);
+      }
 
-        await MobileMenu.query().where("id", id).first().update({
-          name,
-          href,
-          target,
-          icon_url,
-        });
+      try {
+        const { id, status, sort_order } = validatedMenu;
 
-        return {
-          success: true,
-        };
+        const isMenuExists = await MobileMenu.query().first().where("id", id);
+
+        if (!isMenuExists) {
+          throw new UserInputError(`Menü Bulunamadı.`);
+        }
+
+        let biggestSortOrder;
+
+        if (!sort_order && sort_order != 0) {
+          biggestSortOrder = await MobileMenu.query()
+            .select("sort_order")
+            .orderBy([{ column: "sort_order", order: "DESC" }])
+            .first();
+        }
+
+        const updatedMenu = await MobileMenu.query()
+          .update({
+            sort_order: biggestSortOrder
+              ? biggestSortOrder.sort_order + 1
+              : sort_order,
+            status,
+          } as any)
+          .where("id", id)
+          .first()
+          .returning("*");
+
+        for (const description of validatedMenu.description) {
+          const getLanguage: any = await Language.query()
+            .where("code", description.language)
+            .first();
+
+          if (getLanguage) {
+            const isDescriptionExists = await MobileMenuDescription.query()
+              .where("mobile_menu_id", id)
+              .andWhere("language_id", getLanguage.id)
+              .first();
+            if (isDescriptionExists) {
+              await MobileMenuDescription.query()
+                .update({
+                  name: description.name,
+                  href: description.href,
+                  target: description.target,
+                  icon_url: description.icon_url,
+                } as any)
+                .where("mobile_menu_id", id)
+                .andWhere("language_id", getLanguage.id);
+            } else {
+              await MobileMenuDescription.query().insert({
+                name: description.name,
+                href: description.href,
+                target: description.target,
+                icon_url: description.icon_url,
+                mobile_menu_id: id,
+                language_id: getLanguage.id,
+              } as any);
+            }
+          }
+        }
+
+        return updatedMenu;
       } catch (err) {
         console.log(err);
-        return {
-          success: false,
-        };
+        return null;
       }
     },
     deleteMobileMenu: async (_parent, { input }, { db }, _info) => {
+      let validatedMenu;
       try {
-        await MobileMenu.query().deleteById(input.id);
-
-        return {
-          success: true,
-        };
+        validatedMenu = await deleteMobileMenuValidate.validateAsync(input);
       } catch (err) {
-        console.log(err);
-        return {
-          success: false,
-        };
+        throw new UserInputError(err.details[0].message);
       }
+
+      let { id } = validatedMenu;
+
+      const deletedMenu = await MobileMenu.query()
+        .deleteById(id)
+        .returning("*");
+
+      if (!deletedMenu) {
+        throw new ValidationError(`Menü Bulunamadı.`);
+      }
+
+      return {
+        success: true,
+      };
     },
     sortMobileMenu: async (_parent, { input }, { db }, _info) => {
+      let validatedMenu;
       try {
-        for (const menu of input) {
-          await MobileMenu.query()
-            .update({
-              sort_order: menu.sort_order,
-            })
-            .where("id", menu.id);
-        }
-
-        return {
-          success: true,
-        };
+        validatedMenu = await sortMobileMenuValidate.validateAsync(input);
       } catch (err) {
-        console.log(err);
-        return {
-          success: false,
-        };
+        throw new UserInputError(err.details[0].message);
       }
+
+      for (const menu of validatedMenu) {
+        await MobileMenu.query()
+          .update({
+            sort_order: menu.sort_order,
+          } as any)
+          .where("id", menu.id);
+      }
+
+      return {
+        success: true,
+      };
     },
   },
 };

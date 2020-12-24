@@ -88,6 +88,15 @@ export const deleteDesktopMenuValidate = Joi.object({
   id: Joi.string().trim().required(),
 });
 
+export const sortDesktopMenuValidate = Joi.array()
+  .items(
+    Joi.object({
+      id: Joi.string().trim().required(),
+      sort_order: Joi.number().integer().required(),
+    })
+  )
+  .unique((a, b) => a.id === b.id || a.sort_order === b.sort_order);
+
 export class MobileMenuDescription extends Model {
   static get tableName() {
     return tableNames.mobile_menu_description;
@@ -133,3 +142,49 @@ export class MobileMenu extends Model {
     };
   }
 }
+
+export const addMobileMenuValidate = Joi.object({
+  sort_order: Joi.number().integer().required().allow(null),
+  status: Joi.boolean().required(),
+  description: Joi.array()
+    .items(
+      Joi.object({
+        name: Joi.string().trim().required(),
+        href: Joi.string().trim().required().allow(""),
+        target: Joi.string().trim().required().allow(""),
+        icon_url: Joi.string().trim().required().allow(""),
+        language: Joi.string().trim().required(),
+      })
+    )
+    .unique((a, b) => a.language === b.language),
+});
+
+export const updateMobileMenuValidate = Joi.object({
+  id: Joi.string().trim().required(),
+  sort_order: Joi.number().integer().required().allow(null),
+  status: Joi.boolean().required(),
+  description: Joi.array()
+    .items(
+      Joi.object({
+        name: Joi.string().trim().required(),
+        href: Joi.string().trim().required().allow(""),
+        target: Joi.string().trim().required().allow(""),
+        icon_url: Joi.string().trim().required().allow(""),
+        language: Joi.string().trim().required(),
+      })
+    )
+    .unique((a, b) => a.language === b.language),
+});
+
+export const deleteMobileMenuValidate = Joi.object({
+  id: Joi.string().trim().required(),
+});
+
+export const sortMobileMenuValidate = Joi.array()
+  .items(
+    Joi.object({
+      id: Joi.string().trim().required(),
+      sort_order: Joi.number().integer().required(),
+    })
+  )
+  .unique((a, b) => a.id === b.id || a.sort_order === b.sort_order);

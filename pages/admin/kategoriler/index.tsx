@@ -25,6 +25,8 @@ import {
 import { DELETE_CATEGORY } from "../../../apollo/gql/mutations/category";
 import { useLazyQuery, useMutation } from "@apollo/client";
 import Link from "next/link";
+import { useDispatch } from "react-redux";
+import { putAdminRequestError } from "../../../store/reducers/admin";
 
 export interface CategoryDescription {
   name: string;
@@ -51,6 +53,7 @@ interface CategoryRowType {
 
 export default function AdminDashboard() {
   const [categories, setCategories] = useState([]);
+  const dispatch = useDispatch();
 
   const [getCategories, { data, loading, error }] = useLazyQuery(
     GET_CATEGORIES_ADMIN,
@@ -146,13 +149,18 @@ export default function AdminDashboard() {
   };
 
   const handleDeleteCategory = async (categoryId) => {
-    await deleteCategoryRun({
-      variables: {
-        input: {
-          id: categoryId,
+    try {
+      await deleteCategoryRun({
+        variables: {
+          input: {
+            id: categoryId,
+          },
         },
-      },
-    });
+      });
+    } catch (err) {
+      console.log(err);
+      dispatch(putAdminRequestError(err.message));
+    }
 
     getCategories();
   };

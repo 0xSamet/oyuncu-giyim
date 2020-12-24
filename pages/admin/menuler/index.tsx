@@ -7,20 +7,27 @@ import {
   Dimmer,
   Loader,
 } from "semantic-ui-react";
-import { ReactText, useEffect, useMemo, useState } from "react";
+import { ReactText, useCallback, useEffect, useMemo, useState } from "react";
 import { useLazyQuery, useMutation } from "@apollo/client";
 import Link from "next/link";
 import {
   GET_DESKTOP_MENU_ADMIN,
   GET_MOBILE_MENU_ADMIN,
 } from "../../../apollo/gql/query/menu";
-import { DELETE_DESKTOP_MENU } from "../../../apollo/gql/mutations/menu";
+import {
+  DELETE_DESKTOP_MENU,
+  DELETE_MOBILE_MENU,
+  SORT_DESKTOP_MENU,
+  SORT_MOBILE_MENU,
+} from "../../../apollo/gql/mutations/menu";
 import {
   SortableContainer,
   SortableElement,
   SortableHandle,
 } from "react-sortable-hoc";
 import arrayMove from "array-move";
+import { useDispatch } from "react-redux";
+import { putAdminRequestError } from "../../../store/reducers/admin";
 
 export interface DesktopMenuDescription {
   name: string;
@@ -53,18 +60,10 @@ export interface MobileMenu {
   description: MobileMenuDescription[] | null;
 }
 
-interface DesktopMenuRowType {
-  desktopMenu: DesktopMenu;
-}
-
-interface MobileMenuRowType {
-  mobileMenu: MobileMenu;
-}
-
-export default function AdminDashboard() {
+export default function AdminMenus() {
   const [desktopMenu, setDesktopMenu] = useState([]);
   const [mobileMenu, setMobileMenu] = useState([]);
-  const [desktopMenuMinWidth, setDesktopMenuMinWidth] = useState(null);
+  const dispatch = useDispatch();
 
   const [
     getDesktopMenu,
@@ -97,6 +96,33 @@ export default function AdminDashboard() {
     },
   ] = useMutation(DELETE_DESKTOP_MENU);
 
+  const [
+    sortDesktopMenuRun,
+    {
+      loading: sortDesktopMenuLoading,
+      error: sortDesktopMenuError,
+      data: sortDesktopMenuResponse,
+    },
+  ] = useMutation(SORT_DESKTOP_MENU);
+
+  const [
+    deleteMobileMenuRun,
+    {
+      loading: deleteMobileMenuLoading,
+      error: deleteMobileMenuError,
+      data: deleteMobileMenuResponse,
+    },
+  ] = useMutation(DELETE_MOBILE_MENU);
+
+  const [
+    sortMobileMenuRun,
+    {
+      loading: sortMobileMenuLoading,
+      error: sortMobileMenuError,
+      data: sortMobileMenuResponse,
+    },
+  ] = useMutation(SORT_MOBILE_MENU);
+
   useEffect(() => {
     getDesktopMenu();
     getMobileMenu();
@@ -122,6 +148,105 @@ export default function AdminDashboard() {
     }
   }, [mobileMenuData]);
 
+  const handleDeleteDesktopMenu = useCallback(async (menuId) => {
+    try {
+      await deleteDesktopMenuRun({
+        variables: {
+          input: {
+            id: menuId,
+          },
+        },
+      });
+    } catch (err) {
+      console.log(err);
+      dispatch(putAdminRequestError(err.message));
+    }
+
+    getDesktopMenu();
+  }, []);
+
+  const handleDeleteMobileMenu = useCallback(async (menuId) => {
+    try {
+      await deleteMobileMenuRun({
+        variables: {
+          input: {
+            id: menuId,
+          },
+        },
+      });
+    } catch (err) {
+      console.log(err);
+      dispatch(putAdminRequestError(err.message));
+    }
+
+    getMobileMenu();
+  }, []);
+
+  const desktopMenuOnSortEnd = useCallback(
+    async ({ oldIndex, newIndex }) => {
+      const reSortedMenu = arrayMove(desktopMenu, oldIndex, newIndex);
+      setDesktopMenu(reSortedMenu);
+
+      const requestArr = reSortedMenu.map((menu, i) => {
+        return {
+          id: menu.id,
+          sort_order: i,
+        };
+      });
+
+      try {
+        await sortDesktopMenuRun({
+          variables: {
+            input: requestArr,
+          },
+        });
+
+        getDesktopMenu();
+      } catch (err) {
+        console.log(err);
+        dispatch(putAdminRequestError(err.message));
+      }
+    },
+    [desktopMenu]
+  );
+
+  const mobileMenuOnSortEnd = useCallback(
+    async ({ oldIndex, newIndex }) => {
+      const reSortedMenu = arrayMove(mobileMenu, oldIndex, newIndex);
+      setMobileMenu(reSortedMenu);
+
+      const requestArr = reSortedMenu.map((menu, i) => {
+        return {
+          id: menu.id,
+          sort_order: i,
+        };
+      });
+
+      try {
+        await sortMobileMenuRun({
+          variables: {
+            input: requestArr,
+          },
+        });
+
+        getMobileMenu();
+      } catch (err) {
+        console.log(err);
+        dispatch(putAdminRequestError(err.message));
+      }
+    },
+    [mobileMenu]
+  );
+
+  const DesktopMenuDragHandle = SortableHandle(() => {
+    return (
+      <Icon
+        name="arrows alternate vertical"
+        style={{ cursor: "grab", margin: 0 }}
+      />
+    );
+  });
+
   const DesktopMenuRow = SortableElement(({ desktopMenu }) => {
     const { name } = desktopMenu.description.find(
       (description: DesktopMenuDescription) => description.language === "tr"
@@ -129,6 +254,9 @@ export default function AdminDashboard() {
 
     return (
       <Table.Row key={desktopMenu.id}>
+        <Table.Cell textAlign="center">
+          <DesktopMenuDragHandle />
+        </Table.Cell>
         <Table.Cell>{name}</Table.Cell>
         <Table.Cell textAlign="center">{desktopMenu.sort_order}</Table.Cell>
         <Table.Cell singleLine>
@@ -144,7 +272,7 @@ export default function AdminDashboard() {
             icon="trash"
             size="tiny"
             color="red"
-            onClick={() => handleDeleteCategory(desktopMenu.id)}
+            onClick={() => handleDeleteDesktopMenu(desktopMenu.id)}
           ></Button>
         </Table.Cell>
       </Table.Row>
@@ -154,7 +282,7 @@ export default function AdminDashboard() {
   const DesktopMenuSortableList = SortableContainer(({ desktopMenu }) => {
     return (
       <Table.Body id="desktop-appender">
-        {[...mobileMenu]
+        {[...desktopMenu]
           .sort((a, b) => a.sort_order - b.sort_order)
           .map((menu, index) => {
             return (
@@ -165,13 +293,25 @@ export default function AdminDashboard() {
     );
   });
 
-  const MobileMenuRow: React.FC<MobileMenuRowType> = ({ mobileMenu }) => {
+  const MobileMenuDragHandle = SortableHandle(() => {
+    return (
+      <Icon
+        name="arrows alternate vertical"
+        style={{ cursor: "grab", margin: 0 }}
+      />
+    );
+  });
+
+  const MobileMenuRow = SortableElement(({ mobileMenu }) => {
     const { name } = mobileMenu.description.find(
       (description: MobileMenuDescription) => description.language === "tr"
     );
 
     return (
       <Table.Row key={mobileMenu.id}>
+        <Table.Cell textAlign="center">
+          <MobileMenuDragHandle />
+        </Table.Cell>
         <Table.Cell>{name}</Table.Cell>
         <Table.Cell textAlign="center">{mobileMenu.sort_order}</Table.Cell>
         <Table.Cell singleLine>
@@ -187,26 +327,35 @@ export default function AdminDashboard() {
             icon="trash"
             size="tiny"
             color="red"
-            onClick={() => handleDeleteCategory(mobileMenu.id)}
+            onClick={() => handleDeleteMobileMenu(mobileMenu.id)}
           ></Button>
         </Table.Cell>
       </Table.Row>
     );
-  };
+  });
 
-  const handleDeleteCategory = async (menuId) => {
-    await deleteDesktopMenuRun({
-      variables: {
-        input: {
-          id: menuId,
-        },
-      },
-    });
+  const MobileMenuSortableList = SortableContainer(({ mobileMenu }) => {
+    return (
+      <Table.Body id="mobile-appender">
+        {[...mobileMenu]
+          .sort((a, b) => a.sort_order - b.sort_order)
+          .map((menu, index) => {
+            return (
+              <MobileMenuRow key={menu.id} index={index} mobileMenu={menu} />
+            );
+          })}
+      </Table.Body>
+    );
+  });
 
-    getDesktopMenu();
-  };
-
-  if (desktopMenuLoading || mobileMenuLoading || deleteDesktopMenuLoading) {
+  if (
+    desktopMenuLoading ||
+    mobileMenuLoading ||
+    deleteDesktopMenuLoading ||
+    deleteMobileMenuLoading ||
+    sortDesktopMenuLoading ||
+    sortMobileMenuLoading
+  ) {
     return (
       <Segment className="page-loader">
         <Dimmer active>
@@ -248,6 +397,7 @@ export default function AdminDashboard() {
         <Table celled compact className="admin-results-table">
           <Table.Header>
             <Table.Row>
+              <Table.HeaderCell collapsing>Sırala</Table.HeaderCell>
               <Table.HeaderCell>Masaüstü Menüler</Table.HeaderCell>
               <Table.HeaderCell collapsing textAlign="center">
                 Sıralama
@@ -258,23 +408,32 @@ export default function AdminDashboard() {
             </Table.Row>
           </Table.Header>
           {desktopMenu && desktopMenu.length > 0 ? (
-            <>
-              <DesktopMenuSortableList
-                desktopMenu={desktopMenu}
-                helperClass="helper-row"
-                helperContainer={() => {
-                  if (typeof window === "undefined") {
-                    return null;
-                  } else {
-                    return document.querySelector("#desktop-appender");
-                  }
-                }}
-              />
-            </>
+            <DesktopMenuSortableList
+              desktopMenu={desktopMenu}
+              useDragHandle
+              lockAxis="y"
+              helperClass="desktop-helper-row"
+              helperContainer={() => {
+                if (typeof window !== "undefined") {
+                  return document.querySelector("#desktop-appender");
+                }
+              }}
+              onSortStart={({ node }) => {
+                const t = document.querySelector(".desktop-helper-row");
+                if (t) {
+                  node.childNodes.forEach((a: any, i) => {
+                    (t.childNodes[
+                      i
+                    ] as HTMLElement).style.width = `${a.offsetWidth}px`;
+                  });
+                }
+              }}
+              onSortEnd={desktopMenuOnSortEnd}
+            />
           ) : (
             <Table.Body>
               <Table.Row>
-                <Table.HeaderCell colSpan="3" textAlign="center">
+                <Table.HeaderCell colSpan="4" textAlign="center">
                   Masaüstü Menü Bulunamadı
                 </Table.HeaderCell>
               </Table.Row>
@@ -282,7 +441,7 @@ export default function AdminDashboard() {
           )}
           <Table.Footer>
             <Table.Row>
-              <Table.HeaderCell colSpan="3" textAlign="right">
+              <Table.HeaderCell colSpan="4" textAlign="right">
                 {/* <Menu floated="right" pagination>
                   <Menu.Item as="a" icon>
                     <Icon name="chevron left" />
@@ -324,6 +483,9 @@ export default function AdminDashboard() {
         <Table celled compact className="admin-results-table">
           <Table.Header>
             <Table.Row>
+              <Table.HeaderCell collapsing textAlign="center">
+                Sırala
+              </Table.HeaderCell>
               <Table.HeaderCell>Mobil Menüler</Table.HeaderCell>
               <Table.HeaderCell collapsing textAlign="center">
                 Sıralama
@@ -334,25 +496,42 @@ export default function AdminDashboard() {
             </Table.Row>
           </Table.Header>
 
-          <Table.Body>
-            {mobileMenu && mobileMenu.length > 0 ? (
-              [...mobileMenu]
-                .sort((a, b) => a.sort_order - b.sort_order)
-                .map((menu) => {
-                  return <MobileMenuRow key={menu.id} mobileMenu={menu} />;
-                })
-            ) : (
+          {mobileMenu && mobileMenu.length > 0 ? (
+            <MobileMenuSortableList
+              mobileMenu={mobileMenu}
+              useDragHandle
+              lockAxis="y"
+              helperClass="mobile-helper-row"
+              helperContainer={() => {
+                if (typeof window !== "undefined") {
+                  return document.querySelector("#mobile-appender");
+                }
+              }}
+              onSortStart={({ node }) => {
+                const t = document.querySelector(".mobile-helper-row");
+                if (t) {
+                  node.childNodes.forEach((a: any, i) => {
+                    (t.childNodes[
+                      i
+                    ] as HTMLElement).style.width = `${a.offsetWidth}px`;
+                  });
+                }
+              }}
+              onSortEnd={mobileMenuOnSortEnd}
+            />
+          ) : (
+            <Table.Body>
               <Table.Row>
-                <Table.HeaderCell colSpan="3" textAlign="center">
+                <Table.HeaderCell colSpan="4" textAlign="center">
                   Mobil Menü Bulunamadı
                 </Table.HeaderCell>
               </Table.Row>
-            )}
-          </Table.Body>
+            </Table.Body>
+          )}
 
           <Table.Footer>
             <Table.Row>
-              <Table.HeaderCell colSpan="3" textAlign="right">
+              <Table.HeaderCell colSpan="4" textAlign="right">
                 {/* <Menu floated="right" pagination>
                   <Menu.Item as="a" icon>
                     <Icon name="chevron left" />
