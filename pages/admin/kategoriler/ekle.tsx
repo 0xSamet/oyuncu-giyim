@@ -28,6 +28,11 @@ import { GET_LANGUAGES } from "../../../apollo/gql/query/language";
 import { Category } from "./index";
 import { Language } from "../ayarlar/diller";
 import Editor from "../../../components/Editor";
+import {
+  GET_DESKTOP_MENU_ADMIN,
+  GET_MOBILE_MENU_ADMIN,
+} from "../../../apollo/gql/query/menu";
+import { DesktopMenu, MobileMenu } from "../menuler";
 
 export default function AddCategory() {
   const [sampleDesc] = useState({
@@ -43,11 +48,17 @@ export default function AddCategory() {
     id: null,
     parent_id: null,
     sort_order: null,
+    desktop_menu_id: null,
+    mobile_menu_id: null,
     status: true,
     description: [sampleDesc],
   });
   const [categories, setCategories] = useState<Category[] | undefined[]>([]);
   const [languages, setLanguages] = useState<Language[] | undefined[]>([]);
+  const [desktopMenu, setDesktopMenu] = useState<DesktopMenu[] | undefined[]>(
+    []
+  );
+  const [mobileMenu, setMobileMenu] = useState<MobileMenu[] | undefined[]>([]);
   const [activeLanguage, setActiveLanguage] = useState<string | null>(null);
   const router = useRouter();
   const dispatch = useDispatch();
@@ -70,6 +81,28 @@ export default function AddCategory() {
   });
 
   const [
+    getDesktopMenu,
+    {
+      data: desktopMenuData,
+      loading: desktopMenuLoading,
+      error: desktopMenuError,
+    },
+  ] = useLazyQuery(GET_DESKTOP_MENU_ADMIN, {
+    fetchPolicy: "no-cache",
+  });
+
+  const [
+    getMobileMenu,
+    {
+      data: mobileMenuData,
+      loading: mobileMenuLoading,
+      error: mobileMenuError,
+    },
+  ] = useLazyQuery(GET_MOBILE_MENU_ADMIN, {
+    fetchPolicy: "no-cache",
+  });
+
+  const [
     addCategoryRun,
     {
       loading: addCategoryLoading,
@@ -81,6 +114,8 @@ export default function AddCategory() {
   useEffect(() => {
     getCategories();
     getLanguages();
+    getDesktopMenu();
+    getMobileMenu();
 
     return () => {
       setCategories([]);
@@ -96,6 +131,26 @@ export default function AddCategory() {
       setCategories(categoriesData.categoriesOnAdmin);
     }
   }, [categoriesData]);
+
+  useEffect(() => {
+    if (
+      desktopMenuData &&
+      desktopMenuData.desktopMenuOnAdmin &&
+      desktopMenuData.desktopMenuOnAdmin.length > 0
+    ) {
+      setDesktopMenu(desktopMenuData.desktopMenuOnAdmin);
+    }
+  }, [desktopMenuData]);
+
+  useEffect(() => {
+    if (
+      mobileMenuData &&
+      mobileMenuData.mobileMenuOnAdmin &&
+      mobileMenuData.mobileMenuOnAdmin.length > 0
+    ) {
+      setMobileMenu(mobileMenuData.mobileMenuOnAdmin);
+    }
+  }, [mobileMenuData]);
 
   useEffect(() => {
     if (
@@ -134,6 +189,8 @@ export default function AddCategory() {
   const handleFormSubmit = async () => {
     let parentId;
     let sortOrder;
+    let desktopMenuId;
+    let mobileMenuId;
 
     if (fields.parent_id) {
       parentId = Number(fields.parent_id);
@@ -147,6 +204,18 @@ export default function AddCategory() {
       sortOrder = null;
     }
 
+    if (!isNaN(fields.desktop_menu_id as number) && fields.desktop_menu_id) {
+      desktopMenuId = Number(fields.desktop_menu_id);
+    } else {
+      desktopMenuId = null;
+    }
+
+    if (!isNaN(fields.mobile_menu_id as number) && fields.mobile_menu_id) {
+      mobileMenuId = Number(fields.mobile_menu_id);
+    } else {
+      mobileMenuId = null;
+    }
+
     try {
       await addCategoryRun({
         variables: {
@@ -154,6 +223,8 @@ export default function AddCategory() {
             parent_id: parentId,
             sort_order: sortOrder,
             status: fields.status,
+            desktop_menu_id: desktopMenuId,
+            mobile_menu_id: mobileMenuId,
             description: fields.description,
           },
         },
@@ -183,10 +254,6 @@ export default function AddCategory() {
       })
     );
   };
-
-  useEffect(() => {
-    console.log(categories);
-  }, [categories]);
 
   const getCategoriesForOption = useMemo(() => {
     const a = [...categories]
@@ -222,7 +289,53 @@ export default function AddCategory() {
     ];
   }, [categories]);
 
-  const getLanguagesForMenu = useCallback(() => {
+  const getDesktopMenuForOption = useMemo(() => {
+    const a = [...desktopMenu]
+      .sort((a, b) => a.sort_order - b.sort_order)
+      .map((c) => {
+        const { name } = c.description.find((c) => c.language === "tr");
+
+        return {
+          key: c.id,
+          value: c.id,
+          text: name,
+        };
+      });
+
+    return [
+      {
+        key: -1,
+        value: "-1",
+        text: "Menü Yok",
+      },
+      ...a,
+    ];
+  }, [desktopMenu]);
+
+  const getMobileMenuForOption = useMemo(() => {
+    const a = [...mobileMenu]
+      .sort((a, b) => a.sort_order - b.sort_order)
+      .map((c) => {
+        const { name } = c.description.find((c) => c.language === "tr");
+
+        return {
+          key: c.id,
+          value: c.id,
+          text: name,
+        };
+      });
+
+    return [
+      {
+        key: -1,
+        value: "-1",
+        text: "Menü Yok",
+      },
+      ...a,
+    ];
+  }, [mobileMenu]);
+
+  const getLanguagesForMenu = useMemo(() => {
     return (languages as Language[]).map((language) => {
       return {
         menuItem: (
@@ -284,12 +397,16 @@ export default function AddCategory() {
               <input
                 type="number"
                 name="sort_order"
-                value={fields.sort_order || ""}
+                value={
+                  fields.sort_order || fields.sort_order == 0
+                    ? fields.sort_order
+                    : ""
+                }
                 onChange={handleNormalInputChange}
               />
             </Form.Field>
             <Form.Field>
-              <Tab menu={{ pointing: true }} panes={getLanguagesForMenu()} />
+              <Tab menu={{ pointing: true }} panes={getLanguagesForMenu} />
             </Form.Field>
             <Form.Field>
               <label>Kategori Adı</label>
@@ -369,6 +486,43 @@ export default function AddCategory() {
                 </Form.Field>
               );
             })}
+          </Tab.Pane>
+        );
+      },
+    },
+    {
+      menuItem: "Menü Bağlantısı",
+      render: () => {
+        return (
+          <Tab.Pane attached={false}>
+            <Form.Group widths="equal">
+              <Form.Field>
+                <label>Masaüstü Menü</label>
+                <Select
+                  options={getDesktopMenuForOption}
+                  value={fields.desktop_menu_id ? fields.desktop_menu_id : "-1"}
+                  onChange={(_e, { value }: { value: string }) => {
+                    setFields({
+                      ...fields,
+                      desktop_menu_id: value,
+                    });
+                  }}
+                />
+              </Form.Field>
+              <Form.Field>
+                <label>Mobil Menü</label>
+                <Select
+                  options={getMobileMenuForOption}
+                  value={fields.mobile_menu_id ? fields.mobile_menu_id : "-1"}
+                  onChange={(_e, { value }: { value: string }) => {
+                    setFields({
+                      ...fields,
+                      mobile_menu_id: value,
+                    });
+                  }}
+                />
+              </Form.Field>
+            </Form.Group>
           </Tab.Pane>
         );
       },

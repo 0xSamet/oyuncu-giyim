@@ -52,6 +52,8 @@ export class Category extends Model {
 export const addCategoryValidate = Joi.object({
   sort_order: Joi.number().integer().required().allow(null),
   parent_id: Joi.number().integer().required().allow(null),
+  desktop_menu_id: Joi.number().integer().required().allow(null),
+  mobile_menu_id: Joi.number().integer().required().allow(null),
   status: Joi.boolean().required(),
   description: Joi.array()
     .items(
@@ -72,6 +74,8 @@ export const updateCategoryValidate = Joi.object({
   id: Joi.string().trim().required(),
   sort_order: Joi.number().integer().required().allow(null),
   parent_id: Joi.number().integer().required().allow(null),
+  desktop_menu_id: Joi.number().integer().required().allow(null),
+  mobile_menu_id: Joi.number().integer().required().allow(null),
   status: Joi.boolean().required(),
   description: Joi.array()
     .items(

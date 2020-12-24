@@ -7,6 +7,8 @@ export const GET_CATEGORIES = gql`
       sort_order
       parent_id
       status
+      desktop_menu_id
+      mobile_menu_id
       description {
         name
         description
@@ -32,6 +34,8 @@ export const GET_CATEGORIES_ADMIN = gql`
       parent_id
       status
       sort_order
+      desktop_menu_id
+      mobile_menu_id
       description {
         name
         description

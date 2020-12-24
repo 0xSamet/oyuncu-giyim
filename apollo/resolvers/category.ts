@@ -73,7 +73,13 @@ export default {
         throw new UserInputError(err.details[0].message);
       }
 
-      let { parent_id, sort_order, status } = validatedCategory;
+      let {
+        parent_id,
+        sort_order,
+        status,
+        desktop_menu_id,
+        mobile_menu_id,
+      } = validatedCategory;
 
       let biggestSortOrder;
 
@@ -122,6 +128,8 @@ export default {
       const categoryAdded: any = await Category.query().insert({
         parent_id,
         status,
+        desktop_menu_id,
+        mobile_menu_id,
         sort_order: biggestSortOrder
           ? biggestSortOrder.sort_order + 1
           : sort_order,
@@ -156,7 +164,14 @@ export default {
         throw new UserInputError(err.details[0].message);
       }
 
-      let { id, parent_id, sort_order, status } = validatedCategory;
+      let {
+        id,
+        parent_id,
+        sort_order,
+        status,
+        desktop_menu_id,
+        mobile_menu_id,
+      } = validatedCategory;
 
       const isCategoryExists = await Category.query().first().where("id", id);
 
@@ -234,6 +249,8 @@ export default {
             ? biggestSortOrder.sort_order + 1
             : sort_order,
           status,
+          desktop_menu_id,
+          mobile_menu_id,
         } as any)
         .where("id", id)
         .first()

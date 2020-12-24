@@ -12,7 +12,7 @@ import {
   Menu,
   Tab,
 } from "semantic-ui-react";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useLazyQuery, useMutation } from "@apollo/client";
 import { useRouter } from "next/router";
 import { useDispatch } from "react-redux";
@@ -21,10 +21,7 @@ import { putAdminRequestError } from "../../../../../store/reducers/admin";
 import { GET_LANGUAGES } from "../../../../../apollo/gql/query/language";
 import { MobileMenu, MobileMenuDescription } from "../../index";
 import { Language } from "../../../ayarlar/diller";
-import {
-  UPDATE_DESKTOP_MENU,
-  UPDATE_MOBILE_MENU,
-} from "../../../../../apollo/gql/mutations/menu";
+import { UPDATE_MOBILE_MENU } from "../../../../../apollo/gql/mutations/menu";
 import { GET_MOBILE_MENU_ADMIN_ONE } from "../../../../../apollo/gql/query/menu";
 
 export default function UpdateMobileMenu() {
@@ -186,7 +183,7 @@ export default function UpdateMobileMenu() {
     );
   };
 
-  const getLanguagesForMenu = useCallback(() => {
+  const getLanguagesForMenu = useMemo(() => {
     return (languages as Language[]).map((language) => {
       return {
         menuItem: (
@@ -245,7 +242,7 @@ export default function UpdateMobileMenu() {
               />
             </Form.Field>
             <Form.Field>
-              <Tab menu={{ pointing: true }} panes={getLanguagesForMenu()} />
+              <Tab menu={{ pointing: true }} panes={getLanguagesForMenu} />
             </Form.Field>
             <Form.Field>
               <label>Menü Adı</label>

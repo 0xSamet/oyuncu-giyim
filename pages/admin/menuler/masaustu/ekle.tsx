@@ -12,7 +12,7 @@ import {
   Menu,
   Tab,
 } from "semantic-ui-react";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useLazyQuery, useMutation } from "@apollo/client";
 import { useRouter } from "next/router";
 import { useDispatch } from "react-redux";
@@ -143,7 +143,7 @@ export default function AddDesktopMenu() {
     );
   };
 
-  const getLanguagesForMenu = useCallback(() => {
+  const getLanguagesForMenu = useMemo(() => {
     return (languages as Language[]).map((language) => {
       return {
         menuItem: (
@@ -217,7 +217,7 @@ export default function AddDesktopMenu() {
               />
             </Form.Field>
             <Form.Field>
-              <Tab menu={{ pointing: true }} panes={getLanguagesForMenu()} />
+              <Tab menu={{ pointing: true }} panes={getLanguagesForMenu} />
             </Form.Field>
             <Form.Field>
               <label>Menü Adı</label>

@@ -44,6 +44,8 @@ export interface Category {
   parent_id: number | string | null;
   status: boolean;
   sort_order: number;
+  desktop_menu_id: number;
+  mobile_menu_id: number;
   parents?: Category[];
 }
 

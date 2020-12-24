@@ -15,36 +15,6 @@ exports.up = async function (knex) {
       table.boolean("status").defaultTo(true);
       table.boolean("is_default").defaultTo(false);
     })
-    .createTable(tableNames.category, (table) => {
-      table.increments();
-      table
-        .integer("parent_id")
-        .references("id")
-        .inTable(tableNames.category)
-        .onDelete("cascade")
-        .defaultTo(null);
-      table.integer("sort_order");
-      table.boolean("status").defaultTo(true);
-    })
-    .createTable(tableNames.category_description, (table) => {
-      table.increments();
-      table
-        .integer("category_id")
-        .references("id")
-        .inTable(tableNames.category)
-        .onDelete("cascade");
-      table
-        .integer("language_id")
-        .references("id")
-        .inTable(tableNames.language)
-        .onDelete("cascade");
-      table.string("name").notNullable().defaultTo("");
-      table.text("description").defaultTo("");
-      table.string("meta_title").defaultTo("");
-      table.string("meta_description", 500).defaultTo("");
-      table.string("meta_keywords", 500).defaultTo("");
-      table.string("slug").notNullable().defaultTo("");
-    })
     .createTable(tableNames.desktop_menu, (table) => {
       table.increments();
       table.integer("sort_order");
@@ -89,6 +59,48 @@ exports.up = async function (knex) {
       table.string("href").defaultTo("");
       table.string("target").defaultTo("_self");
       table.string("icon_url").defaultTo("");
+    })
+    .createTable(tableNames.category, (table) => {
+      table.increments();
+      table
+        .integer("parent_id")
+        .references("id")
+        .inTable(tableNames.category)
+        .onDelete("cascade")
+        .defaultTo(null);
+      table
+        .integer("desktop_menu_id")
+        .references("id")
+        .inTable(tableNames.desktop_menu)
+        .onDelete("cascade")
+        .defaultTo(null);
+      table
+        .integer("mobile_menu_id")
+        .references("id")
+        .inTable(tableNames.category)
+        .onDelete("cascade")
+        .defaultTo(null);
+      table.integer("sort_order");
+      table.boolean("status").defaultTo(true);
+    })
+    .createTable(tableNames.category_description, (table) => {
+      table.increments();
+      table
+        .integer("category_id")
+        .references("id")
+        .inTable(tableNames.category)
+        .onDelete("cascade");
+      table
+        .integer("language_id")
+        .references("id")
+        .inTable(tableNames.language)
+        .onDelete("cascade");
+      table.string("name").notNullable().defaultTo("");
+      table.text("description").defaultTo("");
+      table.string("meta_title").defaultTo("");
+      table.string("meta_description", 500).defaultTo("");
+      table.string("meta_keywords", 500).defaultTo("");
+      table.string("slug").notNullable().defaultTo("");
     });
 };
 
@@ -96,11 +108,11 @@ exports.up = async function (knex) {
  * @param {Knex} knex
  */
 exports.down = async function (knex) {
-  await knex.schema.dropTableIfExists(tableNames.category_description);
-  await knex.schema.dropTableIfExists(tableNames.category);
   await knex.schema.dropTableIfExists(tableNames.desktop_menu_description);
   await knex.schema.dropTableIfExists(tableNames.desktop_menu);
   await knex.schema.dropTableIfExists(tableNames.mobile_menu_description);
   await knex.schema.dropTableIfExists(tableNames.mobile_menu);
+  await knex.schema.dropTableIfExists(tableNames.category_description);
+  await knex.schema.dropTableIfExists(tableNames.category);
   await knex.schema.dropTableIfExists(tableNames.language);
 };

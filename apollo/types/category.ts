@@ -24,6 +24,8 @@ export default gql`
     description: CategoryDescription
     sort_order: Int!
     status: Boolean
+    desktop_menu_id: Int
+    mobile_menu_id: Int
     parents: [Category]
   }
   type CategoryOnAdmin {
@@ -32,6 +34,8 @@ export default gql`
     description: [CategoryDescriptionOnAdmin]
     sort_order: Int!
     status: Boolean
+    desktop_menu_id: Int
+    mobile_menu_id: Int
     parents: [CategoryOnAdmin]
   }
   input CategoryInputLocalizedFields {
@@ -47,6 +51,8 @@ export default gql`
     parent_id: Int
     sort_order: Int
     status: Boolean
+    desktop_menu_id: Int
+    mobile_menu_id: Int
     description: [CategoryInputLocalizedFields!]!
   }
   input updateCategoryInput {
@@ -54,6 +60,8 @@ export default gql`
     parent_id: Int
     sort_order: Int
     status: Boolean
+    desktop_menu_id: Int
+    mobile_menu_id: Int
     description: [CategoryInputLocalizedFields!]!
   }
   type updateCategoryResponse {
