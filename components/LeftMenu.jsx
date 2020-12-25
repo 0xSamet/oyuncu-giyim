@@ -36,6 +36,7 @@ function LeftMenuListItem({
       className={clsx({
         active: index == indexFromStore,
       })}
+      key={index}
     >
       <Link href={link}>
         <a target={target}>

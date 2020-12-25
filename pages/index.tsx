@@ -1,9 +1,4 @@
 import { wrapper } from "../store";
-import {
-  changeDesktopMenuIndex,
-  changeMobileMenuIndex,
-} from "../store/reducers/menu";
-
 import { handleIconMode, handleMenuIndex } from "../utils";
 
 import ShowCase from "../components/ShowCase";
@@ -12,31 +7,21 @@ import SEO from "../components/Seo";
 
 import { ApolloClient, NormalizedCacheObject, useQuery } from "@apollo/client";
 import { initializeApollo } from "../apollo/client";
-// import { GET_DESKTOP_MENU, GET_MOBILE_MENU } from "../apollo/gql/query/menu.ts";
 import { GET_PAGE } from "../apollo/gql/query/page";
-
 import SwiperCore, { Navigation, Autoplay, Pagination } from "swiper";
-import { QueryBuilder } from "knex";
-import {
-  GetServerSideProps,
-  GetServerSidePropsContext,
-  GetStaticProps,
-  GetStaticPropsContext,
-  GetStaticPropsResult,
-} from "next";
 import { useRouter } from "next/router";
-import { GET_DESKTOP_MENU } from "../apollo/gql/query/menu";
+import { GET_DESKTOP_MENU, GET_MOBILE_MENU } from "../apollo/gql/query/menu";
 
 SwiperCore.use([Navigation, Autoplay, Pagination]);
 
-export default function Home() {
+export default function Home({ page }) {
   //console.log(data);
   //console.log(localization);
   const router = useRouter();
-  console.log(router);
   return (
     <SEO seo={{ meta_title: "", meta_description: "", meta_keyword: "" }}>
       <section className="homepage">
+        {JSON.stringify(page || {}, null, 2)}
         <MainSlider />
         <ShowCase showCaseId={1} />
         <ShowCase showCaseId={2} />
@@ -46,46 +31,50 @@ export default function Home() {
   );
 }
 
-export const getServerSideProps = async () => {
-  const apolloClient: ApolloClient<NormalizedCacheObject> = initializeApollo();
+export const getStaticProps = wrapper.getStaticProps(
+  async ({ store, locale }: { store: any; locale: string }) => {
+    const apolloClient: ApolloClient<NormalizedCacheObject> = initializeApollo();
 
-  return {
-    props: {
-      asd: "sad",
-    },
-  };
-};
+    const {
+      data: { page },
+    } = await apolloClient.query({
+      query: GET_PAGE,
+      variables: {
+        slug: "/",
+        language: locale,
+      },
+    });
 
-// export const getStaticProps: GetStaticProps = wrapper.getStaticProps(
-//   async ({ store, ...etc }) => {
-//     //handleIconMode(store, req);
-//     const apolloClient: ApolloClient<NormalizedCacheObject> = initializeApollo();
+    if (!page) {
+      return {
+        notFound: true,
+      };
+    }
 
-//     await apolloClient.query({
-//       query: GET_DESKTOP_MENU,
-//     });
+    await apolloClient.query({
+      query: GET_DESKTOP_MENU,
+      variables: {
+        language: locale,
+      },
+    });
 
-//     await apolloClient.query({
-//       query: GET_MOBILE_MENU,
-//     });
+    await apolloClient.query({
+      query: GET_MOBILE_MENU,
+      variables: {
+        language: locale,
+      },
+    });
 
-//     const { data } = await apolloClient.query({
-//       query: GET_PAGE,
-//       variables: {
-//         slug: "/",
-//       },
-//     });
+    handleMenuIndex(store, {
+      desktop_menu_id: page.desktop_menu_id,
+      mobile_menu_id: page.mobile_menu_id,
+    });
 
-//     if (!data.error) {
-//       handleMenuIndex(store, data);
-//     }
-
-//     return {
-//       revalidate: 60,
-//       props: {
-//         initialApolloState: apolloClient.cache.extract(),
-//         page: data.page,
-//       },
-//     };
-//   }
-// );
+    return {
+      props: {
+        page: page,
+        initialApolloState: apolloClient.cache.extract(),
+      },
+    };
+  }
+);

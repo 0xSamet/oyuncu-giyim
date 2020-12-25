@@ -54,14 +54,17 @@ export const GET_DESKTOP_MENU_ADMIN_ONE = gql`
 `;
 
 export const GET_MOBILE_MENU = gql`
-  query getMobileMenu {
-    mobileMenu {
+  query getMobileMenu($language: String!) {
+    mobileMenu(language: $language) {
       id
-      name
-      href
-      target
-      icon_url
       sort_order
+      status
+      description {
+        name
+        href
+        target
+        icon_url
+      }
     }
   }
 `;

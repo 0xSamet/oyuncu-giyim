@@ -3,6 +3,7 @@ import Link from "next/link";
 import { useSelector } from "react-redux";
 import { useQuery } from "@apollo/client";
 import { GET_MOBILE_MENU } from "../apollo/gql/query/menu";
+import { useRouter } from "next/dist/client/router";
 
 function MobileMenuListItem({ index = -4, text, link = "#", icon }) {
   const {
@@ -30,7 +31,10 @@ function MobileMenuListItem({ index = -4, text, link = "#", icon }) {
 }
 
 export default function MobileMenu() {
-  const { data, error, loading } = useQuery(GET_MOBILE_MENU);
+  const router = useRouter();
+  const { data, error, loading } = useQuery(GET_MOBILE_MENU, {
+    variables: { language: router.locale },
+  });
 
   if (loading) {
     return <div>loading</div>;
@@ -51,9 +55,9 @@ export default function MobileMenu() {
                 <MobileMenuListItem
                   key={menu.id}
                   index={menu.id}
-                  text={menu.name}
-                  link={menu.href || undefined}
-                  icon={menu.icon_url}
+                  text={menu.description.name}
+                  link={menu.description.href || undefined}
+                  icon={menu.description.icon_url}
                 />
               );
             })

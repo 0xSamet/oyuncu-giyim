@@ -7,6 +7,7 @@ import {
   CategoryDescription,
 } from "../../database/models/category";
 import { Language } from "../../database/models/language";
+import { PageDescription } from "../../database/models/page";
 import { tableNames } from "../../database/tableNames";
 import { getParentCategories } from "../dataloaders/category";
 import { getLanguage } from "./helpers";
@@ -81,38 +82,39 @@ export default {
         mobile_menu_id,
       } = validatedCategory;
 
-      let biggestSortOrder;
-
-      if (!sort_order && sort_order != 0) {
-        biggestSortOrder = await Category.query()
-          .select("sort_order")
-          .orderBy([{ column: "sort_order", order: "DESC" }])
-          .first();
-      }
-
       let isSlugExists = {
         status: false,
-        usingBy: null,
+        message: "",
       };
 
       for (const description of validatedCategory.description) {
-        const isExists: any = await CategoryDescription.query()
+        const isExistsOnCategory: any = await CategoryDescription.query()
           .where("slug", description.slug)
           .first();
 
-        if (isExists) {
+        if (isExistsOnCategory) {
           isSlugExists = {
             status: true,
-            usingBy: isExists.name,
+            message: `Slug ${isExistsOnCategory.name} kategorisinde kullanılıyor.`,
+          };
+          break;
+        }
+
+        const isExistsOnPage: any = await PageDescription.query()
+          .where("slug", description.slug)
+          .first();
+
+        if (isExistsOnPage) {
+          isSlugExists = {
+            status: true,
+            message: `Slug ${isExistsOnPage.name} sayfasında kullanılıyor.`,
           };
           break;
         }
       }
 
       if (isSlugExists.status) {
-        throw new ValidationError(
-          `Slug ${isSlugExists.usingBy} kategorisinde kullanılıyor.`
-        );
+        throw new ValidationError(isSlugExists.message);
       }
 
       if (parent_id) {
@@ -123,6 +125,15 @@ export default {
         if (!isParentExists) {
           throw new ValidationError(`Üst Kategori Bulunamadı`);
         }
+      }
+
+      let biggestSortOrder;
+
+      if (!sort_order && sort_order != 0) {
+        biggestSortOrder = await Category.query()
+          .select("sort_order")
+          .orderBy([{ column: "sort_order", order: "DESC" }])
+          .first();
       }
 
       const categoryAdded: any = await Category.query().insert({
@@ -208,6 +219,41 @@ export default {
         }
       }
 
+      let isSlugExists = {
+        status: false,
+        message: "",
+      };
+
+      for (const description of validatedCategory.description) {
+        const isExistsOnCategory: any = await CategoryDescription.query()
+          .where("slug", description.slug)
+          .first();
+
+        if (isExistsOnCategory && isExistsOnCategory.category_id != id) {
+          isSlugExists = {
+            status: true,
+            message: `Slug ${isExistsOnCategory.name} kategorisinde kullanılıyor.`,
+          };
+          break;
+        }
+
+        const isExistsOnPage: any = await PageDescription.query()
+          .where("slug", description.slug)
+          .first();
+
+        if (isExistsOnPage) {
+          isSlugExists = {
+            status: true,
+            message: `Slug ${isExistsOnPage.name} sayfasında kullanılıyor.`,
+          };
+          break;
+        }
+      }
+
+      if (isSlugExists.status) {
+        throw new ValidationError(isSlugExists.message);
+      }
+
       let biggestSortOrder;
 
       if (!sort_order && sort_order != 0) {
@@ -215,31 +261,6 @@ export default {
           .select("sort_order")
           .orderBy([{ column: "sort_order", order: "DESC" }])
           .first();
-      }
-
-      let isSlugExists = {
-        status: false,
-        usingBy: null,
-      };
-
-      for (const description of validatedCategory.description) {
-        const isExists: any = await CategoryDescription.query()
-          .where("slug", description.slug)
-          .first();
-
-        if (isExists && isExists.category_id != id) {
-          isSlugExists = {
-            status: true,
-            usingBy: isExists.name,
-          };
-          break;
-        }
-      }
-
-      if (isSlugExists.status) {
-        throw new ValidationError(
-          `Slug ${isSlugExists.usingBy} kategorisinde kullanılıyor.`
-        );
       }
 
       const updatedCategory = await Category.query()

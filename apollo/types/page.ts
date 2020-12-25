@@ -70,7 +70,7 @@ export default gql`
   }
   type Query {
     pages: [Page!]
-    page(slug: String): Page
+    page(slug: String!, language: String!): Page
     pagesOnAdmin: [PageOnAdmin!]!
     pageOnAdmin(input: pageOnAdminInput!): PageOnAdmin
   }

@@ -1,13 +1,21 @@
 import { gql } from "@apollo/client";
 
 export const GET_PAGE = gql`
-  query getPage($slug: String) {
-    page(slug: $slug) {
+  query getPage($slug: String!, $language: String!) {
+    page(slug: $slug, language: $language) {
+      id
       desktop_menu_id
       mobile_menu_id
-      meta_title
-      meta_description
-      meta_keyword
+      sort_order
+      status
+      description {
+        name
+        description
+        meta_title
+        meta_description
+        meta_keywords
+        slug
+      }
     }
   }
 `;

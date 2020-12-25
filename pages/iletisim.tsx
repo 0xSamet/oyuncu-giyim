@@ -1,11 +1,11 @@
 import SEO from "../components/Seo";
 import { useDispatch } from "react-redux";
 import { wrapper } from "../store";
-import { handleIconMode, handleMenuIndex } from "../utils";
+import { handleMenuIndex } from "../utils";
 import { GET_PAGE } from "../apollo/gql/query/page";
-// import { GET_DESKTOP_MENU, GET_MOBILE_MENU } from "../apollo/gql/query/menu.ts";
 import { ApolloClient, NormalizedCacheObject, useQuery } from "@apollo/client";
 import { initializeApollo } from "../apollo/client";
+import { GET_DESKTOP_MENU, GET_MOBILE_MENU } from "../apollo/gql/query/menu";
 
 export default function Iletisim({ page }) {
   const dispatch = useDispatch();
@@ -13,51 +13,55 @@ export default function Iletisim({ page }) {
   return (
     <SEO seo={{ meta_title: "", meta_description: "", meta_keyword: "" }}>
       <h1>İletişim</h1>
+      <pre>{JSON.stringify(page || {}, null, 2)}</pre>
     </SEO>
   );
 }
 
-export const getStaticProps = () => {
-  return {
-    notFound: true,
-  };
-  return {
-    props: {
-      asd: "asd",
-    },
-  };
-};
+export const getStaticProps = wrapper.getStaticProps(
+  async ({ store, locale }: { store: any; locale: string }) => {
+    const apolloClient: ApolloClient<NormalizedCacheObject> = initializeApollo();
 
-// export const getServerSideProps = wrapper.getServerSideProps(
-//   async ({ store, req, res, ...etc }) => {
-//     handleIconMode(store, req);
+    const {
+      data: { page },
+    } = await apolloClient.query({
+      query: GET_PAGE,
+      variables: {
+        slug: "/iletisim",
+        language: locale,
+      },
+    });
 
-//     const apolloClient: ApolloClient<NormalizedCacheObject> = initializeApollo();
+    if (!page) {
+      return {
+        notFound: true,
+      };
+    }
 
-//     await apolloClient.query({
-//       query: GET_DESKTOP_MENU,
-//     });
+    await apolloClient.query({
+      query: GET_DESKTOP_MENU,
+      variables: {
+        language: locale,
+      },
+    });
 
-//     await apolloClient.query({
-//       query: GET_MOBILE_MENU,
-//     });
+    await apolloClient.query({
+      query: GET_MOBILE_MENU,
+      variables: {
+        language: locale,
+      },
+    });
 
-//     const { data } = await apolloClient.query({
-//       query: GET_PAGE,
-//       variables: {
-//         slug: "/iletisim",
-//       },
-//     });
+    handleMenuIndex(store, {
+      desktop_menu_id: page.desktop_menu_id,
+      mobile_menu_id: page.mobile_menu_id,
+    });
 
-//     if (!data.error) {
-//       handleMenuIndex(store, data);
-//     }
-
-//     return {
-//       props: {
-//         initialApolloState: apolloClient.cache.extract(),
-//         page: data.page
-//       },
-//     };
-//   }
-// );
+    return {
+      props: {
+        page: page,
+        initialApolloState: apolloClient.cache.extract(),
+      },
+    };
+  }
+);

@@ -11,10 +11,13 @@ export function handleIconMode(store, req) {
   }
 }
 
-export function handleMenuIndex(store, data) {
-  if (data.page) {
-    const { desktop_menu_id, mobile_menu_id } = data.page;
-    store.dispatch(changeDesktopMenuIndex(desktop_menu_id || -1));
-    store.dispatch(changeMobileMenuIndex(mobile_menu_id || -1));
-  }
+export function handleMenuIndex(
+  store,
+  {
+    desktop_menu_id,
+    mobile_menu_id,
+  }: { desktop_menu_id: number; mobile_menu_id: number }
+) {
+  store.dispatch(changeDesktopMenuIndex(desktop_menu_id || -1));
+  store.dispatch(changeMobileMenuIndex(mobile_menu_id || -1));
 }

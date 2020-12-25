@@ -1,4 +1,5 @@
 import { UserInputError, ValidationError } from "apollo-server-micro";
+import { CategoryDescription } from "../../database/models/category";
 import { Language } from "../../database/models/language";
 import {
   addPageValidate,
@@ -7,6 +8,8 @@ import {
   PageDescription,
   updatePageValidate,
 } from "../../database/models/page";
+import { tableNames } from "../../database/tableNames";
+import { getLanguage } from "./helpers";
 
 export default {
   PageOnAdmin: {
@@ -19,14 +22,40 @@ export default {
       return pageDescriptionAdminLoader.load(parent);
     },
   },
+  Page: {
+    description: async (
+      parent,
+      params,
+      { loaders: { pageDescriptionLoader }, req },
+      _info
+    ) => {
+      return pageDescriptionLoader.load({
+        id: parent.id,
+        language: req.language,
+      });
+    },
+  },
   Query: {
     pages: async (_parent, { slug }, { db }, _info) => {
       const result = await Page.query();
 
       return result;
     },
-    page: async (_parent, { slug }, { db }, _info) => {
-      const result = await Page.query().where("slug", slug).first();
+    page: async (_parent, params, { db, req }, _info) => {
+      req.language = await getLanguage(params);
+      const result = await PageDescription.query()
+        .select(
+          `${tableNames.page}.id`,
+          `${tableNames.page}.sort_order`,
+          `${tableNames.page}.status`,
+          "desktop_menu_id",
+          "mobile_menu_id"
+        )
+        .joinRelated(tableNames.page)
+        .joinRelated(tableNames.language)
+        .where("slug", params.slug)
+        .andWhere("code", req.language)
+        .first();
 
       return result;
     },
@@ -67,27 +96,37 @@ export default {
 
       let isSlugExists = {
         status: false,
-        usingBy: null,
+        message: "",
       };
 
       for (const description of validatedPage.description) {
-        const isExists: any = await PageDescription.query()
+        const isExistsOnPage: any = await PageDescription.query()
           .where("slug", description.slug)
           .first();
 
-        if (isExists) {
+        if (isExistsOnPage) {
           isSlugExists = {
             status: true,
-            usingBy: isExists.name,
+            message: `Slug ${isExistsOnPage.name} sayfasında kullanılıyor.`,
+          };
+          break;
+        }
+
+        const isExistsOnCategory: any = await CategoryDescription.query()
+          .where("slug", description.slug)
+          .first();
+
+        if (isExistsOnCategory) {
+          isSlugExists = {
+            status: true,
+            message: `Slug ${isExistsOnCategory.name} kategorisinde kullanılıyor.`,
           };
           break;
         }
       }
 
       if (isSlugExists.status) {
-        throw new ValidationError(
-          `Slug ${isSlugExists.usingBy} kategorisinde kullanılıyor.`
-        );
+        throw new ValidationError(isSlugExists.message);
       }
 
       const pageAdded: any = await Page.query().insert({
@@ -153,27 +192,37 @@ export default {
 
       let isSlugExists = {
         status: false,
-        usingBy: null,
+        message: "",
       };
 
       for (const description of validatedPage.description) {
-        const isExists: any = await PageDescription.query()
+        const isExistsOnPage: any = await PageDescription.query()
           .where("slug", description.slug)
           .first();
 
-        if (isExists && isExists.page_id != id) {
+        if (isExistsOnPage && isExistsOnPage.page_id != id) {
           isSlugExists = {
             status: true,
-            usingBy: isExists.name,
+            message: `Slug ${isExistsOnPage.name} sayfasında kullanılıyor.`,
+          };
+          break;
+        }
+
+        const isExistsOnCategory: any = await CategoryDescription.query()
+          .where("slug", description.slug)
+          .first();
+
+        if (isExistsOnCategory) {
+          isSlugExists = {
+            status: true,
+            message: `Slug ${isExistsOnCategory.name} kategorisinde kullanılıyor.`,
           };
           break;
         }
       }
 
       if (isSlugExists.status) {
-        throw new ValidationError(
-          `Slug ${isSlugExists.usingBy} sayfasında kullanılıyor.`
-        );
+        throw new ValidationError(isSlugExists.message);
       }
 
       const updatedPage = await Page.query()

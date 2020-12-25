@@ -26,14 +26,6 @@ export default {
         throw new UserInputError(err.details[0].message);
       }
       let { name, code, flag_code, sort_order, status } = validatedLanguage;
-      let biggestSortOrder;
-
-      if (!sort_order && sort_order != 0) {
-        biggestSortOrder = await Language.query()
-          .select("sort_order")
-          .orderBy([{ column: "sort_order", order: "DESC" }])
-          .first();
-      }
 
       const isLanguageCodeExists: any = await Language.query()
         .where("code", code)
@@ -43,6 +35,15 @@ export default {
         throw new ValidationError(
           `Dil Kodu ${isLanguageCodeExists.name} dilinde kullanılıyor.`
         );
+      }
+
+      let biggestSortOrder;
+
+      if (!sort_order && sort_order != 0) {
+        biggestSortOrder = await Language.query()
+          .select("sort_order")
+          .orderBy([{ column: "sort_order", order: "DESC" }])
+          .first();
       }
 
       const languageAdded = await Language.query().insertAndFetch({
@@ -65,14 +66,6 @@ export default {
         throw new UserInputError(err.details[0].message);
       }
       let { id, name, code, flag_code, sort_order, status } = validatedLanguage;
-      let biggestSortOrder;
-
-      if (!sort_order && sort_order != 0) {
-        biggestSortOrder = await Language.query()
-          .select("sort_order")
-          .orderBy([{ column: "sort_order", order: "DESC" }])
-          .first();
-      }
 
       const isLanguageCodeExists: any = await Language.query()
         .where("code", code)
@@ -85,6 +78,15 @@ export default {
         throw new ValidationError(
           `Dil Kodu ${isLanguageCodeExists.name} dilinde kullanılıyor.`
         );
+      }
+
+      let biggestSortOrder;
+
+      if (!sort_order && sort_order != 0) {
+        biggestSortOrder = await Language.query()
+          .select("sort_order")
+          .orderBy([{ column: "sort_order", order: "DESC" }])
+          .first();
       }
 
       const updatedLanguage = await Language.query()

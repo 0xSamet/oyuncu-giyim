@@ -20,7 +20,10 @@ import {
   mobileMenuDescriptionLoader,
   mobileMenuDescriptionAdminLoader,
 } from "../../../apollo/dataloaders/menu";
-import { pageDescriptionAdminLoader } from "../../../apollo/dataloaders/page";
+import {
+  pageDescriptionLoader,
+  pageDescriptionAdminLoader,
+} from "../../../apollo/dataloaders/page";
 
 const apolloServer = new ApolloServer({
   schema,
@@ -37,6 +40,7 @@ const apolloServer = new ApolloServer({
         desktopMenuDescriptionAdminLoader,
         mobileMenuDescriptionLoader,
         mobileMenuDescriptionAdminLoader,
+        pageDescriptionLoader,
         pageDescriptionAdminLoader,
       },
     };
