@@ -6,13 +6,13 @@ import ShowCaseProduct from "./ShowCaseProduct";
 import ArrowIcon from "../public/icons/arrow.svg";
 
 type ShowCaseType = {
-  showCaseId: Number
-}
+  showCaseId: Number;
+};
 
-export default function ShowCase({ showCaseId } : ShowCaseType) {
+export default function ShowCase({ showCaseId }: ShowCaseType) {
   const {
     theme: { iconMode },
-  } = useSelector((state) => state);
+  } = useSelector<any, any>((state) => state);
   const [showcase, setShowcase] = useState(undefined);
   useEffect(() => {
     if (showcase) {
