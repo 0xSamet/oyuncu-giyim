@@ -18,52 +18,52 @@ export default function Iletisim({ page }) {
   );
 }
 
-// export const getStaticProps = wrapper.getStaticProps(
-//   async ({ store, locale }: { store: any; locale: string }) => {
-//     const apolloClient: ApolloClient<NormalizedCacheObject> = initializeApollo();
+export const getStaticProps = wrapper.getStaticProps(
+  async ({ store, locale }: { store: any; locale: string }) => {
+    const apolloClient: ApolloClient<NormalizedCacheObject> = initializeApollo();
 
-//     console.log(apolloClient.link);
+    console.log(apolloClient.link);
 
-//     const {
-//       data: { page },
-//     } = await apolloClient.query({
-//       query: GET_PAGE,
-//       variables: {
-//         slug: "/iletisim",
-//         language: locale,
-//       },
-//     });
+    const {
+      data: { page },
+    } = await apolloClient.query({
+      query: GET_PAGE,
+      variables: {
+        slug: "/iletisim",
+        language: locale,
+      },
+    });
 
-//     if (!page) {
-//       return {
-//         notFound: true,
-//       };
-//     }
+    if (!page) {
+      return {
+        notFound: true,
+      };
+    }
 
-//     await apolloClient.query({
-//       query: GET_DESKTOP_MENU,
-//       variables: {
-//         language: locale,
-//       },
-//     });
+    await apolloClient.query({
+      query: GET_DESKTOP_MENU,
+      variables: {
+        language: locale,
+      },
+    });
 
-//     await apolloClient.query({
-//       query: GET_MOBILE_MENU,
-//       variables: {
-//         language: locale,
-//       },
-//     });
+    await apolloClient.query({
+      query: GET_MOBILE_MENU,
+      variables: {
+        language: locale,
+      },
+    });
 
-//     handleMenuIndex(store, {
-//       desktop_menu_id: page.desktop_menu_id,
-//       mobile_menu_id: page.mobile_menu_id,
-//     });
+    handleMenuIndex(store, {
+      desktop_menu_id: page.desktop_menu_id,
+      mobile_menu_id: page.mobile_menu_id,
+    });
 
-//     return {
-//       props: {
-//         page: page,
-//         initialApolloState: apolloClient.cache.extract(),
-//       },
-//     };
-//   }
-// );
+    return {
+      props: {
+        page: page,
+        initialApolloState: apolloClient.cache.extract(),
+      },
+    };
+  }
+);
