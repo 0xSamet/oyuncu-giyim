@@ -12,6 +12,8 @@ export const getStaticProps = wrapper.getStaticProps(
   async ({ store, locale }: { store: any; locale: string }) => {
     const apolloClient: ApolloClient<NormalizedCacheObject> = initializeApollo();
 
+    console.log(apolloClient.link);
+
     const {
       data: { page },
     } = await apolloClient.query({
