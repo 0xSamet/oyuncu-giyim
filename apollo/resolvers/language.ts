@@ -35,7 +35,7 @@ export default {
           .first();
       }
 
-      const isLanguageCodeExists = await Language.query()
+      const isLanguageCodeExists: any = await Language.query()
         .where("code", code)
         .first();
 
@@ -53,7 +53,7 @@ export default {
           ? biggestSortOrder.sort_order + 1
           : sort_order,
         status,
-      });
+      } as any);
 
       return languageAdded;
     },
@@ -74,7 +74,7 @@ export default {
           .first();
       }
 
-      const isLanguageCodeExists = await Language.query()
+      const isLanguageCodeExists: any = await Language.query()
         .where("code", code)
         .first();
 
@@ -98,7 +98,7 @@ export default {
             ? biggestSortOrder.sort_order + 1
             : sort_order,
           status,
-        })
+        } as any)
         .returning("*");
 
       return updatedLanguage;
@@ -113,7 +113,7 @@ export default {
       let { id } = validatedLanguage;
       let result;
 
-      const checkDefaultLanguage = await Language.query().findById(id);
+      const checkDefaultLanguage: any = await Language.query().findById(id);
 
       if (checkDefaultLanguage.is_default) {
         throw new Error("Ana Dil Silinemez");

@@ -238,25 +238,32 @@ export default function AddCategory() {
       parentId = null;
     }
 
-    if (!isNaN(fields.sort_order) && fields.sort_order) {
+    if (
+      (!isNaN(fields.sort_order) && fields.sort_order) ||
+      fields.sort_order === 0
+    ) {
       sortOrder = Number(fields.sort_order);
     } else {
       sortOrder = null;
     }
 
-    if (!isNaN(fields.desktop_menu_id as number) && fields.desktop_menu_id) {
+    if (
+      (!isNaN(fields.desktop_menu_id as number) && fields.desktop_menu_id) ||
+      fields.desktop_menu_id === 0
+    ) {
       desktopMenuId = Number(fields.desktop_menu_id);
     } else {
       desktopMenuId = null;
     }
 
-    if (!isNaN(fields.mobile_menu_id as number) && fields.mobile_menu_id) {
+    if (
+      (!isNaN(fields.mobile_menu_id as number) && fields.mobile_menu_id) ||
+      fields.mobile_menu_id === 0
+    ) {
       mobileMenuId = Number(fields.mobile_menu_id);
     } else {
       mobileMenuId = null;
     }
-
-    console.log(fields);
 
     try {
       await updateCategoryRun({

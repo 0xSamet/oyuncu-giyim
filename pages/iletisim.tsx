@@ -17,6 +17,17 @@ export default function Iletisim({ page }) {
   );
 }
 
+export const getStaticProps = () => {
+  return {
+    notFound: true,
+  };
+  return {
+    props: {
+      asd: "asd",
+    },
+  };
+};
+
 // export const getServerSideProps = wrapper.getServerSideProps(
 //   async ({ store, req, res, ...etc }) => {
 //     handleIconMode(store, req);

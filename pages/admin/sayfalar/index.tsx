@@ -10,51 +10,64 @@ import {
   Dimmer,
   Loader,
 } from "semantic-ui-react";
-import { useState, useEffect, Fragment } from "react";
-import { useLazyQuery } from "@apollo/client";
-import { GET_PAGES } from "../../../apollo/gql/query/page";
-import clsx from "clsx";
-import produce from "immer";
+import {
+  Fragment,
+  ReactText,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
+import {
+  GET_CATEGORIES,
+  GET_CATEGORIES_ADMIN,
+} from "../../../apollo/gql/query/category";
+import { DELETE_CATEGORY } from "../../../apollo/gql/mutations/category";
+import { useLazyQuery, useMutation } from "@apollo/client";
 import Link from "next/link";
+import { useDispatch } from "react-redux";
+import { putAdminRequestError } from "../../../store/reducers/admin";
+import { GET_PAGES_ADMIN } from "../../../apollo/gql/query/page";
 
-interface Page {
-  id: string;
+export interface PageDescription {
   name: string;
-  desktop_menu_id: number;
-  mobile_menu_id: number;
+  description: string;
   meta_title: string;
   meta_description: string;
-  meta_keyword: string;
+  meta_keywords: string;
   slug: string;
+  language: string;
+}
+
+export interface Page {
+  id: ReactText;
+  description: PageDescription[] | null;
+  status: boolean;
+  sort_order: number;
+  desktop_menu_id: number | string;
+  mobile_menu_id: number | string;
 }
 
 interface PageRowType {
   page: Page;
 }
 
-export default function AdminDashboard({ page }) {
-  const [pagesAccordion, setPagesAccordion] = useState({
-    rootAccordionVisible: true,
-    activeIndex: 0,
-    addPagesForm: {
-      visible: false,
-      fields: {
-        name: "",
-        desktop_menu_id: null,
-        mobile_menu_id: -1,
-        meta_title: "",
-        meta_description: "",
-        meta_keywords: "",
-        slug: "",
-      },
-    },
-  });
+export default function AdminDashboard() {
   const [pages, setPages] = useState([]);
-  const [activeIndex, setActiveIndex] = useState(0);
+  const dispatch = useDispatch();
 
-  const [getPages, { data, loading, error }] = useLazyQuery(GET_PAGES, {
+  const [getPages, { data, loading, error }] = useLazyQuery(GET_PAGES_ADMIN, {
     fetchPolicy: "no-cache",
   });
+
+  const [
+    deleteCategoryRun,
+    {
+      loading: deleteCategoryLoading,
+      error: deleteCategoryError,
+      data: deleteCategoryResponse,
+    },
+  ] = useMutation(DELETE_CATEGORY);
 
   useEffect(() => {
     getPages();
@@ -65,21 +78,20 @@ export default function AdminDashboard({ page }) {
   }, []);
 
   useEffect(() => {
-    if (data && data.pages && data.pages.length > 0) {
-      setPages(data.pages);
+    if (data && data.pagesOnAdmin && data.pagesOnAdmin.length > 0) {
+      setPages(data.pagesOnAdmin);
     }
   }, [data]);
 
-  const handleClick = (index) => {
-    const newIndex = activeIndex === index ? -1 : index;
-    return setActiveIndex(newIndex);
-  };
-
   const PageRow: React.FC<PageRowType> = ({ page }) => {
+    const { name } = page.description.find(
+      (description) => description.language === "tr"
+    );
+
     return (
       <Table.Row key={page.id}>
-        <Table.Cell>{page.name}</Table.Cell>
-        <Table.Cell textAlign="center">0</Table.Cell>
+        <Table.Cell>{name}</Table.Cell>
+        <Table.Cell textAlign="center">{page.sort_order}</Table.Cell>
         <Table.Cell singleLine>
           <Link href={`/admin/sayfalar/duzenle/${page.id}`}>
             <a>
@@ -93,14 +105,31 @@ export default function AdminDashboard({ page }) {
             icon="trash"
             size="tiny"
             color="red"
-            // onClick={() => handleDeletePage(category.id)}
+            onClick={() => handleDeleteCategory(page.id)}
           ></Button>
         </Table.Cell>
       </Table.Row>
     );
   };
 
-  if (loading) {
+  const handleDeleteCategory = async (categoryId) => {
+    try {
+      await deleteCategoryRun({
+        variables: {
+          input: {
+            id: categoryId,
+          },
+        },
+      });
+    } catch (err) {
+      console.log(err);
+      dispatch(putAdminRequestError(err.message));
+    }
+
+    getPages();
+  };
+
+  if (loading || deleteCategoryLoading) {
     return (
       <Segment className="page-loader">
         <Dimmer active>
@@ -108,10 +137,6 @@ export default function AdminDashboard({ page }) {
         </Dimmer>
       </Segment>
     );
-  }
-
-  if (error) {
-    console.log(error);
   }
 
   return (
@@ -131,7 +156,7 @@ export default function AdminDashboard({ page }) {
           <Table.Header>
             <Table.Row>
               <Table.HeaderCell colSpan="3" textAlign="right">
-                <Link href="/admin/kategoriler/ekle">
+                <Link href="/admin/sayfalar/ekle">
                   <a>
                     <Button icon labelPosition="left" size="tiny" color="blue">
                       <Icon name="add square" />

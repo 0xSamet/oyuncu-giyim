@@ -26,3 +26,45 @@ export const GET_PAGES = gql`
     }
   }
 `;
+
+export const GET_PAGES_ADMIN = gql`
+  query getPagesAdmin {
+    pagesOnAdmin {
+      id
+      desktop_menu_id
+      mobile_menu_id
+      status
+      sort_order
+      description {
+        name
+        description
+        meta_title
+        meta_keywords
+        meta_description
+        slug
+        language
+      }
+    }
+  }
+`;
+
+export const GET_PAGE_ADMIN = gql`
+  query getPagesAdmin($input: pageOnAdminInput!) {
+    pageOnAdmin(input: $input) {
+      id
+      desktop_menu_id
+      mobile_menu_id
+      status
+      sort_order
+      description {
+        name
+        description
+        meta_title
+        meta_keywords
+        meta_description
+        slug
+        language
+      }
+    }
+  }
+`;

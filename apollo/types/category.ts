@@ -78,8 +78,8 @@ export default gql`
     categoriesOnAdmin: [CategoryOnAdmin!]!
   }
   type Mutation {
-    addCategory(input: addCategoryInput!): CategoryOnAdmin!
-    updateCategory(input: updateCategoryInput!): CategoryOnAdmin!
+    addCategory(input: addCategoryInput!): CategoryOnAdmin
+    updateCategory(input: updateCategoryInput!): CategoryOnAdmin
     deleteCategory(input: deleteCategoryInput!): deleteCategoryResponse!
   }
 `;

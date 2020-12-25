@@ -7,6 +7,7 @@ const tableNames = {
   mobile_menu: "mobile_menu",
   mobile_menu_description: "mobile_menu_description",
   page: "page",
+  page_description: "page_description",
 };
 
 module.exports = {

@@ -1,15 +1,18 @@
 import { gql } from "@apollo/client";
 
 export const GET_DESKTOP_MENU = gql`
-  query getDesktopMenu {
-    desktopMenu {
+  query getDesktopMenu($language: String!) {
+    desktopMenu(language: $language) {
       id
-      name
-      href
-      target
-      icon_url
       sort_order
       is_divider
+      status
+      description {
+        name
+        href
+        target
+        icon_url
+      }
     }
   }
 `;

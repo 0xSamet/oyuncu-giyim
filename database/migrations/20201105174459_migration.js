@@ -101,6 +101,44 @@ exports.up = async function (knex) {
       table.string("meta_description", 500).defaultTo("");
       table.string("meta_keywords", 500).defaultTo("");
       table.string("slug").notNullable().defaultTo("");
+    })
+    .createTable(tableNames.page, (table) => {
+      table.increments();
+      table
+        .integer("desktop_menu_id")
+        .references("id")
+        .inTable(tableNames.desktop_menu)
+        .onDelete("cascade")
+        .defaultTo(null);
+      table
+        .integer("mobile_menu_id")
+        .references("id")
+        .inTable(tableNames.mobile_menu)
+        .onDelete("cascade")
+        .defaultTo(null);
+      table.integer("sort_order");
+      table.boolean("status").defaultTo(true);
+    })
+    .createTable(tableNames.page_description, (table) => {
+      table.increments();
+      table
+        .integer("page_id")
+        .references("id")
+        .inTable(tableNames.page)
+        .onDelete("cascade")
+        .defaultTo(null);
+      table
+        .integer("language_id")
+        .references("id")
+        .inTable(tableNames.language)
+        .onDelete("cascade")
+        .defaultTo(null);
+      table.string("name").notNullable().defaultTo("");
+      table.text("description").defaultTo("");
+      table.string("meta_title").defaultTo("");
+      table.string("meta_description", 500).defaultTo("");
+      table.string("meta_keywords", 500).defaultTo("");
+      table.string("slug").notNullable().defaultTo("");
     });
 };
 
@@ -109,10 +147,13 @@ exports.up = async function (knex) {
  */
 exports.down = async function (knex) {
   await knex.schema.dropTableIfExists(tableNames.desktop_menu_description);
-  await knex.schema.dropTableIfExists(tableNames.desktop_menu);
   await knex.schema.dropTableIfExists(tableNames.mobile_menu_description);
-  await knex.schema.dropTableIfExists(tableNames.mobile_menu);
   await knex.schema.dropTableIfExists(tableNames.category_description);
+  await knex.schema.dropTableIfExists(tableNames.page_description);
+
+  await knex.schema.dropTableIfExists(tableNames.page);
   await knex.schema.dropTableIfExists(tableNames.category);
+  await knex.schema.dropTableIfExists(tableNames.desktop_menu);
+  await knex.schema.dropTableIfExists(tableNames.mobile_menu);
   await knex.schema.dropTableIfExists(tableNames.language);
 };

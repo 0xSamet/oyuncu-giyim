@@ -70,7 +70,9 @@ export default function LeftMenu(props) {
     theme: { iconMode },
   } = useSelector((state) => state);
   const [isTabletMenuClosed, setIsTabletMenuClosed] = useState(false);
-  const { data, loading, error } = useQuery(GET_DESKTOP_MENU);
+  const { data, loading, error } = useQuery(GET_DESKTOP_MENU, {
+    variables: { language: router.locale },
+  });
 
   const handleIconMode = () => {
     return dispatch(toggleIconMode());
@@ -98,12 +100,12 @@ export default function LeftMenu(props) {
     };
   }, [iconMode]);
 
-  if (loading) {
-    return <ul className="main-menu">loading</ul>;
-  }
-
   if (error) {
     return <ul className="main-menu">error</ul>;
+  }
+
+  if (loading) {
+    return <ul className="main-menu">loading</ul>;
   }
 
   return (
@@ -133,10 +135,10 @@ export default function LeftMenu(props) {
                 <LeftMenuListItem
                   key={menu.id}
                   index={menu.id}
-                  text={menu.name}
-                  link={menu.href || undefined}
-                  target={menu.target}
-                  icon={menu.icon_url}
+                  text={menu.description.name}
+                  link={menu.description.href || undefined}
+                  target={menu.description.target}
+                  icon={menu.description.icon_url}
                 />
               );
             }
@@ -144,6 +146,15 @@ export default function LeftMenu(props) {
       ) : (
         <li></li>
       )}
+      {router.locales.map((locale) => (
+        <li>
+          <Link href={router.asPath} locale={locale}>
+            <a>
+              <span>{locale}</span>
+            </a>
+          </Link>
+        </li>
+      ))}
     </ul>
   );
 }

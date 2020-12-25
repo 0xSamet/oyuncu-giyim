@@ -25,6 +25,7 @@ import {
   GetStaticPropsResult,
 } from "next";
 import { useRouter } from "next/router";
+import { GET_DESKTOP_MENU } from "../apollo/gql/query/menu";
 
 SwiperCore.use([Navigation, Autoplay, Pagination]);
 
@@ -45,7 +46,9 @@ export default function Home() {
   );
 }
 
-export const getStaticProps = () => {
+export const getServerSideProps = async () => {
+  const apolloClient: ApolloClient<NormalizedCacheObject> = initializeApollo();
+
   return {
     props: {
       asd: "sad",

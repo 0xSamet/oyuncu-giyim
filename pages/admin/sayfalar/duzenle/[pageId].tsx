@@ -1,4 +1,4 @@
-import SEO from "../../../components/Seo";
+import SEO from "../../../../components/Seo";
 import {
   Button,
   Checkbox,
@@ -16,26 +16,26 @@ import {
   Tab,
   FlagNameValues,
 } from "semantic-ui-react";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useLazyQuery, useMutation } from "@apollo/client";
-import { GET_CATEGORIES_ADMIN } from "../../../apollo/gql/query/category";
-import { ADD_CATEGORY } from "../../../apollo/gql/mutations/category";
 import { useRouter } from "next/router";
 import { useDispatch } from "react-redux";
 import produce from "immer";
-import { putAdminRequestError } from "../../../store/reducers/admin";
-import { GET_LANGUAGES } from "../../../apollo/gql/query/language";
-import { Category } from "./index";
-import { Language } from "../ayarlar/diller";
-import Editor from "../../../components/Editor";
+import { putAdminRequestError } from "../../../../store/reducers/admin";
+import { GET_LANGUAGES } from "../../../../apollo/gql/query/language";
+import { Page, PageDescription } from "../index";
+import { Language } from "../../ayarlar/diller";
+import Editor from "../../../../components/Editor";
 import {
   GET_DESKTOP_MENU_ADMIN,
   GET_MOBILE_MENU_ADMIN,
-} from "../../../apollo/gql/query/menu";
-import { DesktopMenu, MobileMenu } from "../menuler";
+} from "../../../../apollo/gql/query/menu";
+import { DesktopMenu, MobileMenu } from "../../menuler";
+import { ADD_PAGE, UPDATE_PAGE } from "../../../../apollo/gql/mutations/page";
+import { GET_PAGE_ADMIN } from "../../../../apollo/gql/query/page";
 
-export default function AddCategory() {
-  const [sampleDesc] = useState({
+export default function AddPage() {
+  const [sampleDesc] = useState<PageDescription>({
     name: "",
     description: "",
     meta_title: "",
@@ -44,16 +44,14 @@ export default function AddCategory() {
     language: "",
     slug: "",
   });
-  const [fields, setFields] = useState<Category>({
+  const [fields, setFields] = useState<Page>({
     id: null,
-    parent_id: null,
     sort_order: null,
     desktop_menu_id: null,
     mobile_menu_id: null,
     status: true,
     description: [sampleDesc],
   });
-  const [categories, setCategories] = useState<Category[] | undefined[]>([]);
   const [languages, setLanguages] = useState<Language[] | undefined[]>([]);
   const [desktopMenu, setDesktopMenu] = useState<DesktopMenu[] | undefined[]>(
     []
@@ -62,14 +60,11 @@ export default function AddCategory() {
   const [activeLanguage, setActiveLanguage] = useState<string | null>(null);
   const router = useRouter();
   const dispatch = useDispatch();
+
   const [
-    getCategories,
-    {
-      data: categoriesData,
-      loading: categoriesLoading,
-      error: categoriesError,
-    },
-  ] = useLazyQuery(GET_CATEGORIES_ADMIN, {
+    getPage,
+    { data: pageData, loading: pageLoading, error: pageError },
+  ] = useLazyQuery(GET_PAGE_ADMIN, {
     fetchPolicy: "no-cache",
   });
 
@@ -103,34 +98,19 @@ export default function AddCategory() {
   });
 
   const [
-    addCategoryRun,
+    updatePageRun,
     {
-      loading: addCategoryLoading,
-      error: addCategoryError,
-      data: addCategoryResponse,
+      loading: updatePageLoading,
+      error: updatePageError,
+      data: updatePageResponse,
     },
-  ] = useMutation(ADD_CATEGORY);
+  ] = useMutation(UPDATE_PAGE);
 
   useEffect(() => {
-    getCategories();
     getLanguages();
     getDesktopMenu();
     getMobileMenu();
-
-    return () => {
-      setCategories([]);
-    };
   }, []);
-
-  useEffect(() => {
-    if (
-      categoriesData &&
-      categoriesData.categoriesOnAdmin &&
-      categoriesData.categoriesOnAdmin.length > 0
-    ) {
-      setCategories(categoriesData.categoriesOnAdmin);
-    }
-  }, [categoriesData]);
 
   useEffect(() => {
     if (
@@ -153,18 +133,55 @@ export default function AddCategory() {
   }, [mobileMenuData]);
 
   useEffect(() => {
+    if (router.query.pageId) {
+      getPage({
+        variables: {
+          input: {
+            id: router.query.pageId,
+          },
+        },
+      });
+    }
+  }, [router.query.pageId]);
+
+  useEffect(() => {
     if (
       languagesData &&
       languagesData.languages &&
-      languagesData.languages.length > 0
+      languagesData.languages.length > 0 &&
+      pageData &&
+      pageData.pageOnAdmin &&
+      pageData.pageOnAdmin.id
     ) {
+      let {
+        id,
+        status,
+        sort_order,
+        description,
+        desktop_menu_id,
+        mobile_menu_id,
+      } = pageData.pageOnAdmin;
+
       setFields({
         ...fields,
+        status,
+        sort_order,
+        id,
+        desktop_menu_id,
+        mobile_menu_id,
         description: languagesData.languages.map((language) => {
-          return {
-            ...fields.description[0],
-            language: language.code,
-          };
+          const tryFound = description.find(
+            (c) => c.language === language.code
+          );
+
+          if (tryFound) {
+            return tryFound;
+          } else {
+            return {
+              ...sampleDesc,
+              language: language.code,
+            };
+          }
         }),
       });
 
@@ -174,29 +191,22 @@ export default function AddCategory() {
       setLanguages(languagesData.languages);
       setActiveLanguage(activeLanguageCode);
     }
-  }, [languagesData]);
+  }, [languagesData, pageData]);
 
   useEffect(() => {
     if (
-      addCategoryResponse &&
-      addCategoryResponse.addCategory &&
-      addCategoryResponse.addCategory.id
+      updatePageResponse &&
+      updatePageResponse.updatePage &&
+      updatePageResponse.updatePage.id
     ) {
-      router.push("/admin/kategoriler");
+      router.push("/admin/sayfalar");
     }
-  }, [addCategoryResponse]);
+  }, [updatePageResponse]);
 
   const handleFormSubmit = async () => {
-    let parentId;
     let sortOrder;
     let desktopMenuId;
     let mobileMenuId;
-
-    if (fields.parent_id) {
-      parentId = Number(fields.parent_id);
-    } else {
-      parentId = null;
-    }
 
     if (
       (!isNaN(fields.sort_order) && fields.sort_order) ||
@@ -226,10 +236,10 @@ export default function AddCategory() {
     }
 
     try {
-      await addCategoryRun({
+      await updatePageRun({
         variables: {
           input: {
-            parent_id: parentId,
+            id: fields.id,
             sort_order: sortOrder,
             status: fields.status,
             desktop_menu_id: desktopMenuId,
@@ -263,40 +273,6 @@ export default function AddCategory() {
       })
     );
   };
-
-  const getCategoriesForOption = useMemo(() => {
-    const a = [...categories]
-      .sort((a, b) => a.sort_order - b.sort_order)
-      .map((c) => {
-        const { name } = c.description.find((c) => c.language === "tr");
-
-        const parentCategoriesAsArray = c.parents.reverse().map((a) => {
-          const { name } = a.description.find((c) => c.language === "tr");
-          return name;
-        });
-
-        const categoryName =
-          parentCategoriesAsArray.length > 0
-            ? ` > ${name ? name : "[Kategorinin Türkçe Adı Yok]"}`
-            : name
-            ? name
-            : "[Kategorinin Türkçe Adı Yok]";
-        return {
-          key: c.id,
-          value: c.id,
-          text: parentCategoriesAsArray.join(" > ") + categoryName,
-        };
-      });
-
-    return [
-      {
-        key: -1,
-        value: "-1",
-        text: "Üst Kategori Yok",
-      },
-      ...a,
-    ];
-  }, [categories]);
 
   const getDesktopMenuForOption = useMemo(() => {
     const a = [...desktopMenu]
@@ -388,20 +364,6 @@ export default function AddCategory() {
               />
             </Form.Field>
             <Form.Field>
-              <label>Üst Kategori</label>
-              <Select
-                className="category-select"
-                options={getCategoriesForOption}
-                value={fields.parent_id ? fields.parent_id : "-1"}
-                onChange={(_, { value }) => {
-                  setFields({
-                    ...fields,
-                    parent_id: value === "-1" ? null : value,
-                  } as any);
-                }}
-              />
-            </Form.Field>
-            <Form.Field>
               <label>Sıralama</label>
               <input
                 type="number"
@@ -418,7 +380,7 @@ export default function AddCategory() {
               <Tab menu={{ pointing: true }} panes={getLanguagesForMenu} />
             </Form.Field>
             <Form.Field>
-              <label>Kategori Adı</label>
+              <label>Sayfa Adı</label>
               <input
                 type="text"
                 name="name"
@@ -427,7 +389,7 @@ export default function AddCategory() {
               />
             </Form.Field>
             <Form.Field>
-              <label>Kategori Açıklaması</label>
+              <label>Sayfa Açıklaması</label>
               {languages.length > 0 &&
                 (languages as Language[]).map((language) => {
                   const fieldsToUse = fields.description.find(
@@ -532,7 +494,11 @@ export default function AddCategory() {
                 <label>Masaüstü Menü</label>
                 <Select
                   options={getDesktopMenuForOption}
-                  value={fields.desktop_menu_id ? fields.desktop_menu_id : "-1"}
+                  value={
+                    fields.desktop_menu_id
+                      ? String(fields.desktop_menu_id)
+                      : "-1"
+                  }
                   onChange={(_e, { value }: { value: string }) => {
                     setFields({
                       ...fields,
@@ -545,7 +511,9 @@ export default function AddCategory() {
                 <label>Mobil Menü</label>
                 <Select
                   options={getMobileMenuForOption}
-                  value={fields.mobile_menu_id ? fields.mobile_menu_id : "-1"}
+                  value={
+                    fields.mobile_menu_id ? String(fields.mobile_menu_id) : "-1"
+                  }
                   onChange={(_e, { value }: { value: string }) => {
                     setFields({
                       ...fields,
@@ -561,7 +529,7 @@ export default function AddCategory() {
     },
   ];
 
-  if (categoriesLoading || addCategoryLoading || languagesLoading) {
+  if (updatePageLoading || languagesLoading) {
     return (
       <Segment className="page-loader">
         <Dimmer active>
@@ -574,12 +542,12 @@ export default function AddCategory() {
   return (
     <SEO
       seo={{
-        meta_title: "Kategoriler - Oyuncu Giyim",
+        meta_title: "Sayfa Düzenle - Oyuncu Giyim",
         meta_description: "",
         meta_keyword: "",
       }}
     >
-      <section className="admin-categories-page admin-sub-page">
+      <section className="admin-pages-update-page admin-sub-page">
         <Form
           onSubmit={(e) => {
             e.preventDefault();
@@ -588,8 +556,8 @@ export default function AddCategory() {
         >
           <Tab className="tabs" menu={{ pointing: true }} panes={panes} />
           <Button type="submit" fluid icon size="tiny" color="blue">
-            <Icon name="add square" />
-            Ekle
+            <Icon name="save" />
+            Sayfa Güncelle
           </Button>
         </Form>
       </section>

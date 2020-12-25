@@ -137,6 +137,14 @@ exports.seed = async function (knex) {
       sort_order: 0,
       is_divider: false,
     },
+    {
+      sort_order: 1,
+      is_divider: false,
+    },
+    {
+      sort_order: 2,
+      is_divider: false,
+    },
   ]);
 
   await knex(tableNames.desktop_menu_description).insert([
@@ -153,6 +161,34 @@ exports.seed = async function (knex) {
       name: "Homepage",
       href: "/",
       icon_url: "/icons/home.svg",
+    },
+    {
+      desktop_menu_id: 2,
+      language_id: 1,
+      name: "Sweatshirt",
+      href: "/sweatshirt",
+      icon_url: "/icons/sweatshirt.svg",
+    },
+    {
+      desktop_menu_id: 2,
+      language_id: 2,
+      name: "Sweatshirt",
+      href: "/sweatshirt",
+      icon_url: "/icons/sweatshirt.svg",
+    },
+    {
+      desktop_menu_id: 3,
+      language_id: 1,
+      name: "İletişim",
+      href: "/iletisim",
+      icon_url: "/icons/paper-plane.svg",
+    },
+    {
+      desktop_menu_id: 3,
+      language_id: 2,
+      name: "Contact",
+      href: "/contact",
+      icon_url: "/icons/paper-plane.svg",
     },
   ]);
 
@@ -176,6 +212,35 @@ exports.seed = async function (knex) {
       name: "Homepage",
       href: "/",
       icon_url: "/icons/home.svg",
+    },
+  ]);
+
+  await knex(tableNames.page).insert([
+    {
+      sort_order: 0,
+    },
+  ]);
+
+  await knex(tableNames.page_description).insert([
+    {
+      page_id: 1,
+      language_id: 1,
+      name: "Anasayfa",
+      description: "Anaysayfa Açıklama",
+      meta_title: "Anaysayfa | Oyuncu Giyim",
+      meta_description: "Anaysayfa meta desc",
+      meta_keywords: "Anaysayfa meta keywords",
+      slug: "/",
+    },
+    {
+      page_id: 1,
+      language_id: 2,
+      name: "Homepage",
+      description: "Homepage Description",
+      meta_title: "Homepage | Oyuncu Giyim",
+      meta_description: "Homepage meta desc",
+      meta_keywords: "Homepage meta keywords",
+      slug: "/",
     },
   ]);
 };

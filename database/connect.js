@@ -11,6 +11,7 @@ if (!connection) {
     ...connectionConfig,
     debug: false,
   });
+  Model.knex(connection);
 }
 
-export default Model.knex(connection);
+export default connection;

@@ -98,13 +98,14 @@ export default function AddDesktopMenu() {
   const handleFormSubmit = async () => {
     let sortOrder;
 
-    if (!isNaN(fields.sort_order) && fields.sort_order) {
+    if (
+      (!isNaN(fields.sort_order) && fields.sort_order) ||
+      fields.sort_order === 0
+    ) {
       sortOrder = Number(fields.sort_order);
     } else {
       sortOrder = null;
     }
-
-    console.log(fields);
 
     try {
       await addDesktopMenuRun({
