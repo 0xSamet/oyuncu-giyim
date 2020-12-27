@@ -64,6 +64,7 @@ export const getStaticProps = wrapper.getStaticProps(
         page: page,
         initialApolloState: apolloClient.cache.extract(),
       },
+      revalidate: 1,
     };
   }
 );
