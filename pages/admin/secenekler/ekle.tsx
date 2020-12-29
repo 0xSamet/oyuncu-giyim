@@ -1,20 +1,14 @@
 import SEO from "../../../components/Seo";
 import {
   Button,
-  Checkbox,
   Form,
   Icon,
   Select,
-  Input,
-  Label,
-  Flag,
   Segment,
   Dimmer,
   Loader,
-  TextArea,
   Menu,
   Tab,
-  FlagNameValues,
 } from "semantic-ui-react";
 import { useEffect, useMemo, useState } from "react";
 import { useLazyQuery, useMutation } from "@apollo/client";
@@ -23,35 +17,48 @@ import { useDispatch } from "react-redux";
 import produce from "immer";
 import { putAdminRequestError } from "../../../store/reducers/admin";
 import { GET_LANGUAGES } from "../../../apollo/gql/query/language";
-import { Page, PageDescription } from "./index";
+import {
+  Option,
+  OptionDescription,
+  OptionType,
+  OptionValue,
+  OptionValueDescription,
+} from "./index";
 import { Language } from "../ayarlar/diller";
-import Editor from "../../../components/Editor";
-import { DesktopMenu, MobileMenu } from "../menuler";
 import { ADD_PAGE } from "../../../apollo/gql/mutations/page";
 
 export default function AddOptionPage() {
-  const [sampleDesc] = useState<PageDescription>({
+  const [optionTypes, setOptionTypes] = useState<OptionType[] | undefined[]>([
+    {
+      name: "select",
+      sort_order: 0,
+    },
+  ]);
+
+  const [sampleOptionValueDescription] = useState<OptionValueDescription>({
     name: "",
-    description: "",
-    meta_title: "",
-    meta_description: "",
-    meta_keywords: "",
     language: "",
-    slug: "",
   });
-  const [fields, setFields] = useState<Page>({
+
+  const [sampleOptionValue] = useState<OptionValue>({
     id: null,
     sort_order: null,
-    desktop_menu_id: null,
-    mobile_menu_id: null,
-    status: true,
-    description: [sampleDesc],
+    description: [sampleOptionValueDescription],
   });
+  const [sampleOptionDescription] = useState<OptionDescription>({
+    name: "",
+    language: "",
+  });
+  const [fields, setFields] = useState<Option>({
+    id: null,
+    sort_order: null,
+    option_type: optionTypes[0].name,
+    option_values: [sampleOptionValue],
+    description: [sampleOptionDescription],
+  });
+
   const [languages, setLanguages] = useState<Language[] | undefined[]>([]);
-  const [desktopMenu, setDesktopMenu] = useState<DesktopMenu[] | undefined[]>(
-    []
-  );
-  const [mobileMenu, setMobileMenu] = useState<MobileMenu[] | undefined[]>([]);
+
   const [activeLanguage, setActiveLanguage] = useState<string | null>(null);
   const router = useRouter();
   const dispatch = useDispatch();
@@ -82,10 +89,24 @@ export default function AddOptionPage() {
         ...fields,
         description: languagesData.languages.map((language) => {
           return {
-            ...fields.description[0],
+            ...sampleOptionDescription,
             language: language.code,
           };
         }),
+        option_values: [
+          {
+            ...sampleOptionValue,
+            id: 0,
+            description: languagesData.languages.map((language) => {
+              return {
+                ...sampleOptionValueDescription,
+
+                language: language.code,
+              } as OptionValueDescription;
+            }),
+            sort_order: 0,
+          },
+        ],
       });
 
       const { code: activeLanguageCode } = languagesData.languages.find(
@@ -119,15 +140,15 @@ export default function AddOptionPage() {
     }
 
     try {
-      await addPageRun({
-        variables: {
-          input: {
-            sort_order: sortOrder,
-            status: fields.status,
-            description: fields.description,
-          },
-        },
-      });
+      console.log(fields);
+      //   await addPageRun({
+      //     variables: {
+      //       input: {
+      //         sort_order: sortOrder,
+      //         description: fields.description,
+      //       },
+      //     },
+      //   });
     } catch (err) {
       console.log(err);
       dispatch(putAdminRequestError(err.message));
@@ -154,6 +175,69 @@ export default function AddOptionPage() {
     );
   };
 
+  const handleOptionValueNormalInputChange = (e, id) => {
+    return setFields(
+      produce(fields, (draft) => {
+        const foundValueIndex = draft.option_values.findIndex(
+          (c) => c.id === id
+        );
+
+        draft.option_values[foundValueIndex][e.target.name] = e.target.value;
+      })
+    );
+  };
+
+  const handleOptionValueLanguageInputChange = (e, id) => {
+    return setFields(
+      produce(fields, (draft) => {
+        const foundValueIndex = draft.option_values.findIndex(
+          (c) => c.id === id
+        );
+
+        const foundValueDescriptionIndex = draft.option_values[
+          foundValueIndex
+        ].description.findIndex((c) => c.language === activeLanguage);
+
+        draft.option_values[foundValueIndex].description[
+          foundValueDescriptionIndex
+        ][e.target.name] = e.target.value;
+      })
+    );
+  };
+
+  const handleAddOptionValue = () => {
+    return setFields(
+      produce(fields, (draft) => {
+        const lastIndex = draft.option_values.length - 1;
+
+        draft.option_values.push({
+          ...sampleOptionValue,
+          id: Number(draft.option_values[lastIndex].id) + 1,
+          sort_order: Number(draft.option_values[lastIndex].sort_order) + 1,
+          description: (languages as Language[]).map((language) => {
+            return {
+              ...sampleOptionValueDescription,
+              name: "",
+              language: language.code,
+            };
+          }),
+        });
+      })
+    );
+  };
+
+  const handleDeleteOptionValue = (optionValueId) => {
+    return setFields(
+      produce(fields, (draft) => {
+        if (draft.option_values.length > 1) {
+          draft.option_values = draft.option_values.filter(
+            (optionValue) => optionValue.id !== optionValueId
+          );
+        }
+      })
+    );
+  };
+
   const getLanguagesForMenu = useMemo(() => {
     return (languages as Language[]).map((language) => {
       return {
@@ -169,6 +253,16 @@ export default function AddOptionPage() {
     });
   }, [languages, activeLanguage]);
 
+  const getOptionTypesForOption = useMemo(() => {
+    return (optionTypes as OptionType[]).map((optionType) => {
+      return {
+        key: optionType.name,
+        value: String(optionType.name),
+        text: optionType.name,
+      };
+    });
+  }, [optionTypes]);
+
   const panes = [
     {
       menuItem: "Genel",
@@ -178,25 +272,6 @@ export default function AddOptionPage() {
         );
         return (
           <Tab.Pane attached={false}>
-            <Form.Field
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "flex-end",
-              }}
-            >
-              <label>Açık/Kapalı</label>
-              <Checkbox
-                toggle
-                checked={fields.status}
-                onChange={() => {
-                  return setFields({
-                    ...fields,
-                    status: !fields.status,
-                  });
-                }}
-              />
-            </Form.Field>
             <Form.Group
               style={{
                 alignItems: "center",
@@ -205,38 +280,14 @@ export default function AddOptionPage() {
               <Form.Field width={8}>
                 <label>Seçenek Tipi</label>
                 <Select
-                  options={[
-                    {
-                      key: "_self",
-                      value: "_self",
-                      text: "_self",
-                    },
-                    {
-                      key: "_blank",
-                      value: "_blank",
-                      text: "_blank",
-                    },
-                    {
-                      key: "_parent",
-                      value: "_parent",
-                      text: "_parent",
-                    },
-                    {
-                      key: "_top",
-                      value: "_top",
-                      text: "_top",
-                    },
-                  ]}
-                  value={"_top"}
+                  options={getOptionTypesForOption}
+                  value={fields.option_type || ""}
                   onChange={(_e, { value }: { value: string }) => {
-                    // setFields(
-                    //   produce(fields, (draft) => {
-                    //     const findIndex = fields.description.findIndex(
-                    //       (desc) => desc.language === activeLanguage
-                    //     );
-                    //     draft.description[findIndex].target = value;
-                    //   })
-                    // );
+                    setFields(
+                      produce(fields, (draft) => {
+                        draft.option_type = value;
+                      })
+                    );
                   }}
                 />
               </Form.Field>
@@ -276,41 +327,72 @@ export default function AddOptionPage() {
       render: () => {
         return (
           <Tab.Pane attached={false}>
-            <Segment>
-              <Form.Field
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "flex-end",
-                }}
-              >
-                <Icon name="trash" color="red" circular />
-              </Form.Field>
-              <Form.Field>
-                <Tab menu={{ pointing: true }} panes={getLanguagesForMenu} />
-              </Form.Field>
+            {fields.option_values.map((optionValue) => {
+              const fieldsToUse = optionValue.description.find(
+                (description) => description.language === activeLanguage
+              );
+              return (
+                <Segment raised key={optionValue.id}>
+                  <Form.Field
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "flex-end",
+                    }}
+                  >
+                    <Icon
+                      name="trash"
+                      color="red"
+                      circular
+                      style={{ cursor: "pointer" }}
+                      onClick={() => handleDeleteOptionValue(optionValue.id)}
+                    />
+                  </Form.Field>
+                  <Form.Field>
+                    <Tab
+                      menu={{ pointing: true }}
+                      panes={getLanguagesForMenu}
+                    />
+                  </Form.Field>
 
-              <Form.Field>
-                <label>Seçenek Değer Adı</label>
-                <input
-                  type="text"
-                  name="name"
-                  value={fields.sort_order || ""}
-                  onChange={handleLanguageInputChange}
-                />
-              </Form.Field>
-              <Form.Field>
-                <label>Sıralama</label>
-                <input
-                  type="text"
-                  name="name"
-                  value={fields.sort_order || ""}
-                  onChange={handleLanguageInputChange}
-                />
-              </Form.Field>
-            </Segment>
-            <Segment>
-              <Button primary>Seçenek Değeri Ekle</Button>
+                  <Form.Field>
+                    <label>Seçenek Değer Adı</label>
+                    <input
+                      type="text"
+                      name="name"
+                      value={fieldsToUse?.name || ""}
+                      onChange={(e) =>
+                        handleOptionValueLanguageInputChange(e, optionValue.id)
+                      }
+                    />
+                  </Form.Field>
+                  <Form.Field>
+                    <label>Sıralama</label>
+                    <input
+                      type="number"
+                      name="sort_order"
+                      value={
+                        optionValue.sort_order || optionValue.sort_order == 0
+                          ? optionValue.sort_order
+                          : ""
+                      }
+                      onChange={(e) =>
+                        handleOptionValueNormalInputChange(e, optionValue.id)
+                      }
+                    />
+                  </Form.Field>
+                </Segment>
+              );
+            })}
+            <Segment raised textAlign="center" size="mini">
+              <Button
+                as="div"
+                onClick={handleAddOptionValue}
+                primary
+                size="tiny"
+              >
+                Seçenek Değeri Ekle
+              </Button>
             </Segment>
           </Tab.Pane>
         );

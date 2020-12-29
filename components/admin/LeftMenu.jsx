@@ -131,24 +131,6 @@ export default function LeftMenu() {
           href: "/admin/secenekler",
         }}
         icon="/icons/admin/options.svg"
-        submenu={[
-          {
-            index: 10,
-            text: "Seçenekleri Listele",
-            link: {
-              href: "/admin/secenekler",
-            },
-            icon: "/icons/admin/options.svg",
-          },
-          {
-            index: 11,
-            text: "Seçenek Tipleri",
-            link: {
-              href: "/admin/secenekler/tipler",
-            },
-            icon: "/icons/settings.svg",
-          },
-        ]}
       />
       <li className="divider"></li>
       <LeftMenuListItem

@@ -8,7 +8,6 @@ const tableNames = {
   mobile_menu_description: "mobile_menu_description",
   page: "page",
   page_description: "page_description",
-  option_type: "option_type",
   option: "option",
   option_description: "option_description",
   option_value: "option_value",

@@ -146,19 +146,9 @@ exports.up = async function (knex) {
       table.string("meta_keywords", 500).defaultTo("");
       table.string("slug").notNullable().defaultTo("");
     })
-    .createTable(tableNames.option_type, (table) => {
-      table.increments();
-      table.string("name").notNullable();
-      table.integer("sort_order");
-    })
     .createTable(tableNames.option, (table) => {
       table.increments();
-      table
-        .integer("option_type_id")
-        .references("id")
-        .inTable(tableNames.option_type)
-        .onDelete("cascade")
-        .notNullable();
+      table.string("option_type").notNullable();
       table.integer("sort_order");
     })
     .createTable(tableNames.option_description, (table) => {

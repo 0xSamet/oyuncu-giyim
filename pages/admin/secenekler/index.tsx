@@ -34,6 +34,35 @@ export interface Page {
   mobile_menu_id: number | string;
 }
 
+export interface OptionType {
+  name: string;
+  sort_order: number;
+}
+
+export interface OptionValueDescription {
+  name: string;
+  language: string;
+}
+
+export interface OptionValue {
+  id: number;
+  sort_order: number;
+  description: OptionValueDescription[];
+}
+
+export interface OptionDescription {
+  name: string;
+  language: string;
+}
+
+export interface Option {
+  id: number | ReactText;
+  sort_order: number;
+  option_type: string;
+  description: OptionDescription[];
+  option_values: OptionValue[];
+}
+
 interface PageRowType {
   page: Page;
 }
