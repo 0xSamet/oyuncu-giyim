@@ -28,6 +28,7 @@ import Link from "next/link";
 import { useDispatch } from "react-redux";
 import { putAdminRequestError } from "../../../store/reducers/admin";
 import { GET_PAGES_ADMIN } from "../../../apollo/gql/query/page";
+import { DELETE_PAGE } from "../../../apollo/gql/mutations/page";
 
 export interface PageDescription {
   name: string;
@@ -61,24 +62,20 @@ export default function AdminDashboard() {
   });
 
   const [
-    deleteCategoryRun,
+    deletePageRun,
     {
-      loading: deleteCategoryLoading,
-      error: deleteCategoryError,
-      data: deleteCategoryResponse,
+      loading: deletePageLoading,
+      error: deletePageError,
+      data: deletePageResponse,
     },
-  ] = useMutation(DELETE_CATEGORY);
+  ] = useMutation(DELETE_PAGE);
 
   useEffect(() => {
     getPages();
-
-    return () => {
-      setPages([]);
-    };
   }, []);
 
   useEffect(() => {
-    if (data && data.pagesOnAdmin && data.pagesOnAdmin.length > 0) {
+    if (data && data.pagesOnAdmin) {
       setPages(data.pagesOnAdmin);
     }
   }, [data]);
@@ -105,19 +102,19 @@ export default function AdminDashboard() {
             icon="trash"
             size="tiny"
             color="red"
-            onClick={() => handleDeleteCategory(page.id)}
+            onClick={() => handleDeletePage(page.id)}
           ></Button>
         </Table.Cell>
       </Table.Row>
     );
   };
 
-  const handleDeleteCategory = async (categoryId) => {
+  const handleDeletePage = async (pageId) => {
     try {
-      await deleteCategoryRun({
+      await deletePageRun({
         variables: {
           input: {
-            id: categoryId,
+            id: pageId,
           },
         },
       });
@@ -129,7 +126,7 @@ export default function AdminDashboard() {
     getPages();
   };
 
-  if (loading || deleteCategoryLoading) {
+  if (loading || deletePageLoading) {
     return (
       <Segment className="page-loader">
         <Dimmer active>

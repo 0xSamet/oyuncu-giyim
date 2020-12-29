@@ -27,8 +27,9 @@ import { useLazyQuery, useMutation } from "@apollo/client";
 import Link from "next/link";
 import { useDispatch } from "react-redux";
 import { putAdminRequestError } from "../../../store/reducers/admin";
+import { GET_PAGES_ADMIN } from "../../../apollo/gql/query/page";
 
-export interface CategoryDescription {
+export interface PageDescription {
   name: string;
   description: string;
   meta_title: string;
@@ -38,31 +39,26 @@ export interface CategoryDescription {
   language: string;
 }
 
-export interface Category {
+export interface Page {
   id: ReactText;
-  description: CategoryDescription[] | null;
-  parent_id: number | string | null;
+  description: PageDescription[] | null;
   status: boolean;
   sort_order: number;
   desktop_menu_id: number | string;
   mobile_menu_id: number | string;
-  parents?: Category[];
 }
 
-interface CategoryRowType {
-  category: Category;
+interface PageRowType {
+  page: Page;
 }
 
 export default function AdminDashboard() {
-  const [categories, setCategories] = useState([]);
+  const [pages, setPages] = useState([]);
   const dispatch = useDispatch();
 
-  const [getCategories, { data, loading, error }] = useLazyQuery(
-    GET_CATEGORIES_ADMIN,
-    {
-      fetchPolicy: "no-cache",
-    }
-  );
+  const [getPages, { data, loading, error }] = useLazyQuery(GET_PAGES_ADMIN, {
+    fetchPolicy: "no-cache",
+  });
 
   const [
     deleteCategoryRun,
@@ -74,64 +70,30 @@ export default function AdminDashboard() {
   ] = useMutation(DELETE_CATEGORY);
 
   useEffect(() => {
-    getCategories();
+    getPages();
 
     return () => {
-      setCategories([]);
+      setPages([]);
     };
   }, []);
 
   useEffect(() => {
-    if (data && data.categoriesOnAdmin) {
-      setCategories(
-        data.categoriesOnAdmin.map((category) => {
-          return {
-            ...category,
-            parents: category.parents.reverse(),
-          };
-        })
-      );
+    if (data && data.pagesOnAdmin) {
+      setPages(data.pagesOnAdmin);
     }
   }, [data]);
 
-  const CategoryRow: React.FC<CategoryRowType> = ({ category }) => {
-    const { name } = category.description.find(
-      (category) => category.language === "tr"
+  const PageRow: React.FC<PageRowType> = ({ page }) => {
+    const { name } = page.description.find(
+      (description) => description.language === "tr"
     );
 
     return (
-      <Table.Row key={category.id}>
-        <Table.Cell>
-          {category.parents.map((category) => {
-            const { name } = category.description.find(
-              (category) => category.language === "tr"
-            );
-            return (
-              <Fragment key={category.id}>
-                {name}
-                <Icon
-                  name="chevron right"
-                  size="small"
-                  style={{ marginRight: 1, marginLeft: 1 }}
-                />
-              </Fragment>
-            );
-          })}
-          <span
-            style={{
-              background: "#1a69a4",
-              color: "#fff",
-              padding: 5,
-              borderRadius: ".28571429rem",
-              lineHeight: 2,
-            }}
-          >
-            {name}
-          </span>
-        </Table.Cell>
-        <Table.Cell textAlign="center">{category.sort_order}</Table.Cell>
+      <Table.Row key={page.id}>
+        <Table.Cell>{name}</Table.Cell>
+        <Table.Cell textAlign="center">{page.sort_order}</Table.Cell>
         <Table.Cell singleLine>
-          <Link href={`/admin/kategoriler/duzenle/${category.id}`}>
+          <Link href={`/admin/sayfalar/duzenle/${page.id}`}>
             <a>
               <Button icon labelPosition="left" size="tiny" color="teal">
                 <Icon name="edit" />
@@ -143,7 +105,7 @@ export default function AdminDashboard() {
             icon="trash"
             size="tiny"
             color="red"
-            onClick={() => handleDeleteCategory(category.id)}
+            onClick={() => handleDeleteCategory(page.id)}
           ></Button>
         </Table.Cell>
       </Table.Row>
@@ -164,7 +126,7 @@ export default function AdminDashboard() {
       dispatch(putAdminRequestError(err.message));
     }
 
-    getCategories();
+    getPages();
   };
 
   if (loading || deleteCategoryLoading) {
@@ -180,12 +142,12 @@ export default function AdminDashboard() {
   return (
     <SEO
       seo={{
-        meta_title: "Kategoriler - Oyuncu Giyim",
+        meta_title: "Sayfalar - Oyuncu Giyim",
         meta_description: "",
         meta_keyword: "",
       }}
     >
-      <section className="admin-categories-page">
+      <section className="admin-pages-page">
         <Table
           celled
           compact
@@ -194,11 +156,11 @@ export default function AdminDashboard() {
           <Table.Header>
             <Table.Row>
               <Table.HeaderCell colSpan="3" textAlign="right">
-                <Link href="/admin/kategoriler/ekle">
+                <Link href="/admin/sayfalar/ekle">
                   <a>
                     <Button icon labelPosition="left" size="tiny" color="blue">
                       <Icon name="add square" />
-                      Kategori Ekle
+                      Sayfa Ekle
                     </Button>
                   </a>
                 </Link>
@@ -209,7 +171,7 @@ export default function AdminDashboard() {
         <Table celled compact className="admin-results-table">
           <Table.Header>
             <Table.Row>
-              <Table.HeaderCell>Kategoriler</Table.HeaderCell>
+              <Table.HeaderCell>Sayfalar</Table.HeaderCell>
               <Table.HeaderCell collapsing textAlign="center">
                 Sıralama
               </Table.HeaderCell>
@@ -220,16 +182,16 @@ export default function AdminDashboard() {
           </Table.Header>
 
           <Table.Body>
-            {categories && categories.length > 0 ? (
-              [...categories]
+            {pages && pages.length > 0 ? (
+              [...pages]
                 .sort((a, b) => a.sort_order - b.sort_order)
-                .map((category) => {
-                  return <CategoryRow key={category.id} category={category} />;
+                .map((page) => {
+                  return <PageRow key={page.id} page={page} />;
                 })
             ) : (
               <Table.Row>
                 <Table.HeaderCell colSpan="3" textAlign="center">
-                  Kategori Bulunamadı
+                  Sayfa Bulunamadı
                 </Table.HeaderCell>
               </Table.Row>
             )}

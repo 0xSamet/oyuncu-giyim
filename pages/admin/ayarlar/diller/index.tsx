@@ -53,7 +53,7 @@ export default function AdminSettingsLanguages() {
   }, []);
 
   useEffect(() => {
-    if (data && data.languages && data.languages.length > 0) {
+    if (data && data.languages) {
       setLanguages(data.languages);
     }
   }, [data]);

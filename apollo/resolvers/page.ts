@@ -34,6 +34,16 @@ export default {
         language: req.language,
       });
     },
+    slugs: async (
+      parent,
+      params,
+      { loaders: { pageSlugsLoader }, req },
+      _info
+    ) => {
+      return pageSlugsLoader.load({
+        id: parent.id,
+      });
+    },
   },
   Query: {
     pages: async (_parent, { slug }, { db }, _info) => {
@@ -55,6 +65,7 @@ export default {
         .joinRelated(tableNames.language)
         .where("slug", params.slug)
         .andWhere("code", req.language)
+        .andWhere(`${tableNames.page}.status`, true)
         .first();
 
       return result;

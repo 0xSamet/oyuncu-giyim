@@ -129,21 +129,13 @@ export default function AdminMenus() {
   }, []);
 
   useEffect(() => {
-    if (
-      desktopMenuData &&
-      desktopMenuData.desktopMenuOnAdmin &&
-      desktopMenuData.desktopMenuOnAdmin.length > 0
-    ) {
+    if (desktopMenuData && desktopMenuData.desktopMenuOnAdmin) {
       setDesktopMenu(desktopMenuData.desktopMenuOnAdmin);
     }
   }, [desktopMenuData]);
 
   useEffect(() => {
-    if (
-      mobileMenuData &&
-      mobileMenuData.mobileMenuOnAdmin &&
-      mobileMenuData.mobileMenuOnAdmin.length > 0
-    ) {
+    if (mobileMenuData && mobileMenuData.mobileMenuOnAdmin) {
       setMobileMenu(mobileMenuData.mobileMenuOnAdmin);
     }
   }, [mobileMenuData]);

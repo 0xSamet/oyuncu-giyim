@@ -23,6 +23,7 @@ import {
 import {
   pageDescriptionLoader,
   pageDescriptionAdminLoader,
+  pageSlugsLoader,
 } from "../../../apollo/dataloaders/page";
 
 const apolloServer = new ApolloServer({
@@ -42,6 +43,7 @@ const apolloServer = new ApolloServer({
         mobileMenuDescriptionAdminLoader,
         pageDescriptionLoader,
         pageDescriptionAdminLoader,
+        pageSlugsLoader,
       },
     };
   },

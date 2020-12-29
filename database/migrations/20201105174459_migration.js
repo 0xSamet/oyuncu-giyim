@@ -27,12 +27,14 @@ exports.up = async function (knex) {
         .integer("desktop_menu_id")
         .references("id")
         .inTable(tableNames.desktop_menu)
-        .onDelete("cascade");
+        .onDelete("cascade")
+        .notNullable();
       table
         .integer("language_id")
         .references("id")
         .inTable(tableNames.language)
-        .onDelete("cascade");
+        .onDelete("cascade")
+        .notNullable();
       table.string("name").notNullable().defaultTo("");
       table.string("href").defaultTo("");
       table.string("target").defaultTo("_self");
@@ -49,12 +51,14 @@ exports.up = async function (knex) {
         .integer("mobile_menu_id")
         .references("id")
         .inTable(tableNames.mobile_menu)
-        .onDelete("cascade");
+        .onDelete("cascade")
+        .notNullable();
       table
         .integer("language_id")
         .references("id")
         .inTable(tableNames.language)
-        .onDelete("cascade");
+        .onDelete("cascade")
+        .notNullable();
       table.string("name").notNullable().defaultTo("");
       table.string("href").defaultTo("");
       table.string("target").defaultTo("_self");
@@ -89,12 +93,14 @@ exports.up = async function (knex) {
         .integer("category_id")
         .references("id")
         .inTable(tableNames.category)
-        .onDelete("cascade");
+        .onDelete("cascade")
+        .notNullable();
       table
         .integer("language_id")
         .references("id")
         .inTable(tableNames.language)
-        .onDelete("cascade");
+        .onDelete("cascade")
+        .notNullable();
       table.string("name").notNullable().defaultTo("");
       table.text("description").defaultTo("");
       table.string("meta_title").defaultTo("");
@@ -126,19 +132,80 @@ exports.up = async function (knex) {
         .references("id")
         .inTable(tableNames.page)
         .onDelete("cascade")
-        .defaultTo(null);
+        .notNullable();
       table
         .integer("language_id")
         .references("id")
         .inTable(tableNames.language)
         .onDelete("cascade")
-        .defaultTo(null);
+        .notNullable();
       table.string("name").notNullable().defaultTo("");
       table.text("description").defaultTo("");
       table.string("meta_title").defaultTo("");
       table.string("meta_description", 500).defaultTo("");
       table.string("meta_keywords", 500).defaultTo("");
       table.string("slug").notNullable().defaultTo("");
+    })
+    .createTable(tableNames.option_type, (table) => {
+      table.increments();
+      table.string("name").notNullable();
+    })
+    .createTable(tableNames.option, (table) => {
+      table.increments();
+      table
+        .integer("option_type_id")
+        .references("id")
+        .inTable(tableNames.option_type)
+        .onDelete("cascade")
+        .notNullable();
+      table.integer("sort_order");
+    })
+    .createTable(tableNames.option_description, (table) => {
+      table.increments();
+      table
+        .integer("option_id")
+        .references("id")
+        .inTable(tableNames.option)
+        .onDelete("cascade")
+        .notNullable();
+      table
+        .integer("language_id")
+        .references("id")
+        .inTable(tableNames.language)
+        .onDelete("cascade")
+        .notNullable();
+      table.string("name").notNullable().defaultTo("");
+    })
+    .createTable(tableNames.option_value, (table) => {
+      table.increments();
+      table
+        .integer("option_id")
+        .references("id")
+        .inTable(tableNames.option)
+        .onDelete("cascade")
+        .notNullable();
+      table
+        .integer("language_id")
+        .references("id")
+        .inTable(tableNames.language)
+        .onDelete("cascade")
+        .notNullable();
+    })
+    .createTable(tableNames.option_value_description, (table) => {
+      table.increments();
+      table
+        .integer("option_value_id")
+        .references("id")
+        .inTable(tableNames.option_value)
+        .onDelete("cascade")
+        .notNullable();
+      table
+        .integer("language_id")
+        .references("id")
+        .inTable(tableNames.language)
+        .onDelete("cascade")
+        .notNullable();
+      table.string("name").notNullable().defaultTo("");
     });
 };
 
@@ -146,14 +213,29 @@ exports.up = async function (knex) {
  * @param {Knex} knex
  */
 exports.down = async function (knex) {
-  await knex.schema.dropTableIfExists(tableNames.desktop_menu_description);
-  await knex.schema.dropTableIfExists(tableNames.mobile_menu_description);
+  //clear category
   await knex.schema.dropTableIfExists(tableNames.category_description);
-  await knex.schema.dropTableIfExists(tableNames.page_description);
-
-  await knex.schema.dropTableIfExists(tableNames.page);
   await knex.schema.dropTableIfExists(tableNames.category);
+
+  //clear page
+  await knex.schema.dropTableIfExists(tableNames.page_description);
+  await knex.schema.dropTableIfExists(tableNames.page);
+
+  //clear desktop_menu
+  await knex.schema.dropTableIfExists(tableNames.desktop_menu_description);
   await knex.schema.dropTableIfExists(tableNames.desktop_menu);
+
+  //clear mobile_menu
+  await knex.schema.dropTableIfExists(tableNames.mobile_menu_description);
   await knex.schema.dropTableIfExists(tableNames.mobile_menu);
+
+  //clear options
+  await knex.schema.dropTableIfExists(tableNames.option_value_description);
+  await knex.schema.dropTableIfExists(tableNames.option_value);
+  await knex.schema.dropTableIfExists(tableNames.option_description);
+  await knex.schema.dropTableIfExists(tableNames.option);
+  await knex.schema.dropTableIfExists(tableNames.option_type);
+
+  //clear language
   await knex.schema.dropTableIfExists(tableNames.language);
 };

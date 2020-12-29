@@ -8,6 +8,10 @@ export const GET_PAGE = gql`
       mobile_menu_id
       sort_order
       status
+      slugs {
+        slug
+        language
+      }
       description {
         name
         description

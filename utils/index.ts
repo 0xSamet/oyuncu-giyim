@@ -10,14 +10,3 @@ export function handleIconMode(store, req) {
     store.dispatch(toggleIconMode());
   }
 }
-
-export function handleMenuIndex(
-  store,
-  {
-    desktop_menu_id,
-    mobile_menu_id,
-  }: { desktop_menu_id: number; mobile_menu_id: number }
-) {
-  store.dispatch(changeDesktopMenuIndex(desktop_menu_id || -1));
-  store.dispatch(changeMobileMenuIndex(mobile_menu_id || -1));
-}

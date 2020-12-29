@@ -31,6 +31,28 @@ export const pageDescriptionLoader = new DataLoader(
   }
 );
 
+export const pageSlugsLoader = new DataLoader(
+  async (keys: Array<{ id: number }>) => {
+    let response = {};
+
+    const slugs: any = await PageDescription.query()
+      .select("page_id", "slug", "code as language")
+      .joinRelated(tableNames.language)
+      .whereIn(
+        "page_id",
+        keys.map((a) => a.id)
+      );
+
+    keys.forEach((page) => {
+      response[page.id] = slugs.filter((slug) => slug.page_id == page.id);
+    });
+
+    return keys.map((page) => {
+      return response[page.id];
+    });
+  }
+);
+
 export const pageDescriptionAdminLoader = new DataLoader(async (keys) => {
   let response = {};
 

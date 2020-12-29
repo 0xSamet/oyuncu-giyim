@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import clsx from "clsx";
 import Link from "next/link";
 import { useDispatch, useSelector } from "react-redux";
@@ -69,6 +69,7 @@ export default function LeftMenu(props) {
   const router = useRouter();
   const {
     theme: { iconMode },
+    page: { slugs },
   } = useSelector((state) => state);
   const [isTabletMenuClosed, setIsTabletMenuClosed] = useState(false);
   const { data, loading, error } = useQuery(GET_DESKTOP_MENU, {
@@ -78,6 +79,21 @@ export default function LeftMenu(props) {
   const handleIconMode = () => {
     return dispatch(toggleIconMode());
   };
+
+  const renderLanguageSwitcher = useMemo(() => {
+    if (slugs) {
+      return slugs.map((slug) => (
+        <li key={slug.language}>
+          <Link href={slug.slug} locale={slug.language}>
+            <a>
+              <span>{slug.language}</span>
+            </a>
+          </Link>
+        </li>
+      ));
+    }
+    return null;
+  }, [slugs]);
 
   useEffect(() => {
     Cookie.set("iconMode", iconMode);
@@ -147,15 +163,7 @@ export default function LeftMenu(props) {
       ) : (
         <li></li>
       )}
-      {router.locales.map((locale) => (
-        <li>
-          <Link href={router.asPath} locale={locale}>
-            <a>
-              <span>{locale}</span>
-            </a>
-          </Link>
-        </li>
-      ))}
+      {renderLanguageSwitcher}
     </ul>
   );
 }

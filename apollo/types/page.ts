@@ -18,12 +18,17 @@ export default gql`
     slug: String
     language: String
   }
+  type SlugsType {
+    slug: String
+    language: String
+  }
   type Page {
     id: ID!
     desktop_menu_id: Int
     mobile_menu_id: Int
     description: PageDescription
     slug: String
+    slugs: [SlugsType!]!
     sort_order: Int
     status: Boolean
   }
