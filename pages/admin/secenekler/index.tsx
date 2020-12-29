@@ -1,27 +1,13 @@
-import { GetStaticProps } from "next";
 import SEO from "../../../components/Seo";
 import {
   Icon,
-  Label,
-  Menu,
   Table,
   Button,
   Segment,
   Dimmer,
   Loader,
 } from "semantic-ui-react";
-import {
-  Fragment,
-  ReactText,
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
-import {
-  GET_CATEGORIES,
-  GET_CATEGORIES_ADMIN,
-} from "../../../apollo/gql/query/category";
+import { ReactText, useEffect, useState } from "react";
 import { DELETE_CATEGORY } from "../../../apollo/gql/mutations/category";
 import { useLazyQuery, useMutation } from "@apollo/client";
 import Link from "next/link";
@@ -142,12 +128,12 @@ export default function AdminDashboard() {
   return (
     <SEO
       seo={{
-        meta_title: "Sayfalar - Oyuncu Giyim",
+        meta_title: "Seçenekler - Oyuncu Giyim",
         meta_description: "",
         meta_keyword: "",
       }}
     >
-      <section className="admin-pages-page">
+      <section className="admin-options-page">
         <Table
           celled
           compact
@@ -156,11 +142,11 @@ export default function AdminDashboard() {
           <Table.Header>
             <Table.Row>
               <Table.HeaderCell colSpan="3" textAlign="right">
-                <Link href="/admin/sayfalar/ekle">
+                <Link href="/admin/secenekler/ekle">
                   <a>
                     <Button icon labelPosition="left" size="tiny" color="blue">
                       <Icon name="add square" />
-                      Sayfa Ekle
+                      Seçenekler Ekle
                     </Button>
                   </a>
                 </Link>
@@ -171,7 +157,7 @@ export default function AdminDashboard() {
         <Table celled compact className="admin-results-table">
           <Table.Header>
             <Table.Row>
-              <Table.HeaderCell>Sayfalar</Table.HeaderCell>
+              <Table.HeaderCell>Seçenekler</Table.HeaderCell>
               <Table.HeaderCell collapsing textAlign="center">
                 Sıralama
               </Table.HeaderCell>

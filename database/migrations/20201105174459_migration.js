@@ -149,6 +149,7 @@ exports.up = async function (knex) {
     .createTable(tableNames.option_type, (table) => {
       table.increments();
       table.string("name").notNullable();
+      table.integer("sort_order");
     })
     .createTable(tableNames.option, (table) => {
       table.increments();

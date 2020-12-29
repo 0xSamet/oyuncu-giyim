@@ -301,7 +301,14 @@ export default function AddMobileMenu() {
           }}
         >
           <Tab className="tabs" menu={{ pointing: true }} panes={panes} />
-          <Button type="submit" fluid icon size="tiny" color="blue">
+          <Button
+            className="big-button"
+            type="submit"
+            fluid
+            icon
+            size="tiny"
+            color="blue"
+          >
             <Icon name="add square" />
             Mobil Menü Ekle
           </Button>

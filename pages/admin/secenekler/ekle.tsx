@@ -1,4 +1,4 @@
-import SEO from "../../../../../components/Seo";
+import SEO from "../../../components/Seo";
 import {
   Button,
   Checkbox,
@@ -6,41 +6,56 @@ import {
   Icon,
   Select,
   Input,
+  Label,
+  Flag,
   Segment,
   Dimmer,
   Loader,
+  TextArea,
   Menu,
   Tab,
+  FlagNameValues,
 } from "semantic-ui-react";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useLazyQuery, useMutation } from "@apollo/client";
 import { useRouter } from "next/router";
 import { useDispatch } from "react-redux";
 import produce from "immer";
-import { putAdminRequestError } from "../../../../../store/reducers/admin";
-import { GET_LANGUAGES } from "../../../../../apollo/gql/query/language";
-import { MobileMenu, MobileMenuDescription } from "../../index";
-import { Language } from "../../../ayarlar/diller";
-import { UPDATE_MOBILE_MENU } from "../../../../../apollo/gql/mutations/menu";
-import { GET_MOBILE_MENU_ADMIN_ONE } from "../../../../../apollo/gql/query/menu";
+import { putAdminRequestError } from "../../../store/reducers/admin";
+import { GET_LANGUAGES } from "../../../apollo/gql/query/language";
+import { Page, PageDescription } from "./index";
+import { Language } from "../ayarlar/diller";
+import Editor from "../../../components/Editor";
+import { DesktopMenu, MobileMenu } from "../menuler";
+import { ADD_PAGE } from "../../../apollo/gql/mutations/page";
 
-export default function UpdateMobileMenu() {
-  const [sampleDesc] = useState<MobileMenuDescription>({
+export default function AddOptionPage() {
+  const [sampleDesc] = useState<PageDescription>({
     name: "",
-    href: "",
-    target: "_self",
-    icon_url: "",
+    description: "",
+    meta_title: "",
+    meta_description: "",
+    meta_keywords: "",
     language: "",
+    slug: "",
   });
-  const [fields, setFields] = useState<MobileMenu>({
+  const [fields, setFields] = useState<Page>({
+    id: null,
     sort_order: null,
+    desktop_menu_id: null,
+    mobile_menu_id: null,
     status: true,
     description: [sampleDesc],
   });
   const [languages, setLanguages] = useState<Language[] | undefined[]>([]);
+  const [desktopMenu, setDesktopMenu] = useState<DesktopMenu[] | undefined[]>(
+    []
+  );
+  const [mobileMenu, setMobileMenu] = useState<MobileMenu[] | undefined[]>([]);
   const [activeLanguage, setActiveLanguage] = useState<string | null>(null);
   const router = useRouter();
   const dispatch = useDispatch();
+
   const [
     getLanguages,
     { data: languagesData, loading: languagesLoading, error: languagesError },
@@ -49,75 +64,27 @@ export default function UpdateMobileMenu() {
   });
 
   const [
-    getMobileMenuRun,
-    {
-      data: mobileMenuData,
-      loading: mobileMenuLoading,
-      error: mobileMenuError,
-    },
-  ] = useLazyQuery(GET_MOBILE_MENU_ADMIN_ONE, {
-    fetchPolicy: "no-cache",
-  });
-
-  const [
-    updateMobileMenuRun,
-    {
-      loading: updateMobileMenuLoading,
-      error: updateMobileMenuError,
-      data: updateMobileMenuResponse,
-    },
-  ] = useMutation(UPDATE_MOBILE_MENU);
+    addPageRun,
+    { loading: addPageLoading, error: addPageError, data: addPageResponse },
+  ] = useMutation(ADD_PAGE);
 
   useEffect(() => {
     getLanguages();
   }, []);
 
   useEffect(() => {
-    if (router.query.mobileMenuId) {
-      getMobileMenuRun({
-        variables: {
-          input: {
-            id: router.query.mobileMenuId,
-          },
-        },
-      });
-    }
-  }, [router.query.mobileMenuId]);
-
-  useEffect(() => {
     if (
       languagesData &&
       languagesData.languages &&
-      languagesData.languages.length > 0 &&
-      mobileMenuData &&
-      mobileMenuData.mobileMenuOnAdminOne &&
-      mobileMenuData.mobileMenuOnAdminOne.id
+      languagesData.languages.length > 0
     ) {
-      let {
-        id,
-        status,
-        sort_order,
-        description,
-      } = mobileMenuData.mobileMenuOnAdminOne;
-
       setFields({
         ...fields,
-        status,
-        sort_order,
-        id,
         description: languagesData.languages.map((language) => {
-          const tryFound = description.find(
-            (c) => c.language === language.code
-          );
-
-          if (tryFound) {
-            return tryFound;
-          } else {
-            return {
-              ...sampleDesc,
-              language: language.code,
-            };
-          }
+          return {
+            ...fields.description[0],
+            language: language.code,
+          };
         }),
       });
 
@@ -127,17 +94,17 @@ export default function UpdateMobileMenu() {
       setLanguages(languagesData.languages);
       setActiveLanguage(activeLanguageCode);
     }
-  }, [languagesData, mobileMenuData]);
+  }, [languagesData]);
 
   useEffect(() => {
     if (
-      updateMobileMenuResponse &&
-      updateMobileMenuResponse.updateMobileMenu &&
-      updateMobileMenuResponse.updateMobileMenu.id
+      addPageResponse &&
+      addPageResponse.addPage &&
+      addPageResponse.addPage.id
     ) {
-      router.push("/admin/menuler");
+      router.push("/admin/sayfalar");
     }
-  }, [updateMobileMenuResponse]);
+  }, [addPageResponse]);
 
   const handleFormSubmit = async () => {
     let sortOrder;
@@ -152,11 +119,12 @@ export default function UpdateMobileMenu() {
     }
 
     try {
-      await updateMobileMenuRun({
+      await addPageRun({
         variables: {
           input: {
-            ...fields,
             sort_order: sortOrder,
+            status: fields.status,
+            description: fields.description,
           },
         },
       });
@@ -210,50 +178,23 @@ export default function UpdateMobileMenu() {
         );
         return (
           <Tab.Pane attached={false}>
-            <Form.Group style={{ justifyContent: "flex-end" }}>
-              <Form.Field
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
+            <Form.Field
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "flex-end",
+              }}
+            >
+              <label>Açık/Kapalı</label>
+              <Checkbox
+                toggle
+                checked={fields.status}
+                onChange={() => {
+                  return setFields({
+                    ...fields,
+                    status: !fields.status,
+                  });
                 }}
-              >
-                <label>Açık/Kapalı</label>
-                <Checkbox
-                  toggle
-                  checked={fields.status}
-                  onChange={() => {
-                    return setFields({
-                      ...fields,
-                      status: !fields.status,
-                    });
-                  }}
-                />
-              </Form.Field>
-            </Form.Group>
-            <Form.Field>
-              <label>Sıralama</label>
-              <input
-                type="number"
-                name="sort_order"
-                value={
-                  fields.sort_order || fields.sort_order == 0
-                    ? fields.sort_order
-                    : ""
-                }
-                onChange={handleNormalInputChange}
-              />
-            </Form.Field>
-            <Form.Field>
-              <Tab menu={{ pointing: true }} panes={getLanguagesForMenu} />
-            </Form.Field>
-            <Form.Field>
-              <label>Menü Adı</label>
-              <input
-                type="text"
-                name="name"
-                value={fieldsToUse?.name || ""}
-                onChange={handleLanguageInputChange}
               />
             </Form.Field>
             <Form.Group
@@ -261,16 +202,8 @@ export default function UpdateMobileMenu() {
                 alignItems: "center",
               }}
             >
-              <Form.Field width={10}>
-                <label>Gideceği Link</label>
-                <Input
-                  name="href"
-                  value={fieldsToUse?.href || ""}
-                  onChange={handleLanguageInputChange}
-                />
-              </Form.Field>
-              <Form.Field width={6}>
-                <label>Target</label>
+              <Form.Field width={8}>
+                <label>Seçenek Tipi</label>
                 <Select
                   options={[
                     {
@@ -294,26 +227,43 @@ export default function UpdateMobileMenu() {
                       text: "_top",
                     },
                   ]}
-                  value={fieldsToUse?.target || ""}
+                  value={"_top"}
                   onChange={(_e, { value }: { value: string }) => {
-                    setFields(
-                      produce(fields, (draft) => {
-                        const findIndex = fields.description.findIndex(
-                          (desc) => desc.language === activeLanguage
-                        );
-                        draft.description[findIndex].target = value;
-                      })
-                    );
+                    // setFields(
+                    //   produce(fields, (draft) => {
+                    //     const findIndex = fields.description.findIndex(
+                    //       (desc) => desc.language === activeLanguage
+                    //     );
+                    //     draft.description[findIndex].target = value;
+                    //   })
+                    // );
                   }}
                 />
               </Form.Field>
+              <Form.Field width={8}>
+                <label>Sıralama</label>
+                <input
+                  type="number"
+                  name="sort_order"
+                  value={
+                    fields.sort_order || fields.sort_order == 0
+                      ? fields.sort_order
+                      : ""
+                  }
+                  onChange={handleNormalInputChange}
+                />
+              </Form.Field>
             </Form.Group>
+
             <Form.Field>
-              <label>İcon Linki</label>
+              <Tab menu={{ pointing: true }} panes={getLanguagesForMenu} />
+            </Form.Field>
+            <Form.Field>
+              <label>Seçenek Adı</label>
               <input
                 type="text"
-                name="icon_url"
-                value={fieldsToUse?.icon_url || ""}
+                name="name"
+                value={fieldsToUse?.name || ""}
                 onChange={handleLanguageInputChange}
               />
             </Form.Field>
@@ -321,9 +271,54 @@ export default function UpdateMobileMenu() {
         );
       },
     },
+    {
+      menuItem: "Seçenek Değerleri",
+      render: () => {
+        return (
+          <Tab.Pane attached={false}>
+            <Segment>
+              <Form.Field
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "flex-end",
+                }}
+              >
+                <Icon name="trash" color="red" circular />
+              </Form.Field>
+              <Form.Field>
+                <Tab menu={{ pointing: true }} panes={getLanguagesForMenu} />
+              </Form.Field>
+
+              <Form.Field>
+                <label>Seçenek Değer Adı</label>
+                <input
+                  type="text"
+                  name="name"
+                  value={fields.sort_order || ""}
+                  onChange={handleLanguageInputChange}
+                />
+              </Form.Field>
+              <Form.Field>
+                <label>Sıralama</label>
+                <input
+                  type="text"
+                  name="name"
+                  value={fields.sort_order || ""}
+                  onChange={handleLanguageInputChange}
+                />
+              </Form.Field>
+            </Segment>
+            <Segment>
+              <Button primary>Seçenek Değeri Ekle</Button>
+            </Segment>
+          </Tab.Pane>
+        );
+      },
+    },
   ];
 
-  if (updateMobileMenuLoading || mobileMenuLoading || languagesLoading) {
+  if (addPageLoading || languagesLoading) {
     return (
       <Segment className="page-loader">
         <Dimmer active>
@@ -336,12 +331,12 @@ export default function UpdateMobileMenu() {
   return (
     <SEO
       seo={{
-        meta_title: "Mobil Menü Güncelle - Oyuncu Giyim",
+        meta_title: "Seçenek Ekle - Oyuncu Giyim",
         meta_description: "",
         meta_keyword: "",
       }}
     >
-      <section className="admin-mobile-menu-update-page admin-sub-page">
+      <section className="admin-pages-add-page admin-sub-page">
         <Form
           onSubmit={(e) => {
             e.preventDefault();
@@ -357,8 +352,8 @@ export default function UpdateMobileMenu() {
             size="tiny"
             color="blue"
           >
-            <Icon name="save" />
-            Güncelle
+            <Icon name="add square" />
+            Sayfa Ekle
           </Button>
         </Form>
       </section>

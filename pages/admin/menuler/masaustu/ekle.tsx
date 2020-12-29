@@ -322,7 +322,14 @@ export default function AddDesktopMenu() {
           }}
         >
           <Tab className="tabs" menu={{ pointing: true }} panes={panes} />
-          <Button type="submit" fluid icon size="tiny" color="blue">
+          <Button
+            className="big-button"
+            type="submit"
+            fluid
+            icon
+            size="tiny"
+            color="blue"
+          >
             <Icon name="add square" />
             Menü Ekle
           </Button>

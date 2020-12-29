@@ -1,99 +1,70 @@
 import { GetStaticProps } from "next";
-import SEO from "../../../components/Seo";
+import SEO from "../../../../components/Seo";
 import {
   Icon,
-  Label,
-  Menu,
   Table,
   Button,
   Segment,
   Dimmer,
   Loader,
 } from "semantic-ui-react";
-import {
-  Fragment,
-  ReactText,
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
-import {
-  GET_CATEGORIES,
-  GET_CATEGORIES_ADMIN,
-} from "../../../apollo/gql/query/category";
-import { DELETE_CATEGORY } from "../../../apollo/gql/mutations/category";
+import { ReactText, useEffect, useState } from "react";
+import { DELETE_CATEGORY } from "../../../../apollo/gql/mutations/category";
 import { useLazyQuery, useMutation } from "@apollo/client";
 import Link from "next/link";
 import { useDispatch } from "react-redux";
-import { putAdminRequestError } from "../../../store/reducers/admin";
-import { GET_PAGES_ADMIN } from "../../../apollo/gql/query/page";
+import { putAdminRequestError } from "../../../../store/reducers/admin";
+import { GET_OPTION_TYPES } from "../../../../apollo/gql/query/option";
+import { DELETE_OPTION_TYPE } from "../../../../apollo/gql/mutations/option";
 
-export interface PageDescription {
-  name: string;
-  description: string;
-  meta_title: string;
-  meta_description: string;
-  meta_keywords: string;
-  slug: string;
-  language: string;
-}
-
-export interface Page {
+export interface OptionType {
   id: ReactText;
-  description: PageDescription[] | null;
-  status: boolean;
+  name: string;
   sort_order: number;
-  desktop_menu_id: number | string;
-  mobile_menu_id: number | string;
 }
 
-interface PageRowType {
-  page: Page;
+interface OptionTypesRow {
+  optionType: OptionType;
 }
 
-export default function AdminDashboard() {
-  const [pages, setPages] = useState([]);
+export default function OptionTypesPage() {
+  const [optionTypes, setOptionTypes] = useState([]);
   const dispatch = useDispatch();
 
-  const [getPages, { data, loading, error }] = useLazyQuery(GET_PAGES_ADMIN, {
-    fetchPolicy: "no-cache",
-  });
+  const [getOptionTypes, { data, loading, error }] = useLazyQuery(
+    GET_OPTION_TYPES,
+    {
+      fetchPolicy: "no-cache",
+    }
+  );
 
   const [
-    deleteCategoryRun,
+    deleteOptionTypeRun,
     {
-      loading: deleteCategoryLoading,
-      error: deleteCategoryError,
-      data: deleteCategoryResponse,
+      loading: deleteOptionTypeLoading,
+      error: deleteOptionTypeError,
+      data: deleteOptionTypeResponse,
     },
-  ] = useMutation(DELETE_CATEGORY);
+  ] = useMutation(DELETE_OPTION_TYPE);
 
   useEffect(() => {
-    getPages();
-
-    return () => {
-      setPages([]);
-    };
+    getOptionTypes();
   }, []);
 
   useEffect(() => {
-    if (data && data.pagesOnAdmin) {
-      setPages(data.pagesOnAdmin);
+    if (data && data.optionTypes) {
+      setOptionTypes(data.optionTypes);
     }
   }, [data]);
 
-  const PageRow: React.FC<PageRowType> = ({ page }) => {
-    const { name } = page.description.find(
-      (description) => description.language === "tr"
-    );
-
+  const OptionTypeRow: React.FC<OptionTypesRow> = ({ optionType }) => {
+    console.log(optionType);
     return (
-      <Table.Row key={page.id}>
-        <Table.Cell>{name}</Table.Cell>
-        <Table.Cell textAlign="center">{page.sort_order}</Table.Cell>
+      <Table.Row key={optionType.id}>
+        <Table.Cell>{optionType.name}</Table.Cell>
+        <Table.Cell textAlign="center">{optionType.sort_order}</Table.Cell>
         <Table.Cell singleLine>
-          <Link href={`/admin/sayfalar/duzenle/${page.id}`}>
+          <Link href={`/admin/secenekler/tipler/duzenle/${optionType.id}`}>
             <a>
               <Button icon labelPosition="left" size="tiny" color="teal">
                 <Icon name="edit" />
@@ -105,19 +76,19 @@ export default function AdminDashboard() {
             icon="trash"
             size="tiny"
             color="red"
-            onClick={() => handleDeleteCategory(page.id)}
+            onClick={() => handleDeleteCategory(optionType.id)}
           ></Button>
         </Table.Cell>
       </Table.Row>
     );
   };
 
-  const handleDeleteCategory = async (categoryId) => {
+  const handleDeleteCategory = async (optionTypeId) => {
     try {
-      await deleteCategoryRun({
+      await deleteOptionTypeRun({
         variables: {
           input: {
-            id: categoryId,
+            id: optionTypeId,
           },
         },
       });
@@ -126,10 +97,10 @@ export default function AdminDashboard() {
       dispatch(putAdminRequestError(err.message));
     }
 
-    getPages();
+    getOptionTypes();
   };
 
-  if (loading || deleteCategoryLoading) {
+  if (loading || deleteOptionTypeLoading) {
     return (
       <Segment className="page-loader">
         <Dimmer active>
@@ -156,11 +127,11 @@ export default function AdminDashboard() {
           <Table.Header>
             <Table.Row>
               <Table.HeaderCell colSpan="3" textAlign="right">
-                <Link href="/admin/sayfalar/ekle">
+                <Link href="/admin/secenekler/tipler/ekle">
                   <a>
                     <Button icon labelPosition="left" size="tiny" color="blue">
                       <Icon name="add square" />
-                      Sayfa Ekle
+                      Seçenek Tipi Ekle
                     </Button>
                   </a>
                 </Link>
@@ -182,11 +153,16 @@ export default function AdminDashboard() {
           </Table.Header>
 
           <Table.Body>
-            {pages && pages.length > 0 ? (
-              [...pages]
+            {optionTypes && optionTypes.length > 0 ? (
+              [...optionTypes]
                 .sort((a, b) => a.sort_order - b.sort_order)
-                .map((page) => {
-                  return <PageRow key={page.id} page={page} />;
+                .map((optionType) => {
+                  return (
+                    <OptionTypeRow
+                      key={optionType.id}
+                      optionType={optionType}
+                    />
+                  );
                 })
             ) : (
               <Table.Row>
