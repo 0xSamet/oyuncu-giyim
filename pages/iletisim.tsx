@@ -28,50 +28,50 @@ export default function Iletisim({ page }) {
   );
 }
 
-// export const getStaticProps = async ({
-//   store,
-//   locale,
-// }: {
-//   store: any;
-//   locale: string;
-// }) => {
-//   const apolloClient: ApolloClient<NormalizedCacheObject> = initializeApollo();
+export const getStaticProps = async ({
+  store,
+  locale,
+}: {
+  store: any;
+  locale: string;
+}) => {
+  const apolloClient: ApolloClient<NormalizedCacheObject> = initializeApollo();
 
-//   const {
-//     data: { page },
-//   } = await apolloClient.query({
-//     query: GET_PAGE,
-//     variables: {
-//       slug: "/iletisim",
-//       language: locale,
-//     },
-//   });
+  const {
+    data: { page },
+  } = await apolloClient.query({
+    query: GET_PAGE,
+    variables: {
+      slug: "/iletisim",
+      language: locale,
+    },
+  });
 
-//   if (!page) {
-//     return {
-//       notFound: true,
-//     };
-//   }
+  if (!page) {
+    return {
+      notFound: true,
+    };
+  }
 
-//   await apolloClient.query({
-//     query: GET_DESKTOP_MENU,
-//     variables: {
-//       language: locale,
-//     },
-//   });
+  await apolloClient.query({
+    query: GET_DESKTOP_MENU,
+    variables: {
+      language: locale,
+    },
+  });
 
-//   await apolloClient.query({
-//     query: GET_MOBILE_MENU,
-//     variables: {
-//       language: locale,
-//     },
-//   });
+  await apolloClient.query({
+    query: GET_MOBILE_MENU,
+    variables: {
+      language: locale,
+    },
+  });
 
-//   return {
-//     props: {
-//       page: page,
-//       initialApolloState: apolloClient.cache.extract(),
-//     },
-//     revalidate: 60,
-//   };
-// };
+  return {
+    props: {
+      page: page,
+      initialApolloState: apolloClient.cache.extract(),
+    },
+    revalidate: 60,
+  };
+};
