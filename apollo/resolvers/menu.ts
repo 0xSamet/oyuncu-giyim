@@ -120,7 +120,7 @@ export default {
           status,
           sort_order: biggestSortOrder
             ? biggestSortOrder.sort_order + 1
-            : sort_order,
+            : sort_order || 0,
           is_divider,
         } as any);
 
@@ -290,7 +290,7 @@ export default {
           status,
           sort_order: biggestSortOrder
             ? biggestSortOrder.sort_order + 1
-            : sort_order,
+            : sort_order || 0,
         } as any);
 
         for (const description of validatedMenu.description) {

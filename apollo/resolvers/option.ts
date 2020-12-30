@@ -1,7 +1,7 @@
 import { UserInputError, ValidationError } from "apollo-server-micro";
 import { CategoryDescription } from "../../database/models/category";
 import { Language } from "../../database/models/language";
-import { addOptionValidate } from "../../database/models/options";
+import { addOptionValidate, Option } from "../../database/models/options";
 import {
   addPageValidate,
   deletePageValidate,
@@ -13,14 +13,37 @@ import { tableNames } from "../../database/tableNames";
 import { getLanguage } from "./helpers";
 
 export default {
-  Query: {
-    asd: async (_parent, { input }, _ctx, _info) => {
-      let validatedOptionType;
+  Mutation: {
+    addOption: async (_parent, { input }, _ctx, _info) => {
+      let validatedOption;
       try {
-        validatedOptionType = await addOptionValidate.validateAsync(input);
+        validatedOption = await addOptionValidate.validateAsync(input);
       } catch (err) {
         throw new UserInputError(err.details[0].message);
       }
+
+      console.log(validatedOption);
+
+      const { type, description, option_values, sort_order } = validatedOption;
+
+      let biggestSortOrder;
+
+      if (!sort_order && sort_order != 0) {
+        biggestSortOrder = await Option.query()
+          .select("sort_order")
+          .orderBy([{ column: "sort_order", order: "DESC" }])
+          .first();
+      }
+
+      console.log();
+
+      const optionAdded = await Option.query().insert({
+        type,
+        sort_order: biggestSortOrder
+          ? biggestSortOrder.sort_order + 1
+          : sort_order || 0,
+      } as any);
+
       return null;
     },
   },

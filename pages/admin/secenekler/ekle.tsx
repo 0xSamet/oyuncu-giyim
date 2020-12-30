@@ -26,6 +26,7 @@ import {
 } from "./index";
 import { Language } from "../ayarlar/diller";
 import { ADD_PAGE } from "../../../apollo/gql/mutations/page";
+import { addOptionValidate } from "../../../database/models/options";
 
 export default function AddOptionPage() {
   const [optionTypes, setOptionTypes] = useState<OptionType[] | undefined[]>([
@@ -141,6 +142,9 @@ export default function AddOptionPage() {
 
     try {
       console.log(fields);
+
+      const validatedOptionType = await addOptionValidate.validateAsync(fields);
+
       //   await addPageRun({
       //     variables: {
       //       input: {

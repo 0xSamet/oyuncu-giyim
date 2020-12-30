@@ -143,7 +143,7 @@ export default {
         mobile_menu_id,
         sort_order: biggestSortOrder
           ? biggestSortOrder.sort_order + 1
-          : sort_order,
+          : sort_order || 0,
       } as any);
 
       for (const description of validatedCategory.description) {

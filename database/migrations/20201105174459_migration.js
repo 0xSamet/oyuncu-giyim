@@ -148,7 +148,7 @@ exports.up = async function (knex) {
     })
     .createTable(tableNames.option, (table) => {
       table.increments();
-      table.string("option_type").notNullable();
+      table.string("type").notNullable();
       table.integer("sort_order");
     })
     .createTable(tableNames.option_description, (table) => {
@@ -181,6 +181,7 @@ exports.up = async function (knex) {
         .inTable(tableNames.language)
         .onDelete("cascade")
         .notNullable();
+      table.integer("sort_order");
     })
     .createTable(tableNames.option_value_description, (table) => {
       table.increments();
@@ -225,7 +226,6 @@ exports.down = async function (knex) {
   await knex.schema.dropTableIfExists(tableNames.option_value);
   await knex.schema.dropTableIfExists(tableNames.option_description);
   await knex.schema.dropTableIfExists(tableNames.option);
-  await knex.schema.dropTableIfExists(tableNames.option_type);
 
   //clear language
   await knex.schema.dropTableIfExists(tableNames.language);

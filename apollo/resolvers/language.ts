@@ -52,7 +52,7 @@ export default {
         flag_code,
         sort_order: biggestSortOrder
           ? biggestSortOrder.sort_order + 1
-          : sort_order,
+          : sort_order || 0,
         status,
       } as any);
 
