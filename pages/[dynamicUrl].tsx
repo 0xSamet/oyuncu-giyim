@@ -1,5 +1,5 @@
 import { wrapper } from "../store";
-import { handleIconMode, handleMenuIndex } from "../utils";
+import { handleIconMode } from "../utils";
 
 import SEO from "../components/Seo";
 import { ApolloClient, NormalizedCacheObject } from "@apollo/client";
