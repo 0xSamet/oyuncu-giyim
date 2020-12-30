@@ -28,51 +28,51 @@ export default function OptionsPage({ page }) {
   );
 }
 
-export const getStaticProps = async ({
-  locale,
-}: {
-  store: any;
-  locale: string;
-}) => {
-  const apolloClient: ApolloClient<NormalizedCacheObject> = initializeApollo();
+// export const getStaticProps = async ({
+//   locale,
+// }: {
+//   store: any;
+//   locale: string;
+// }) => {
+//   const apolloClient: ApolloClient<NormalizedCacheObject> = initializeApollo();
 
-  console.log(apolloClient.link);
+//   console.log(apolloClient.link);
 
-  const {
-    data: { page },
-  } = await apolloClient.query({
-    query: GET_PAGE,
-    variables: {
-      slug: "/options",
-      language: locale,
-    },
-  });
+//   const {
+//     data: { page },
+//   } = await apolloClient.query({
+//     query: GET_PAGE,
+//     variables: {
+//       slug: "/options",
+//       language: locale,
+//     },
+//   });
 
-  if (!page) {
-    return {
-      notFound: true,
-    };
-  }
+//   if (!page) {
+//     return {
+//       notFound: true,
+//     };
+//   }
 
-  await apolloClient.query({
-    query: GET_DESKTOP_MENU,
-    variables: {
-      language: locale,
-    },
-  });
+//   await apolloClient.query({
+//     query: GET_DESKTOP_MENU,
+//     variables: {
+//       language: locale,
+//     },
+//   });
 
-  await apolloClient.query({
-    query: GET_MOBILE_MENU,
-    variables: {
-      language: locale,
-    },
-  });
+//   await apolloClient.query({
+//     query: GET_MOBILE_MENU,
+//     variables: {
+//       language: locale,
+//     },
+//   });
 
-  return {
-    props: {
-      page: page,
-      initialApolloState: apolloClient.cache.extract(),
-    },
-    revalidate: 60,
-  };
-};
+//   return {
+//     props: {
+//       page: page,
+//       initialApolloState: apolloClient.cache.extract(),
+//     },
+//     revalidate: 60,
+//   };
+// };
