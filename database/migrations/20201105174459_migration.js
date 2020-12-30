@@ -175,12 +175,6 @@ exports.up = async function (knex) {
         .inTable(tableNames.option)
         .onDelete("cascade")
         .notNullable();
-      table
-        .integer("language_id")
-        .references("id")
-        .inTable(tableNames.language)
-        .onDelete("cascade")
-        .notNullable();
       table.integer("sort_order");
     })
     .createTable(tableNames.option_value_description, (table) => {

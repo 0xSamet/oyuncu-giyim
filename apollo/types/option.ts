@@ -1,9 +1,6 @@
 import { gql } from "apollo-server-micro";
 
 export default gql`
-  type asd {
-    name: String
-  }
   type OptionDescriptionOnAdmin {
     name: String
     language: String
@@ -13,6 +10,7 @@ export default gql`
     language: String
   }
   type OptionValueOnAdmin {
+    id: ID!
     description: [OptionValueDescriptionOnAdmin!]!
     sort_order: Int
   }
@@ -36,14 +34,36 @@ export default gql`
     description: [OptionValueDescriptionOnAdminInput!]!
     sort_order: Int
   }
+  input optionOnAdminInput {
+    id: ID!
+  }
   input addOptionInput {
     type: String!
     description: [OptionDescriptionOnAdminInput!]!
     option_values: [OptionValueOnAdminInput!]!
     sort_order: Int
   }
+  input updateOptionInput {
+    id: ID!
+    type: String!
+    description: [OptionDescriptionOnAdminInput!]!
+    option_values: [OptionValueOnAdminInput!]!
+    sort_order: Int
+  }
+  input deleteOptionInput {
+    id: ID!
+  }
+  type deleteOptionResponse {
+    success: Boolean!
+  }
 
+  type Query {
+    optionsOnAdmin: [OptionOnAdmin!]
+    optionOnAdmin(input: optionOnAdminInput!): OptionOnAdmin
+  }
   type Mutation {
     addOption(input: addOptionInput!): OptionOnAdmin
+    updateOption(input: updateOptionInput!): OptionOnAdmin
+    deleteOption(input: deleteOptionInput!): deleteOptionResponse!
   }
 `;

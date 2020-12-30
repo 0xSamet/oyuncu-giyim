@@ -1,4 +1,4 @@
-import SEO from "../../../components/Seo";
+import SEO from "../../../../components/Seo";
 import {
   Button,
   Form,
@@ -15,17 +15,18 @@ import { useLazyQuery, useMutation } from "@apollo/client";
 import { useRouter } from "next/router";
 import { useDispatch } from "react-redux";
 import produce from "immer";
-import { putAdminRequestError } from "../../../store/reducers/admin";
-import { GET_LANGUAGES } from "../../../apollo/gql/query/language";
+import { putAdminRequestError } from "../../../../store/reducers/admin";
 import {
   Option,
   OptionDescription,
   OptionType,
   OptionValue,
   OptionValueDescription,
-} from "./index";
-import { Language } from "../ayarlar/diller";
-import { ADD_OPTION } from "../../../apollo/gql/mutations/option";
+} from "../index";
+import { Language } from "../../ayarlar/diller";
+import { UPDATE_OPTION } from "../../../../apollo/gql/mutations/option";
+import { GET_LANGUAGES } from "../../../../apollo/gql/query/language";
+import { GET_OPTION_ADMIN } from "../../../../apollo/gql/query/option";
 
 export default function AddOptionPage() {
   const [optionTypes, setOptionTypes] = useState<OptionType[] | undefined[]>([
@@ -34,12 +35,10 @@ export default function AddOptionPage() {
       sort_order: 0,
     },
   ]);
-
   const [sampleOptionValueDescription] = useState<OptionValueDescription>({
     name: "",
     language: "",
   });
-
   const [sampleOptionValue] = useState<OptionValue>({
     id: null,
     sort_order: null,
@@ -58,7 +57,6 @@ export default function AddOptionPage() {
   });
 
   const [languages, setLanguages] = useState<Language[] | undefined[]>([]);
-
   const [activeLanguage, setActiveLanguage] = useState<string | null>(null);
   const router = useRouter();
   const dispatch = useDispatch();
@@ -71,13 +69,32 @@ export default function AddOptionPage() {
   });
 
   const [
-    addOptionRun,
+    getOption,
+    { data: optionData, loading: optionLoading, error: optionError },
+  ] = useLazyQuery(GET_OPTION_ADMIN, {
+    fetchPolicy: "no-cache",
+  });
+
+  const [
+    updateOptionRun,
     {
-      loading: addOptionLoading,
-      error: addOptionError,
-      data: addOptionResponse,
+      loading: updateOptionLoading,
+      error: updateOptionError,
+      data: updateOptionResponse,
     },
-  ] = useMutation(ADD_OPTION);
+  ] = useMutation(UPDATE_OPTION);
+
+  useEffect(() => {
+    if (router.query.optionId) {
+      getOption({
+        variables: {
+          input: {
+            id: router.query.optionId,
+          },
+        },
+      });
+    }
+  }, [router.query.optionId]);
 
   useEffect(() => {
     getLanguages();
@@ -87,30 +104,56 @@ export default function AddOptionPage() {
     if (
       languagesData &&
       languagesData.languages &&
-      languagesData.languages.length > 0
+      languagesData.languages.length > 0 &&
+      optionData &&
+      optionData.optionOnAdmin &&
+      optionData.optionOnAdmin.id
     ) {
+      let {
+        id,
+        sort_order,
+        description,
+        option_values,
+      } = optionData.optionOnAdmin;
+
       setFields({
         ...fields,
+        id,
+        sort_order,
         description: languagesData.languages.map((language) => {
-          return {
-            ...sampleOptionDescription,
-            language: language.code,
-          };
-        }),
-        option_values: [
-          {
-            ...sampleOptionValue,
-            id: 0,
-            description: languagesData.languages.map((language) => {
-              return {
-                ...sampleOptionValueDescription,
+          const tryFound = description.find(
+            (c) => c.language === language.code
+          );
 
-                language: language.code,
-              } as OptionValueDescription;
+          if (tryFound) {
+            return tryFound;
+          } else {
+            return {
+              ...sampleOptionDescription,
+              language: language.code,
+            };
+          }
+        }),
+        option_values: option_values.map((optionValue: OptionValue) => {
+          return {
+            ...sampleOptionValue,
+            id: optionValue.id,
+            sort_order: optionValue.sort_order,
+            description: languagesData.languages.map((language) => {
+              const tryFound = optionValue.description.find(
+                (c) => c.language === language.code
+              );
+              if (tryFound) {
+                return tryFound;
+              } else {
+                return {
+                  ...sampleOptionValueDescription,
+                  language: language.code,
+                };
+              }
             }),
-            sort_order: 0,
-          },
-        ],
+          } as OptionValue;
+        }),
       });
 
       const { code: activeLanguageCode } = languagesData.languages.find(
@@ -119,17 +162,17 @@ export default function AddOptionPage() {
       setLanguages(languagesData.languages);
       setActiveLanguage(activeLanguageCode);
     }
-  }, [languagesData]);
+  }, [languagesData, optionData]);
 
   useEffect(() => {
     if (
-      addOptionResponse &&
-      addOptionResponse.addOption &&
-      addOptionResponse.addOption.id
+      updateOptionResponse &&
+      updateOptionResponse.updateOption &&
+      updateOptionResponse.updateOption.id
     ) {
       router.push("/admin/secenekler");
     }
-  }, [addOptionResponse]);
+  }, [updateOptionResponse]);
 
   const handleFormSubmit = async () => {
     let sortOrder;
@@ -144,11 +187,10 @@ export default function AddOptionPage() {
     }
 
     try {
-      console.log(fields);
-
-      await addOptionRun({
+      await updateOptionRun({
         variables: {
           input: {
+            id: fields.id,
             type: fields.type,
             sort_order: sortOrder,
             description: fields.description,
@@ -361,6 +403,21 @@ export default function AddOptionPage() {
                     />
                   </Form.Field>
                   <Form.Field>
+                    <label>Sıralama</label>
+                    <input
+                      type="number"
+                      name="sort_order"
+                      value={
+                        optionValue.sort_order || optionValue.sort_order == 0
+                          ? optionValue.sort_order
+                          : ""
+                      }
+                      onChange={(e) =>
+                        handleOptionValueNormalInputChange(e, optionValue.id)
+                      }
+                    />
+                  </Form.Field>
+                  <Form.Field>
                     <Tab
                       menu={{ pointing: true }}
                       panes={getLanguagesForMenu}
@@ -375,21 +432,6 @@ export default function AddOptionPage() {
                       value={fieldsToUse?.name || ""}
                       onChange={(e) =>
                         handleOptionValueLanguageInputChange(e, optionValue.id)
-                      }
-                    />
-                  </Form.Field>
-                  <Form.Field>
-                    <label>Sıralama</label>
-                    <input
-                      type="number"
-                      name="sort_order"
-                      value={
-                        optionValue.sort_order || optionValue.sort_order == 0
-                          ? optionValue.sort_order
-                          : ""
-                      }
-                      onChange={(e) =>
-                        handleOptionValueNormalInputChange(e, optionValue.id)
                       }
                     />
                   </Form.Field>
@@ -412,7 +454,7 @@ export default function AddOptionPage() {
     },
   ];
 
-  if (addOptionLoading || languagesLoading) {
+  if (updateOptionLoading || languagesLoading) {
     return (
       <Segment className="page-loader">
         <Dimmer active>
@@ -425,12 +467,12 @@ export default function AddOptionPage() {
   return (
     <SEO
       seo={{
-        meta_title: "Seçenek Ekle - Oyuncu Giyim",
+        meta_title: "Seçenek Düzenle - Oyuncu Giyim",
         meta_description: "",
         meta_keyword: "",
       }}
     >
-      <section className="admin-pages-add-page admin-sub-page">
+      <section className="admin-options-update-page admin-sub-page">
         <Form
           onSubmit={(e) => {
             e.preventDefault();
@@ -446,8 +488,8 @@ export default function AddOptionPage() {
             size="tiny"
             color="blue"
           >
-            <Icon name="add square" />
-            Seçenek Ekle
+            <Icon name="save" />
+            Seçeneği Güncelle
           </Button>
         </Form>
       </section>

@@ -1,24 +1,24 @@
 import { gql } from "@apollo/client";
 
-export const ADD_OPTION_TYPE = gql`
-  mutation addOptionType($input: addOptionTypeInput!) {
-    addOptionType(input: $input) {
+export const ADD_OPTION = gql`
+  mutation addOption($input: addOptionInput!) {
+    addOption(input: $input) {
       id
     }
   }
 `;
 
-export const UPDATE_OPTION_TYPE = gql`
-  mutation updateOptionType($input: updateOptionTypeInput!) {
-    updateOptionType(input: $input) {
+export const UPDATE_OPTION = gql`
+  mutation updateOption($input: updateOptionInput!) {
+    updateOption(input: $input) {
       id
     }
   }
 `;
 
-export const DELETE_OPTION_TYPE = gql`
-  mutation deleteOptionType($input: deleteOptionTypeInput!) {
-    deleteOptionType(input: $input) {
+export const DELETE_OPTION = gql`
+  mutation deleteOption($input: deleteOptionInput!) {
+    deleteOption(input: $input) {
       success
     }
   }

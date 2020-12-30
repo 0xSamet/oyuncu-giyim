@@ -25,6 +25,11 @@ import {
   pageDescriptionAdminLoader,
   pageSlugsLoader,
 } from "../../../apollo/dataloaders/page";
+import {
+  optionDescriptionAdminLoader,
+  optionValueAdminLoader,
+  optionValueDescriptionAdminLoader,
+} from "../../../apollo/dataloaders/option";
 
 const apolloServer = new ApolloServer({
   schema,
@@ -44,6 +49,9 @@ const apolloServer = new ApolloServer({
         pageDescriptionLoader,
         pageDescriptionAdminLoader,
         pageSlugsLoader,
+        optionDescriptionAdminLoader,
+        optionValueAdminLoader,
+        optionValueDescriptionAdminLoader,
       },
     };
   },
