@@ -1,9 +1,7 @@
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import clsx from "clsx";
-import ArrowIcon from "../public/icons/arrow.svg";
-import PlusIcon from "../public/icons/plus.svg";
-import MinusIcon from "../public/icons/minus.svg";
 
 export default function ShowCaseProductItem({ productId }) {
   const [selectingSize, setSelectingSize] = useState(false);
@@ -17,7 +15,12 @@ export default function ShowCaseProductItem({ productId }) {
       })}
     >
       <div className="showcase-product-image">
-        <img src={`/products/valorant-sweat-${productId}.jpg`} />
+        <Image
+          src={`/products/valorant-sweat-${productId}.jpg`}
+          layout="responsive"
+          width={200}
+          height={200}
+        />
       </div>
       <div className="showcase-product-info">
         <Link href="#">
