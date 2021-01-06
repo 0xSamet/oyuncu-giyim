@@ -9,12 +9,14 @@ import pageTypes from "./types/page";
 import categoryTypes from "./types/category";
 import languageTypes from "./types/language";
 import optionTypes from "./types/option";
+import imageTypes from "./types/image";
 
 import menuResolver from "./resolvers/menu";
 import pageResolver from "./resolvers/page";
 import categoryResolver from "./resolvers/category";
 import languageResolver from "./resolvers/language";
 import optionResolver from "./resolvers/option";
+import imageResolver from "./resolvers/image";
 
 const typeDefs = [
   menuTypes,
@@ -22,6 +24,7 @@ const typeDefs = [
   categoryTypes,
   languageTypes,
   optionTypes,
+  imageTypes,
 ];
 
 const resolvers = [
@@ -30,6 +33,7 @@ const resolvers = [
   categoryResolver,
   languageResolver,
   optionResolver,
+  imageResolver,
 ];
 
 export const schema = makeExecutableSchema({

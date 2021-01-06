@@ -80,7 +80,7 @@ export default function LeftMenu() {
       <li>
         <a>
           <span className="main-menu-icon-wrapper" onClick={handleIconMode}>
-            <img src="/icons/arrow.svg" />
+            <img src="/static/icons/arrow.svg" />
           </span>
           <span className="main-menu-text-wrapper"></span>
         </a>
@@ -89,7 +89,7 @@ export default function LeftMenu() {
         index={0}
         text="Dashboard"
         link={{ href: "/admin/dashboard" }}
-        icon="/icons/admin/dashboard.svg"
+        icon="/static/icons/admin/dashboard.svg"
       />
       <LeftMenuListItem
         index={1}
@@ -97,7 +97,7 @@ export default function LeftMenu() {
         link={{
           href: "/admin/siparisler",
         }}
-        icon="/icons/admin/orders.svg"
+        icon="/static/icons/admin/orders.svg"
       />
       <LeftMenuListItem
         index={2}
@@ -105,7 +105,7 @@ export default function LeftMenu() {
         link={{
           href: "/admin/musteriler",
         }}
-        icon="/icons/admin/customers.svg"
+        icon="/static/icons/admin/customers.svg"
       />
       <li className="divider"></li>
       <LeftMenuListItem
@@ -114,7 +114,7 @@ export default function LeftMenu() {
         link={{
           href: "/admin/urunler",
         }}
-        icon="/icons/sweat.svg"
+        icon="/static/icons/sweat.svg"
       />
       <LeftMenuListItem
         index={4}
@@ -122,7 +122,7 @@ export default function LeftMenu() {
         link={{
           href: "/admin/kategoriler",
         }}
-        icon="/icons/categories.svg"
+        icon="/static/icons/categories.svg"
       />
       <LeftMenuListItem
         index={5}
@@ -130,7 +130,7 @@ export default function LeftMenu() {
         link={{
           href: "/admin/secenekler",
         }}
-        icon="/icons/admin/options.svg"
+        icon="/static/icons/admin/options.svg"
       />
       <li className="divider"></li>
       <LeftMenuListItem
@@ -139,7 +139,7 @@ export default function LeftMenu() {
         link={{
           href: "/admin/menuler",
         }}
-        icon="/icons/admin/hamburger.svg"
+        icon="/static/icons/admin/hamburger.svg"
       />
       <LeftMenuListItem
         index={7}
@@ -147,7 +147,7 @@ export default function LeftMenu() {
         link={{
           href: "/admin/sayfalar",
         }}
-        icon="/icons/admin/pages.svg"
+        icon="/static/icons/admin/pages.svg"
       />
       <LeftMenuListItem
         index={8}
@@ -155,7 +155,7 @@ export default function LeftMenu() {
         link={{
           href: "/admin/ayarlar",
         }}
-        icon="/icons/settings.svg"
+        icon="/static/icons/settings.svg"
         submenu={[
           {
             index: 9,
@@ -163,7 +163,7 @@ export default function LeftMenu() {
             link: {
               href: "/admin/ayarlar/diller",
             },
-            icon: "/icons/admin/language.svg",
+            icon: "/static/icons/admin/language.svg",
           },
         ]}
       />

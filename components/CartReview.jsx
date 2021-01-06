@@ -1,7 +1,7 @@
 import CartReviewListItem from "./CartReviewListItem";
 import { useDispatch } from "react-redux";
-import GoBackIcon from "../public/icons/go-back.svg";
-import WalletIcon from "../public/icons/wallet.svg";
+import GoBackIcon from "../public/static/icons/go-back.svg";
+import WalletIcon from "../public/static/icons/wallet.svg";
 
 import { closeAllModals } from "../store/reducers/modals";
 

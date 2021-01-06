@@ -40,7 +40,7 @@ export default function MainSlider() {
           height={550}
         />
       </SwiperSlide>
-      <SwiperSlide>
+      {/* <SwiperSlide>
         <Image
           src="/slider/slider-3.jpg"
           layout="intrinsic"
@@ -55,7 +55,7 @@ export default function MainSlider() {
           width={1165}
           height={550}
         />
-      </SwiperSlide>
+      </SwiperSlide> */}
     </Swiper>
   );
 }

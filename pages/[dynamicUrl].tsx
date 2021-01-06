@@ -27,7 +27,10 @@ export default function DynamicPage({}) {
             <li className="filter-el">
               <span className="filter-el-title">
                 Beden Seç
-                <img className="filter-down-icon" src="/icons/arrow.svg" />
+                <img
+                  className="filter-down-icon"
+                  src="/static/icons/arrow.svg"
+                />
               </span>
               <span className="filter-options">
                 <ul>
@@ -40,14 +43,20 @@ export default function DynamicPage({}) {
             <li className="filter-el">
               <span className="filter-el-title">
                 Cinsiyet Seç
-                <img className="filter-down-icon" src="/icons/arrow.svg" />
+                <img
+                  className="filter-down-icon"
+                  src="/static/icons/arrow.svg"
+                />
               </span>
               <span className="filter-desc"></span>
             </li>
             <li className="filter-el">
               <span className="filter-el-title">
                 Fiyat Seç
-                <img className="filter-down-icon" src="/icons/arrow.svg" />
+                <img
+                  className="filter-down-icon"
+                  src="/static/icons/arrow.svg"
+                />
               </span>
               <span className="filter-desc"></span>
             </li>
@@ -56,7 +65,7 @@ export default function DynamicPage({}) {
         <div className="product-listing-wrapper">
           <div className="product">
             <div className="product-image">
-              <img src="/products/valorant-sweat-1.jpg" />
+              <img src="/static/products/valorant-sweat-1.jpg" />
             </div>
             <div className="product-info">
               <h3 className="product-name">Valorant Sweat - 1</h3>
@@ -70,7 +79,7 @@ export default function DynamicPage({}) {
           </div>
           <div className="product">
             <div className="product-image">
-              <img src="/products/valorant-sweat-1.jpg" />
+              <img src="/static/products/valorant-sweat-1.jpg" />
             </div>
             <div className="product-info">
               <h3 className="product-name">Valorant Sweat - 1</h3>
@@ -84,7 +93,7 @@ export default function DynamicPage({}) {
           </div>
           <div className="product">
             <div className="product-image">
-              <img src="/products/valorant-sweat-1.jpg" />
+              <img src="/static/products/valorant-sweat-1.jpg" />
             </div>
             <div className="product-info">
               <h3 className="product-name">Valorant Sweat - 1</h3>
@@ -98,7 +107,7 @@ export default function DynamicPage({}) {
           </div>
           <div className="product">
             <div className="product-image">
-              <img src="/products/valorant-sweat-1.jpg" />
+              <img src="/static/products/valorant-sweat-1.jpg" />
             </div>
             <div className="product-info">
               <h3 className="product-name">Valorant Sweat - 1</h3>
@@ -112,7 +121,7 @@ export default function DynamicPage({}) {
           </div>
           <div className="product">
             <div className="product-image">
-              <img src="/products/valorant-sweat-1.jpg" />
+              <img src="/static/products/valorant-sweat-1.jpg" />
             </div>
             <div className="product-info">
               <h3 className="product-name">Valorant Sweat - 1</h3>
@@ -126,7 +135,7 @@ export default function DynamicPage({}) {
           </div>
           <div className="product">
             <div className="product-image">
-              <img src="/products/valorant-sweat-1.jpg" />
+              <img src="/static/products/valorant-sweat-1.jpg" />
             </div>
             <div className="product-info">
               <h3 className="product-name">Valorant Sweat - 1</h3>
@@ -140,7 +149,7 @@ export default function DynamicPage({}) {
           </div>
           <div className="product">
             <div className="product-image">
-              <img src="/products/valorant-sweat-1.jpg" />
+              <img src="/static/products/valorant-sweat-1.jpg" />
             </div>
             <div className="product-info">
               <h3 className="product-name">Valorant Sweat - 1</h3>
@@ -154,7 +163,7 @@ export default function DynamicPage({}) {
           </div>
           <div className="product">
             <div className="product-image">
-              <img src="/products/valorant-sweat-1.jpg" />
+              <img src="/static/products/valorant-sweat-1.jpg" />
             </div>
             <div className="product-info">
               <h3 className="product-name">Valorant Sweat - 1</h3>
@@ -168,7 +177,7 @@ export default function DynamicPage({}) {
           </div>
           <div className="product">
             <div className="product-image">
-              <img src="/products/valorant-sweat-1.jpg" />
+              <img src="/static/products/valorant-sweat-1.jpg" />
             </div>
             <div className="product-info">
               <h3 className="product-name">Valorant Sweat - 1</h3>
@@ -182,7 +191,7 @@ export default function DynamicPage({}) {
           </div>
           <div className="product">
             <div className="product-image">
-              <img src="/products/valorant-sweat-1.jpg" />
+              <img src="/static/products/valorant-sweat-1.jpg" />
             </div>
             <div className="product-info">
               <h3 className="product-name">Valorant Sweat - 1</h3>
@@ -196,7 +205,7 @@ export default function DynamicPage({}) {
           </div>
           <div className="product">
             <div className="product-image">
-              <img src="/products/valorant-sweat-1.jpg" />
+              <img src="/static/products/valorant-sweat-1.jpg" />
             </div>
             <div className="product-info">
               <h3 className="product-name">Valorant Sweat - 1</h3>

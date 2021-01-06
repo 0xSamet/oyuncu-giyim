@@ -1,13 +1,13 @@
 import { useState } from "react";
 import Link from "next/link";
 
-import CartIcon from "../public/icons/cart.svg";
-import ProfileIcon from "../public/icons/profile.svg";
-import NotificationIcon from "../public/icons/notification.svg";
-import DeliveryTruckIcon from "../public/icons/delivery-truck.svg";
-import CheckedIcon from "../public/icons/checked.svg";
-import CancelIcon from "../public/icons/cancel.svg";
-import SearchIcon from "../public/icons/search.svg";
+import CartIcon from "../public/static/icons/cart.svg";
+import ProfileIcon from "../public/static/icons/profile.svg";
+import NotificationIcon from "../public/static/icons/notification.svg";
+import DeliveryTruckIcon from "../public/static/icons/delivery-truck.svg";
+import CheckedIcon from "../public/static/icons/checked.svg";
+import CancelIcon from "../public/static/icons/cancel.svg";
+import SearchIcon from "../public/static/icons/search.svg";
 
 import { Button, Divider, Input, Checkbox } from "semantic-ui-react";
 import clsx from "clsx";
@@ -26,7 +26,7 @@ function DesktopSearchListItem({ productId }) {
   return (
     <li className="product">
       <div className="product-image">
-        <img src={`/products/valorant-sweat-${productId}.jpg`} />
+        <img src={`/static/products/valorant-sweat-${productId}.jpg`} />
       </div>
       <div className="product-informations">
         <h3 className="product-name">Valorant Sweat Gri</h3>
@@ -56,7 +56,7 @@ export default function Header() {
       <div className="logo-wrapper">
         <Link href="/">
           <a>
-            <img className="logo" src="/oyuncu-giyim-logo.png" />
+            <img className="logo" src="/static/oyuncu-giyim-logo.png" />
           </a>
         </Link>
       </div>

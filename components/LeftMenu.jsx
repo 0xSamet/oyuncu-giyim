@@ -130,7 +130,7 @@ export default function LeftMenu(props) {
       <li>
         <a>
           <span className="main-menu-icon-wrapper" onClick={handleIconMode}>
-            <img src="/icons/arrow.svg" />
+            <img src="/static/icons/arrow.svg" />
           </span>
           <span className="main-menu-text-wrapper"></span>
         </a>

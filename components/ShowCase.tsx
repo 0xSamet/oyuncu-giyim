@@ -3,7 +3,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { useSelector } from "react-redux";
 import ShowCaseProduct from "./ShowCaseProduct";
 
-import ArrowIcon from "../public/icons/arrow.svg";
+import ArrowIcon from "../public/static/icons/arrow.svg";
 
 type ShowCaseType = {
   showCaseId: Number;

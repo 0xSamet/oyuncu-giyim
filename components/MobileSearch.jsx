@@ -1,7 +1,7 @@
 import { Input } from "semantic-ui-react";
-import SearchIcon from "../public/icons/search.svg";
-import ArrowIcon from "../public/icons/arrow.svg";
-import CancelIcon from "../public/icons/cancel.svg";
+import SearchIcon from "../public/static/icons/search.svg";
+import ArrowIcon from "../public/static/icons/arrow.svg";
+import CancelIcon from "../public/static/icons/cancel.svg";
 
 import { useState } from "react";
 

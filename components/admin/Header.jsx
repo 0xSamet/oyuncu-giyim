@@ -3,8 +3,8 @@ import { useSelector, useDispatch } from "react-redux";
 import Link from "next/link";
 import clsx from "clsx";
 
-import ProfileIcon from "../../public/icons/profile.svg";
-import HamburgerMenuIcon from "../../public/icons/admin/hamburger.svg";
+import ProfileIcon from "../../public/static/icons/profile.svg";
+import HamburgerMenuIcon from "../../public/static/icons/admin/hamburger.svg";
 import { Button, Divider, Input, Checkbox } from "semantic-ui-react";
 
 import {
@@ -30,7 +30,7 @@ export default function Header() {
       <div className="logo-wrapper">
         <Link href="/admin/dashboard">
           <a>
-            <img className="logo" src="/oyuncu-giyim-logo.png" />
+            <img className="logo" src="/static/oyuncu-giyim-logo.png" />
           </a>
         </Link>
       </div>

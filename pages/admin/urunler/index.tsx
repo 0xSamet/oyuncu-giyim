@@ -48,6 +48,54 @@ interface OptionRowType {
   option: Option;
 }
 
+//--------------------------------------------------------------------asdsadadasdASDASDASDASDSA///
+
+export interface ProductDescription {
+  name: string;
+  description: string;
+  meta_title: string;
+  meta_description: string;
+  meta_keywords: string;
+  slug: string;
+  language: string;
+}
+
+export interface ProductOptionValue {
+  id: number | ReactText;
+  quantity: number;
+  price: number;
+  price_prefix: string[];
+}
+
+export interface ProductOption {
+  id: number | ReactText;
+  required: boolean;
+  values: ProductOptionValue[];
+}
+
+export interface ProductImage {
+  id: number | ReactText;
+  src: string;
+  sort_order: number;
+}
+
+export interface Product {
+  id: number | ReactText;
+  status: boolean;
+  description: ProductDescription[];
+  model: string;
+  sku: string;
+  price: number;
+  tax_class: number;
+  quantity: number;
+  minimum_quanity: number;
+  sort_order: number;
+  categories: number[];
+  filters: number[];
+  options: ProductOption[];
+  images: ProductImage[];
+}
+
 export default function AdminDashboard() {
   const [options, setOptions] = useState([]);
   const dispatch = useDispatch();
@@ -137,7 +185,7 @@ export default function AdminDashboard() {
   return (
     <SEO
       seo={{
-        meta_title: "Seçenekler - Oyuncu Giyim",
+        meta_title: "Ürünler - Oyuncu Giyim",
         meta_description: "",
         meta_keyword: "",
       }}
@@ -151,11 +199,11 @@ export default function AdminDashboard() {
           <Table.Header>
             <Table.Row>
               <Table.HeaderCell colSpan="3" textAlign="right">
-                <Link href="/admin/secenekler/ekle">
+                <Link href="/admin/urunler/ekle">
                   <a>
                     <Button icon labelPosition="left" size="tiny" color="blue">
                       <Icon name="add square" />
-                      Seçenek Ekle
+                      Ürün Ekle
                     </Button>
                   </a>
                 </Link>
@@ -166,7 +214,7 @@ export default function AdminDashboard() {
         <Table celled compact className="admin-results-table">
           <Table.Header>
             <Table.Row>
-              <Table.HeaderCell>Seçenekler</Table.HeaderCell>
+              <Table.HeaderCell>Ürünler</Table.HeaderCell>
               <Table.HeaderCell collapsing textAlign="center">
                 Sıralama
               </Table.HeaderCell>
@@ -186,7 +234,7 @@ export default function AdminDashboard() {
             ) : (
               <Table.Row>
                 <Table.HeaderCell colSpan="3" textAlign="center">
-                  Seçenek Bulunamadı
+                  Ürün Bulunamadı
                 </Table.HeaderCell>
               </Table.Row>
             )}

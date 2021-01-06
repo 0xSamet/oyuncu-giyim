@@ -1,11 +1,11 @@
 import { Input } from "semantic-ui-react";
 import { useState } from "react";
 
-import CartIcon from "../public/icons/cart.svg";
-import ProfileIcon from "../public/icons/profile.svg";
-import NotificationIcon from "../public/icons/notification.svg";
-import MasterCardIcon from "../public/icons/mastercard.svg";
-import VisaCardIcon from "../public/icons/visacard.svg";
+import CartIcon from "../public/static/icons/cart.svg";
+import ProfileIcon from "../public/static/icons/profile.svg";
+import NotificationIcon from "../public/static/icons/notification.svg";
+import MasterCardIcon from "../public/static/icons/mastercard.svg";
+import VisaCardIcon from "../public/static/icons/visacard.svg";
 
 export default function Header() {
   const [searchWord, setSearchWord] = useState("");

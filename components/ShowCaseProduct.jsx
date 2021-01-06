@@ -16,7 +16,7 @@ export default function ShowCaseProductItem({ productId }) {
     >
       <div className="showcase-product-image">
         <Image
-          src={`/products/valorant-sweat-${productId}.jpg`}
+          src={`/static/products/valorant-sweat-${productId}.jpg`}
           layout="responsive"
           width={200}
           height={200}
