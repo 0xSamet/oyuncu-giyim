@@ -9,7 +9,7 @@ export default gql`
     meta_keywords: String
     slug: String
   }
-  type CategoryDescriptionOnAdmin {
+  type PageDescriptionOnAdmin {
     name: String!
     description: String
     meta_title: String
@@ -27,7 +27,6 @@ export default gql`
     desktop_menu_id: Int
     mobile_menu_id: Int
     description: PageDescription
-    slug: String
     slugs: [SlugsType!]!
     sort_order: Int
     status: Boolean
@@ -36,7 +35,7 @@ export default gql`
     id: ID!
     desktop_menu_id: Int
     mobile_menu_id: Int
-    description: [CategoryDescriptionOnAdmin]
+    description: [PageDescriptionOnAdmin]
     sort_order: Int
     status: Boolean
   }
@@ -74,7 +73,6 @@ export default gql`
     success: Boolean!
   }
   type Query {
-    pages: [Page!]
     page(slug: String!, language: String!): Page
     pagesOnAdmin: [PageOnAdmin!]!
     pageOnAdmin(input: pageOnAdminInput!): PageOnAdmin

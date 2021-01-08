@@ -1,19 +1,12 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import clsx from "clsx";
 import Link from "next/link";
 import { useDispatch, useSelector } from "react-redux";
-
 import { useSpring, animated } from "react-spring";
-
 import { toggleIconMode } from "../../store/reducers/theme";
+import produce from "immer";
 
-function LeftMenuListItem({
-  index = -4,
-  text,
-  link: { href = "#" },
-  icon,
-  submenu = [],
-}) {
+function LeftMenuListItemV2({ menu, menus, setMenus }) {
   const {
     menu: {
       desktopMenu: { index: indexFromStore },
@@ -21,44 +14,121 @@ function LeftMenuListItem({
     theme: { iconMode },
   } = useSelector((state) => state);
 
-  const [toggle, setToggle] = useState(false);
-  const getHeight = () => {
-    if (iconMode) {
-      return submenu.length * 55;
-    } else {
-      return submenu.length * 45;
+  const getDeepHeight = (menu, total = 0) => {
+    // BAD CODE //
+    if (menu && menu.submenu && menu.submenu.length > 0) {
+      const countChildrens = menu.submenu.length;
+      total += countChildrens;
+      menu.submenu.forEach((subMenu) => {
+        if (subMenu.submenu && subMenu.submenu.length > 0 && subMenu.isActive) {
+          total += subMenu.submenu.length;
+        }
+        if (subMenu.submenu && subMenu.submenu.length > 0) {
+          subMenu.submenu.forEach((subSubMenu) => {
+            if (
+              subSubMenu.submenu &&
+              subSubMenu.submenu.length > 0 &&
+              subSubMenu.isActive
+            ) {
+              total += subSubMenu.submenu.length;
+            }
+          });
+        }
+      });
+      return total * (iconMode ? 55 : 45);
     }
+    return 0;
   };
-  const props = useSpring({ height: toggle ? getHeight() : 0 });
+
+  if (menu && menu.divider) {
+    return <li className="divider"></li>;
+  }
+
+  const props = useSpring({
+    height: menu.isActive ? getDeepHeight(menu) : 0,
+  });
+
   return (
     <li
       className={clsx({
-        active: index === indexFromStore,
+        active:
+          (Array.isArray(menu.index)
+            ? menu.index[menu.index.length - 1]
+            : menu.index) === indexFromStore,
       })}
     >
-      <Link href={href}>
+      <Link href={menu.link}>
         <a
           onClick={(e) => {
-            if (submenu.length > 0) e.preventDefault();
-            setToggle(!toggle);
+            if (menu.submenu && menu.submenu.length > 0) e.preventDefault();
+            if (Array.isArray(menu.index)) {
+              setMenus(
+                produce(menus, (draft) => {
+                  let handleDeepMenuString = "";
+                  menu.index.forEach((realIndex, currentIndex) => {
+                    handleDeepMenuString += `[${realIndex}]${
+                      currentIndex + 1 != menu.index.length ? ".submenu" : ""
+                    }`;
+                  });
+
+                  eval(
+                    `draft${handleDeepMenuString}.isActive = !draft${handleDeepMenuString}.isActive`
+                  );
+                })
+              );
+            } else {
+              setMenus(
+                produce(menus, (draft) => {
+                  draft[menu.index]["isActive"] = !draft[menu.index][
+                    "isActive"
+                  ];
+                })
+              );
+            }
           }}
         >
           <span className="main-menu-icon-wrapper">
-            <img src={icon} />
+            <img src={menu.icon} />
           </span>
-          <span className="main-menu-text-wrapper">{text}</span>
+          <span className="main-menu-text-wrapper">{menu.text}</span>
+          {menu.submenu && menu.submenu.length > 0 && (
+            <span
+              style={{
+                width: 9,
+                position: "absolute",
+                right: 10,
+                opacity: iconMode ? 0 : 1,
+                transition: "opacity 0.3s",
+              }}
+            >
+              <img
+                src={"/static/icons/arrow.svg"}
+                style={{
+                  transform: `${
+                    menu.isActive ? "rotate(90deg)" : "rotate(-90deg)"
+                  }`,
+                  transition: "0.5s",
+                  transformOrigin: "center center",
+                }}
+              />
+            </span>
+          )}
         </a>
       </Link>
-      {submenu.length > 0 && (
+
+      {menu.submenu && menu.submenu.length > 0 && (
         <animated.ul style={props} className="submenu">
-          {submenu.map((menu) => {
+          {menu.submenu.map((menu) => {
             return (
-              <LeftMenuListItem
-                key={menu.index}
-                index={menu.index}
-                text={menu.text}
-                link={menu.link}
-                icon={menu.icon}
+              <LeftMenuListItemV2
+                index={
+                  Array.isArray(menu.index)
+                    ? menu.index[menu.index.length - 1]
+                    : menu.index
+                }
+                menu={menu}
+                menus={menus}
+                setMenus={setMenus}
               />
             );
           })}
@@ -70,6 +140,121 @@ function LeftMenuListItem({
 
 export default function LeftMenu() {
   const dispatch = useDispatch();
+  const [menus, setMenus] = useState([
+    {
+      index: 0,
+      text: "Dashboard",
+      link: "/admin/dashboard",
+      icon: "/static/icons/admin/dashboard.svg",
+      isActive: false,
+    },
+    {
+      index: 1,
+      text: "Siparişler",
+      link: "/admin/siparisler",
+      icon: "/static/icons/admin/orders.svg",
+      isActive: false,
+    },
+
+    {
+      index: 2,
+      text: "Müşteriler",
+      link: "/admin/musteriler",
+      icon: "/static/icons/admin/customers.svg",
+      isActive: false,
+    },
+    {
+      index: 3,
+      divider: true,
+    },
+    {
+      index: 4,
+      text: "Ürünler",
+      link: "/admin/urunler",
+      icon: "/static/icons/sweat.svg",
+      isActive: false,
+    },
+    {
+      index: 5,
+      text: "Kategoriler",
+      link: "/admin/kategoriler",
+      icon: "/static/icons/categories.svg",
+      isActive: false,
+    },
+    {
+      index: 6,
+      text: "Seçenekler",
+      link: "/admin/secenekler",
+      icon: "/static/icons/admin/options.svg",
+      isActive: false,
+    },
+    {
+      index: 7,
+      divider: true,
+    },
+    {
+      index: 8,
+      text: "Menüler",
+      link: "/admin/menuler",
+      icon: "/static/icons/admin/hamburger.svg",
+      isActive: false,
+    },
+    {
+      index: 9,
+      text: "Sayfalar",
+      link: "/admin/sayfalar",
+      icon: "/static/icons/admin/pages.svg",
+      isActive: false,
+    },
+    {
+      index: 10,
+      text: "Ayarlar",
+      link: "/admin/ayarlar",
+      icon: "/static/icons/settings.svg",
+      isActive: false,
+      submenu: [
+        {
+          index: [10, 0],
+          text: "Yerelleştirme",
+          link: "",
+          icon: "/static/icons/admin/language.svg",
+          isActive: false,
+          submenu: [
+            {
+              index: [10, 0, 0],
+              text: "Dil",
+              link: "/admin/ayarlar/diller",
+              icon: "/static/icons/admin/language.svg",
+              isActive: false,
+            },
+            {
+              index: [10, 0, 1],
+              text: "Vergiler",
+              link: "/admin/ayarlar/vergiler",
+              icon: "/static/icons/admin/tax.svg",
+              isActive: false,
+              submenu: [
+                {
+                  index: [10, 0, 1, 0],
+                  text: "Vergi Sınıfları",
+                  link: "/admin/ayarlar/vergiler/vergi-siniflari",
+                  icon: "/static/icons/admin/tax.svg",
+                  isActive: false,
+                },
+                {
+                  index: [10, 0, 1, 1],
+                  text: "Vergi Oranları",
+                  link: "/admin/ayarlar/vergiler/vergi-oranlari",
+                  icon: "/static/icons/admin/tax.svg",
+                  isActive: false,
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    },
+  ]);
 
   const handleIconMode = () => {
     return dispatch(toggleIconMode());
@@ -85,88 +270,33 @@ export default function LeftMenu() {
           <span className="main-menu-text-wrapper"></span>
         </a>
       </li>
-      <LeftMenuListItem
-        index={0}
-        text="Dashboard"
-        link={{ href: "/admin/dashboard" }}
-        icon="/static/icons/admin/dashboard.svg"
-      />
-      <LeftMenuListItem
-        index={1}
-        text="Siparişler"
-        link={{
-          href: "/admin/siparisler",
-        }}
-        icon="/static/icons/admin/orders.svg"
-      />
-      <LeftMenuListItem
-        index={2}
-        text="Müşteriler"
-        link={{
-          href: "/admin/musteriler",
-        }}
-        icon="/static/icons/admin/customers.svg"
-      />
-      <li className="divider"></li>
-      <LeftMenuListItem
-        index={3}
-        text="Ürünler"
-        link={{
-          href: "/admin/urunler",
-        }}
-        icon="/static/icons/sweat.svg"
-      />
-      <LeftMenuListItem
-        index={4}
-        text="Kategoriler"
-        link={{
-          href: "/admin/kategoriler",
-        }}
-        icon="/static/icons/categories.svg"
-      />
-      <LeftMenuListItem
-        index={5}
-        text="Seçenekler"
-        link={{
-          href: "/admin/secenekler",
-        }}
-        icon="/static/icons/admin/options.svg"
-      />
-      <li className="divider"></li>
-      <LeftMenuListItem
-        index={6}
-        text="Menüler"
-        link={{
-          href: "/admin/menuler",
-        }}
-        icon="/static/icons/admin/hamburger.svg"
-      />
-      <LeftMenuListItem
-        index={7}
-        text="Sayfalar"
-        link={{
-          href: "/admin/sayfalar",
-        }}
-        icon="/static/icons/admin/pages.svg"
-      />
-      <LeftMenuListItem
-        index={8}
-        text="Ayarlar"
-        link={{
-          href: "/admin/ayarlar",
-        }}
-        icon="/static/icons/settings.svg"
-        submenu={[
-          {
-            index: 9,
-            text: "Dil",
-            link: {
-              href: "/admin/ayarlar/diller",
-            },
-            icon: "/static/icons/admin/language.svg",
-          },
-        ]}
-      />
+      {menus.map((menu) => {
+        if (menu.divider) {
+          return (
+            <LeftMenuListItemV2
+              index={
+                Array.isArray(menu.index)
+                  ? menu.index[menu.index.length - 1]
+                  : menu.index
+              }
+              menu={menu}
+            />
+          );
+        } else {
+          return (
+            <LeftMenuListItemV2
+              index={
+                Array.isArray(menu.index)
+                  ? menu.index[menu.index.length - 1]
+                  : menu.index
+              }
+              menu={menu}
+              menus={menus}
+              setMenus={setMenus}
+            />
+          );
+        }
+      })}
     </ul>
   );
 }

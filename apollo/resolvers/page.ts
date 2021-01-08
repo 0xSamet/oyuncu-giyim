@@ -46,11 +46,6 @@ export default {
     },
   },
   Query: {
-    pages: async (_parent, { slug }, { db }, _info) => {
-      const result = await Page.query();
-
-      return result;
-    },
     page: async (_parent, params, { db, req }, _info) => {
       req.language = await getLanguage(params);
       const result = await PageDescription.query()
