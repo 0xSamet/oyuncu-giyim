@@ -23,7 +23,7 @@ import {
   OptionValue,
   OptionValueDescription,
 } from "../index";
-import { Language } from "../../ayarlar/diller";
+import { Language } from "../../ayarlar/yerellestirme/diller";
 import { UPDATE_OPTION } from "../../../../apollo/gql/mutations/option";
 import { GET_LANGUAGES } from "../../../../apollo/gql/query/language";
 import { GET_OPTION_ADMIN } from "../../../../apollo/gql/query/option";

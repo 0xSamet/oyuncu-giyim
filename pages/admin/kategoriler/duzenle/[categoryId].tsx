@@ -35,9 +35,8 @@ import { Tab } from "semantic-ui-react";
 import { putAdminRequestError } from "../../../../store/reducers/admin";
 import { GET_LANGUAGES } from "../../../../apollo/gql/query/language";
 import { Category, CategoryDescription } from "../index";
-import { Language } from "../../ayarlar/diller";
+import { Language } from "../../ayarlar/yerellestirme/diller";
 import Editor from "../../../../components/Editor";
-import { updateCategoryValidate } from "../../../../database/models/category";
 import { DesktopMenu, MobileMenu } from "../../menuler";
 import {
   GET_DESKTOP_MENU_ADMIN,

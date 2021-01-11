@@ -7,13 +7,13 @@ import {
   Segment,
   Table,
 } from "semantic-ui-react";
-import SEO from "../../../../components/Seo";
+import SEO from "../../../../../components/Seo";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useLazyQuery, useMutation } from "@apollo/client";
-import { GET_LANGUAGES } from "../../../../apollo/gql/query/language";
-import { DELETE_LANGUAGE } from "../../../../apollo/gql/mutations/language";
-import { putAdminRequestError } from "../../../../store/reducers/admin";
+import { GET_LANGUAGES } from "../../../../../apollo/gql/query/language";
+import { DELETE_LANGUAGE } from "../../../../../apollo/gql/mutations/language";
+import { putAdminRequestError } from "../../../../../store/reducers/admin";
 
 export interface Language {
   id: string;
@@ -126,7 +126,7 @@ export default function AdminSettingsLanguages() {
           <Table.Header>
             <Table.Row>
               <Table.HeaderCell colSpan="3" textAlign="right">
-                <Link href="/admin/ayarlar/diller/ekle">
+                <Link href="/admin/ayarlar/yerellestirme/diller/ekle">
                   <a>
                     <Button icon labelPosition="left" size="tiny" color="blue">
                       <Icon name="add square" />

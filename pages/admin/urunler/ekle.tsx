@@ -26,7 +26,7 @@ import produce from "immer";
 import { putAdminRequestError } from "../../../store/reducers/admin";
 import { GET_LANGUAGES } from "../../../apollo/gql/query/language";
 import { Page, PageDescription } from "../sayfalar";
-import { Language } from "../ayarlar/diller";
+import { Language } from "../ayarlar/yerellestirme/diller";
 import Editor from "../../../components/Editor";
 import {
   GET_DESKTOP_MENU_ADMIN,

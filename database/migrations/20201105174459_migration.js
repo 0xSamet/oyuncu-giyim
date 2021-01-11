@@ -192,6 +192,44 @@ exports.up = async function (knex) {
         .onDelete("cascade")
         .notNullable();
       table.string("name").notNullable().defaultTo("");
+    })
+    .createTable(tableNames.country, (table) => {
+      table.increments();
+      table.integer("sort_order");
+      table.boolean("status").defaultTo(true);
+    })
+    .createTable(tableNames.country_description, (table) => {
+      table.increments();
+      table
+        .integer("country_id")
+        .references("id")
+        .inTable(tableNames.country)
+        .onDelete("cascade")
+        .notNullable();
+      table
+        .integer("language_id")
+        .references("id")
+        .inTable(tableNames.language)
+        .onDelete("cascade")
+        .notNullable();
+      table.string("name").notNullable().defaultTo("");
+    })
+    .createTable(tableNames.zone, (table) => {
+      table.increments();
+      table
+        .integer("country_id")
+        .references("id")
+        .inTable(tableNames.country)
+        .onDelete("cascade")
+        .notNullable();
+      table.string("name").notNullable().defaultTo("");
+      table.integer("sort_order");
+      table.boolean("status").defaultTo(true);
+    })
+    .createTable(tableNames.geo_zone, (table) => {
+      table.increments();
+      table.string("name").notNullable().defaultTo("");
+      table.text("description").defaultTo("");
     });
 };
 
@@ -220,6 +258,12 @@ exports.down = async function (knex) {
   await knex.schema.dropTableIfExists(tableNames.option_value);
   await knex.schema.dropTableIfExists(tableNames.option_description);
   await knex.schema.dropTableIfExists(tableNames.option);
+
+  //clear country / zone / geo_zone
+  await knex.schema.dropTableIfExists(tableNames.geo_zone);
+  await knex.schema.dropTableIfExists(tableNames.zone);
+  await knex.schema.dropTableIfExists(tableNames.country_description);
+  await knex.schema.dropTableIfExists(tableNames.country);
 
   //clear language
   await knex.schema.dropTableIfExists(tableNames.language);

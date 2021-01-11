@@ -30,6 +30,10 @@ import {
   optionValueAdminLoader,
   optionValueDescriptionAdminLoader,
 } from "../../../apollo/dataloaders/option";
+import {
+  countryDescriptionLoader,
+  countryDescriptionAdminLoader,
+} from "../../../apollo/dataloaders/country";
 
 const apolloServer = new ApolloServer({
   schema,
@@ -52,6 +56,8 @@ const apolloServer = new ApolloServer({
         optionDescriptionAdminLoader,
         optionValueAdminLoader,
         optionValueDescriptionAdminLoader,
+        countryDescriptionLoader,
+        countryDescriptionAdminLoader,
       },
     };
   },

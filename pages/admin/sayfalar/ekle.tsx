@@ -24,7 +24,7 @@ import produce from "immer";
 import { putAdminRequestError } from "../../../store/reducers/admin";
 import { GET_LANGUAGES } from "../../../apollo/gql/query/language";
 import { Page, PageDescription } from "./index";
-import { Language } from "../ayarlar/diller";
+import { Language } from "../ayarlar/yerellestirme/diller";
 import Editor from "../../../components/Editor";
 import {
   GET_DESKTOP_MENU_ADMIN,
@@ -130,7 +130,7 @@ export default function AddPage() {
         ...fields,
         description: languagesData.languages.map((language) => {
           return {
-            ...fields.description[0],
+            ...sampleDesc,
             language: language.code,
           };
         }),

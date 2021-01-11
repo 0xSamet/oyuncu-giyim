@@ -12,6 +12,10 @@ const tableNames = {
   option_description: "option_description",
   option_value: "option_value",
   option_value_description: "option_value_description",
+  country: "country",
+  country_description: "country_description",
+  zone: "zone",
+  geo_zone: "geo_zone",
 };
 
 module.exports = {

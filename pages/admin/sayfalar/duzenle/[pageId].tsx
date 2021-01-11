@@ -24,14 +24,14 @@ import produce from "immer";
 import { putAdminRequestError } from "../../../../store/reducers/admin";
 import { GET_LANGUAGES } from "../../../../apollo/gql/query/language";
 import { Page, PageDescription } from "../index";
-import { Language } from "../../ayarlar/diller";
+import { Language } from "../../ayarlar/yerellestirme/diller";
 import Editor from "../../../../components/Editor";
 import {
   GET_DESKTOP_MENU_ADMIN,
   GET_MOBILE_MENU_ADMIN,
 } from "../../../../apollo/gql/query/menu";
 import { DesktopMenu, MobileMenu } from "../../menuler";
-import { ADD_PAGE, UPDATE_PAGE } from "../../../../apollo/gql/mutations/page";
+import { UPDATE_PAGE } from "../../../../apollo/gql/mutations/page";
 import { GET_PAGE_ADMIN } from "../../../../apollo/gql/query/page";
 
 export default function AddPage() {

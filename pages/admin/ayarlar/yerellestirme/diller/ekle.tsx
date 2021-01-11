@@ -1,4 +1,4 @@
-import SEO from "../../../../components/Seo";
+import SEO from "../../../../../components/Seo";
 import {
   Button,
   Checkbox,
@@ -16,8 +16,8 @@ import { useRouter } from "next/router";
 import { useDispatch } from "react-redux";
 
 import { Tab } from "semantic-ui-react";
-import { putAdminRequestError } from "../../../../store/reducers/admin";
-import { ADD_LANGUAGE } from "../../../../apollo/gql/mutations/language";
+import { putAdminRequestError } from "../../../../../store/reducers/admin";
+import { ADD_LANGUAGE } from "../../../../../apollo/gql/mutations/language";
 
 export default function AdminSettingsAddLanguage() {
   const [fields, setFields] = useState({
