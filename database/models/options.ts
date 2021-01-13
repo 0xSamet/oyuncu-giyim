@@ -8,7 +8,7 @@ export class OptionValueDescription extends Model {
   }
 
   static get relationMappings() {
-    const { Language } = require("./language");
+    const { Language } = require("./localization/language");
     return {
       option_value: {
         relation: Model.BelongsToOneRelation,
@@ -63,7 +63,7 @@ export class OptionDescription extends Model {
   }
 
   static get relationMappings() {
-    const { Language } = require("./language");
+    const { Language } = require("./localization/language");
     return {
       option: {
         relation: Model.BelongsToOneRelation,

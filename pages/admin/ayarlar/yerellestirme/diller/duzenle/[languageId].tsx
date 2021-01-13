@@ -20,8 +20,8 @@ import { putAdminRequestError } from "../../../../../../store/reducers/admin";
 import {
   ADD_LANGUAGE,
   UPDATE_LANGUAGE,
-} from "../../../../../../apollo/gql/mutations/language";
-import { GET_LANGUAGE } from "../../../../../../apollo/gql/query/language";
+} from "../../../../../../apollo/gql/mutations/localization/language";
+import { GET_LANGUAGE } from "../../../../../../apollo/gql/query/localization/language";
 
 export default function AdminSettingsAddLanguage() {
   const [fields, setFields] = useState({

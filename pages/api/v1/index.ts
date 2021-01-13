@@ -1,14 +1,6 @@
-import {
-  ApolloError,
-  ApolloServer,
-  Config,
-  UserInputError,
-  ValidationError,
-} from "apollo-server-micro";
+import { ApolloServer } from "apollo-server-micro";
 import { schema } from "../../../apollo/schema";
 import { parentCategoriesLoader } from "../../../apollo/dataloaders/category";
-import { GraphQLError } from "graphql";
-import { v4 as uuidv4 } from "uuid";
 import db from "../../../database/connect";
 import {
   categoriesDescriptionLoader,
@@ -33,7 +25,9 @@ import {
 import {
   countryDescriptionLoader,
   countryDescriptionAdminLoader,
-} from "../../../apollo/dataloaders/country";
+} from "../../../apollo/dataloaders/localization/country";
+import { zoneCountryAdminLoader } from "../../../apollo/dataloaders/localization/zone";
+import { geoZoneZonesAdminLoader } from "../../../apollo/dataloaders/localization/geo_zone";
 
 const apolloServer = new ApolloServer({
   schema,
@@ -58,6 +52,8 @@ const apolloServer = new ApolloServer({
         optionValueDescriptionAdminLoader,
         countryDescriptionLoader,
         countryDescriptionAdminLoader,
+        zoneCountryAdminLoader,
+        geoZoneZonesAdminLoader,
       },
     };
   },

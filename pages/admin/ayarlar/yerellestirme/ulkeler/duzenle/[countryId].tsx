@@ -22,7 +22,7 @@ import { useRouter } from "next/router";
 import { useDispatch } from "react-redux";
 import produce from "immer";
 import { putAdminRequestError } from "../../../../../../store/reducers/admin";
-import { GET_LANGUAGES } from "../../../../../../apollo/gql/query/language";
+import { GET_LANGUAGES } from "../../../../../../apollo/gql/query/localization/language";
 import { Country, CountryDescription } from "../index";
 import { Language } from "../../../../ayarlar/yerellestirme/diller";
 import Editor from "../../../../../../components/Editor";
@@ -33,8 +33,8 @@ import {
 import { DesktopMenu, MobileMenu } from "../../../../menuler";
 import { UPDATE_PAGE } from "../../../../../../apollo/gql/mutations/page";
 import { GET_PAGE_ADMIN } from "../../../../../../apollo/gql/query/page";
-import { GET_COUNTRY_ADMIN } from "../../../../../../apollo/gql/query/country";
-import { UPDATE_COUNTRY } from "../../../../../../apollo/gql/mutations/country";
+import { GET_COUNTRY_ADMIN } from "../../../../../../apollo/gql/query/localization/country";
+import { UPDATE_COUNTRY } from "../../../../../../apollo/gql/mutations/localization/country";
 
 export default function AddPage() {
   const [sampleDesc] = useState<CountryDescription>({

@@ -5,16 +5,10 @@ import {
   Form,
   Icon,
   Select,
-  Input,
-  Label,
-  Flag,
   Segment,
   Dimmer,
   Loader,
-  TextArea,
-  Menu,
   Tab,
-  FlagNameValues,
 } from "semantic-ui-react";
 import { useEffect, useMemo, useState } from "react";
 import { useLazyQuery, useMutation } from "@apollo/client";
@@ -22,88 +16,62 @@ import { useRouter } from "next/router";
 import { useDispatch } from "react-redux";
 import produce from "immer";
 import { putAdminRequestError } from "../../../../../store/reducers/admin";
-import { GET_LANGUAGES } from "../../../../../apollo/gql/query/localization/language";
-import { Country, CountryDescription } from "./index";
-import { Language } from "../../../ayarlar/yerellestirme/diller";
-import Editor from "../../../../../components/Editor";
-import {
-  GET_DESKTOP_MENU_ADMIN,
-  GET_MOBILE_MENU_ADMIN,
-} from "../../../../../apollo/gql/query/menu";
-import { DesktopMenu, MobileMenu } from "../../../menuler";
-import { ADD_PAGE } from "../../../../../apollo/gql/mutations/page";
-import { ADD_COUNTRY } from "../../../../../apollo/gql/mutations/localization/country";
+import { Country } from "../ulkeler";
+import { GET_COUNTRIES_ADMIN } from "../../../../../apollo/gql/query/localization/country";
+import { ADD_ZONE } from "../../../../../apollo/gql/mutations/localization/zone";
+import { Zone } from ".";
 
 export default function AddPage() {
-  const [sampleDesc] = useState<CountryDescription>({
-    name: "",
-
-    language: "",
-  });
-  const [fields, setFields] = useState<Country>({
+  const [fields, setFields] = useState<Zone>({
     id: null,
     sort_order: null,
     status: true,
-    description: [sampleDesc],
+    name: "",
+    country: null,
+    country_id: null,
   });
-  const [languages, setLanguages] = useState<Language[] | undefined[]>([]);
-  const [activeLanguage, setActiveLanguage] = useState<string | null>(null);
+  const [countries, setCountries] = useState<Country[] | undefined[]>([]);
+
+  const [
+    getCountries,
+    { data: countriesData, loading: countriesLoading, error: countriesError },
+  ] = useLazyQuery(GET_COUNTRIES_ADMIN, {
+    fetchPolicy: "no-cache",
+  });
+
   const router = useRouter();
   const dispatch = useDispatch();
 
   const [
-    getLanguages,
-    { data: languagesData, loading: languagesLoading, error: languagesError },
-  ] = useLazyQuery(GET_LANGUAGES, {
-    fetchPolicy: "no-cache",
-  });
-
-  const [
-    addCountryRun,
-    {
-      loading: addCountryLoading,
-      error: addCountryError,
-      data: addCountryResponse,
-    },
-  ] = useMutation(ADD_COUNTRY);
+    addZoneRun,
+    { loading: addZoneLoading, error: addZoneError, data: addZoneResponse },
+  ] = useMutation(ADD_ZONE);
 
   useEffect(() => {
-    getLanguages();
+    getCountries();
   }, []);
 
   useEffect(() => {
-    if (
-      languagesData &&
-      languagesData.languages &&
-      languagesData.languages.length > 0
-    ) {
-      setFields({
-        ...fields,
-        description: languagesData.languages.map((language) => {
-          return {
-            ...sampleDesc,
-            language: language.code,
-          };
-        }),
-      });
-
-      const { code: activeLanguageCode } = languagesData.languages.find(
-        (language) => language.is_default === true
-      );
-      setLanguages(languagesData.languages);
-      setActiveLanguage(activeLanguageCode);
+    if (countriesData && countriesData.countriesOnAdmin) {
+      setCountries(countriesData.countriesOnAdmin);
+      if (countriesData.countriesOnAdmin.length > 0) {
+        setFields({
+          ...fields,
+          country_id: countriesData.countriesOnAdmin[0].id,
+        });
+      }
     }
-  }, [languagesData]);
+  }, [countriesData]);
 
   useEffect(() => {
     if (
-      addCountryResponse &&
-      addCountryResponse.addCountry &&
-      addCountryResponse.addCountry.id
+      addZoneResponse &&
+      addZoneResponse.addZone &&
+      addZoneResponse.addZone.id
     ) {
-      router.push("/admin/ayarlar/yerellestirme/ulkeler");
+      router.push("/admin/ayarlar/yerellestirme/sehirler");
     }
-  }, [addCountryResponse]);
+  }, [addZoneResponse]);
 
   const handleFormSubmit = async () => {
     let sortOrder;
@@ -118,12 +86,13 @@ export default function AddPage() {
     }
 
     try {
-      await addCountryRun({
+      await addZoneRun({
         variables: {
           input: {
             sort_order: sortOrder,
             status: fields.status,
-            description: fields.description,
+            name: fields.name,
+            country_id: Number(fields.country_id),
           },
         },
       });
@@ -141,40 +110,26 @@ export default function AddPage() {
     );
   };
 
-  const handleLanguageInputChange = (e) => {
-    return setFields(
-      produce(fields, (draft) => {
-        const foundIndex = fields.description.findIndex(
-          (c) => c.language === activeLanguage
-        );
+  const getCountriesForOption = useMemo(() => {
+    const a = [...countries]
+      .sort((a, b) => a.sort_order - b.sort_order)
+      .map((c) => {
+        const { name } = c.description.find((c) => c.language === "tr");
 
-        draft.description[foundIndex][e.target.name] = e.target.value;
-      })
-    );
-  };
+        return {
+          key: c.id,
+          value: c.id,
+          text: name,
+        };
+      });
 
-  const getLanguagesForMenu = useMemo(() => {
-    return (languages as Language[]).map((language) => {
-      return {
-        menuItem: (
-          <Menu.Item
-            key={language.code}
-            content={language.name}
-            onClick={() => setActiveLanguage(language.code)}
-            active={language.code === activeLanguage}
-          ></Menu.Item>
-        ),
-      };
-    });
-  }, [languages, activeLanguage]);
+    return a;
+  }, [countries]);
 
   const panes = [
     {
       menuItem: "Genel",
       render: () => {
-        const fieldsToUse = fields.description.find(
-          (description) => description.language === activeLanguage
-        );
         return (
           <Tab.Pane attached={false}>
             <Form.Field
@@ -209,16 +164,27 @@ export default function AddPage() {
                 onChange={handleNormalInputChange}
               />
             </Form.Field>
+
             <Form.Field>
-              <Tab menu={{ pointing: true }} panes={getLanguagesForMenu} />
-            </Form.Field>
-            <Form.Field>
-              <label>Ülke Adı</label>
+              <label>Şehir Adı</label>
               <input
                 type="text"
                 name="name"
-                value={fieldsToUse?.name || ""}
-                onChange={handleLanguageInputChange}
+                value={fields.name || ""}
+                onChange={handleNormalInputChange}
+              />
+            </Form.Field>
+            <Form.Field>
+              <label>Ülke</label>
+              <Select
+                options={getCountriesForOption}
+                value={fields.country_id}
+                onChange={(_e, { value }: { value: string }) => {
+                  setFields({
+                    ...fields,
+                    country_id: value,
+                  });
+                }}
               />
             </Form.Field>
           </Tab.Pane>
@@ -227,7 +193,7 @@ export default function AddPage() {
     },
   ];
 
-  if (addCountryLoading || languagesLoading) {
+  if (countriesLoading || addZoneLoading) {
     return (
       <Segment className="page-loader">
         <Dimmer active>
@@ -240,7 +206,7 @@ export default function AddPage() {
   return (
     <SEO
       seo={{
-        meta_title: "Ülke Ekle - Oyuncu Giyim",
+        meta_title: "Şehir Ekle - Oyuncu Giyim",
         meta_description: "",
         meta_keyword: "",
       }}
@@ -262,7 +228,7 @@ export default function AddPage() {
             color="blue"
           >
             <Icon name="add square" />
-            Ülke Ekle
+            Şehir Ekle
           </Button>
         </Form>
       </section>

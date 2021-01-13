@@ -230,6 +230,23 @@ exports.up = async function (knex) {
       table.increments();
       table.string("name").notNullable().defaultTo("");
       table.text("description").defaultTo("");
+      table.integer("sort_order");
+    })
+    .createTable(tableNames.zone_geo_zone, (table) => {
+      table.increments();
+      table
+        .integer("country_id")
+        .references("id")
+        .inTable(tableNames.country)
+        .onDelete("cascade")
+        .notNullable();
+      table.integer("zone_id").notNullable();
+      table
+        .integer("geo_zone_id")
+        .references("id")
+        .inTable(tableNames.geo_zone)
+        .onDelete("cascade")
+        .notNullable();
     });
 };
 
@@ -259,7 +276,8 @@ exports.down = async function (knex) {
   await knex.schema.dropTableIfExists(tableNames.option_description);
   await knex.schema.dropTableIfExists(tableNames.option);
 
-  //clear country / zone / geo_zone
+  //clear country / zone / geo_zone / zone_geo_zone
+  await knex.schema.dropTableIfExists(tableNames.zone_geo_zone);
   await knex.schema.dropTableIfExists(tableNames.geo_zone);
   await knex.schema.dropTableIfExists(tableNames.zone);
   await knex.schema.dropTableIfExists(tableNames.country_description);

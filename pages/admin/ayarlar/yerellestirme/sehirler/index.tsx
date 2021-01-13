@@ -1,95 +1,93 @@
-import { GetStaticProps } from "next";
 import SEO from "../../../../../components/Seo";
 import {
   Icon,
-  Label,
-  Menu,
   Table,
   Button,
   Segment,
   Dimmer,
   Loader,
 } from "semantic-ui-react";
-import {
-  Fragment,
-  ReactText,
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
-import {
-  GET_CATEGORIES,
-  GET_CATEGORIES_ADMIN,
-} from "../../../../../apollo/gql/query/category";
+import { ReactText, useEffect, useState } from "react";
 import { DELETE_CATEGORY } from "../../../../../apollo/gql/mutations/category";
 import { useLazyQuery, useMutation } from "@apollo/client";
 import Link from "next/link";
 import { useDispatch } from "react-redux";
 import { putAdminRequestError } from "../../../../../store/reducers/admin";
-import { GET_PAGES_ADMIN } from "../../../../../apollo/gql/query/page";
-import { DELETE_PAGE } from "../../../../../apollo/gql/mutations/page";
-import { GET_COUNTRIES_ADMIN } from "../../../../../apollo/gql/query/localization/country";
 import { DELETE_COUNTRY } from "../../../../../apollo/gql/mutations/localization/country";
+import { Country } from "../ulkeler";
+import { GET_ZONES_ADMIN } from "../../../../../apollo/gql/query/localization/zone";
+import { DELETE_ZONE } from "../../../../../apollo/gql/mutations/localization/zone";
 
-export interface CountryDescription {
-  name: string;
-  language: string;
-}
-
-export interface Country {
+export interface Zone {
   id: ReactText;
-  description: CountryDescription[] | null;
+  name: string;
   status: boolean;
   sort_order: number;
+  country: Country | null;
+  country_id: number | string;
 }
 
-interface CountryRowType {
-  country: Country;
+interface ZoneRowType {
+  zone: Zone;
 }
 
 export default function AdminDashboard() {
-  const [countries, setCountries] = useState([]);
+  const [zones, setZones] = useState([]);
   const dispatch = useDispatch();
 
-  const [getCountries, { data, loading, error }] = useLazyQuery(
-    GET_COUNTRIES_ADMIN,
-    {
-      fetchPolicy: "no-cache",
-    }
-  );
+  const [getZones, { data, loading, error }] = useLazyQuery(GET_ZONES_ADMIN, {
+    fetchPolicy: "no-cache",
+  });
 
   const [
-    deleteCountryRun,
+    deleteZoneRun,
     {
-      loading: deleteCountryLoading,
-      error: deleteCountryError,
-      data: deleteCountryResponse,
+      loading: deleteZoneLoading,
+      error: deleteZoneError,
+      data: deleteZoneResponse,
     },
-  ] = useMutation(DELETE_COUNTRY);
+  ] = useMutation(DELETE_ZONE);
 
   useEffect(() => {
-    getCountries();
+    getZones();
   }, []);
 
   useEffect(() => {
-    if (data && data.countriesOnAdmin) {
-      setCountries(data.countriesOnAdmin);
+    if (data && data.zonesOnAdmin) {
+      setZones(data.zonesOnAdmin);
     }
   }, [data]);
 
-  const CountryRow: React.FC<CountryRowType> = ({ country }) => {
-    const { name } = country.description.find(
+  const ZoneRow: React.FC<ZoneRowType> = ({ zone }) => {
+    const { name: countryName } = zone.country.description.find(
       (description) => description.language === "tr"
     );
 
     return (
-      <Table.Row key={country.id}>
-        <Table.Cell>{name}</Table.Cell>
-        <Table.Cell textAlign="center">{country.sort_order}</Table.Cell>
+      <Table.Row key={zone.id}>
+        <Table.Cell>
+          {countryName}
+          <Icon
+            name="chevron right"
+            size="small"
+            style={{ marginRight: 1, marginLeft: 1 }}
+          />
+          <span
+            style={{
+              background: "#1a69a4",
+              color: "#fff",
+              padding: 5,
+              borderRadius: ".28571429rem",
+              lineHeight: 2,
+            }}
+          >
+            {zone.name}
+          </span>
+        </Table.Cell>
+        <Table.Cell textAlign="center">{zone.sort_order}</Table.Cell>
         <Table.Cell singleLine>
           <Link
-            href={`/admin/ayarlar/yerellestirme/ulkeler/duzenle/${country.id}`}
+            href={`/admin/ayarlar/yerellestirme/sehirler/duzenle/${zone.id}`}
           >
             <a>
               <Button icon labelPosition="left" size="tiny" color="teal">
@@ -102,19 +100,19 @@ export default function AdminDashboard() {
             icon="trash"
             size="tiny"
             color="red"
-            onClick={() => handleDeleteCountry(country.id)}
+            onClick={() => handleDeleteZone(zone.id)}
           ></Button>
         </Table.Cell>
       </Table.Row>
     );
   };
 
-  const handleDeleteCountry = async (countryId) => {
+  const handleDeleteZone = async (zoneId) => {
     try {
-      await deleteCountryRun({
+      await deleteZoneRun({
         variables: {
           input: {
-            id: countryId,
+            id: zoneId,
           },
         },
       });
@@ -123,10 +121,10 @@ export default function AdminDashboard() {
       dispatch(putAdminRequestError(err.message));
     }
 
-    getCountries();
+    getZones();
   };
 
-  if (loading || deleteCountryLoading) {
+  if (loading || deleteZoneLoading) {
     return (
       <Segment className="page-loader">
         <Dimmer active>
@@ -139,12 +137,12 @@ export default function AdminDashboard() {
   return (
     <SEO
       seo={{
-        meta_title: "Ülkeler - Oyuncu Giyim",
+        meta_title: "Şehirler - Oyuncu Giyim",
         meta_description: "",
         meta_keyword: "",
       }}
     >
-      <section className="admin-countries-page">
+      <section className="admin-zones-page">
         <Table
           celled
           compact
@@ -153,11 +151,11 @@ export default function AdminDashboard() {
           <Table.Header>
             <Table.Row>
               <Table.HeaderCell colSpan="3" textAlign="right">
-                <Link href="/admin/ayarlar/yerellestirme/ulkeler/ekle">
+                <Link href="/admin/ayarlar/yerellestirme/sehirler/ekle">
                   <a>
                     <Button icon labelPosition="left" size="tiny" color="blue">
                       <Icon name="add square" />
-                      Ülke Ekle
+                      Şehir Ekle
                     </Button>
                   </a>
                 </Link>
@@ -168,7 +166,7 @@ export default function AdminDashboard() {
         <Table celled compact className="admin-results-table">
           <Table.Header>
             <Table.Row>
-              <Table.HeaderCell>Ülkeler</Table.HeaderCell>
+              <Table.HeaderCell>Şehirler</Table.HeaderCell>
               <Table.HeaderCell collapsing textAlign="center">
                 Sıralama
               </Table.HeaderCell>
@@ -179,16 +177,16 @@ export default function AdminDashboard() {
           </Table.Header>
 
           <Table.Body>
-            {countries && countries.length > 0 ? (
-              [...countries]
+            {zones && zones.length > 0 ? (
+              [...zones]
                 .sort((a, b) => a.sort_order - b.sort_order)
-                .map((country) => {
-                  return <CountryRow key={country.id} country={country} />;
+                .map((zone) => {
+                  return <ZoneRow key={zone.id} zone={zone} />;
                 })
             ) : (
               <Table.Row>
                 <Table.HeaderCell colSpan="3" textAlign="center">
-                  Ülke Bulunamadı
+                  Şehir Bulunamadı
                 </Table.HeaderCell>
               </Table.Row>
             )}

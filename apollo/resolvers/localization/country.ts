@@ -1,15 +1,15 @@
 import { UserInputError, ValidationError } from "apollo-server-micro";
-import { CategoryDescription } from "../../database/models/category";
-import { Language } from "../../database/models/language";
+import { CategoryDescription } from "../../../database/models/category";
+import { Language } from "../../../database/models/localization/language";
 import {
   addCountryValidate,
   deleteCountryValidate,
   Country,
   CountryDescription,
   updateCountryValidate,
-} from "../../database/models/country";
-import { tableNames } from "../../database/tableNames";
-import { getLanguage } from "./helpers";
+} from "../../../database/models/localization/country";
+import { tableNames } from "../../../database/tableNames";
+import { getLanguage } from "../helpers";
 
 // resolver lar yapılcak
 
@@ -121,7 +121,7 @@ export default {
       const isCountryExists = await Country.query().first().where("id", id);
 
       if (!isCountryExists) {
-        throw new UserInputError(`Sayfa Bulunamadı.`);
+        throw new UserInputError(`Ülke Bulunamadı.`);
       }
 
       let biggestSortOrder;

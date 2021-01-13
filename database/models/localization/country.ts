@@ -1,6 +1,7 @@
 import Joi from "joi";
 import { Model } from "objection";
-import { tableNames } from "../tableNames";
+import { tableNames } from "../../tableNames";
+import { Zone } from "./zone";
 
 export class CountryDescription extends Model {
   static get tableName() {
@@ -43,6 +44,14 @@ export class Country extends Model {
         join: {
           from: `${tableNames.country}.id`,
           to: `${tableNames.country_description}.country_id`,
+        },
+      },
+      zone: {
+        relation: Model.HasManyRelation,
+        modelClass: Zone,
+        join: {
+          from: `${tableNames.country}.id`,
+          to: `${tableNames.zone}.country_id`,
         },
       },
     };

@@ -8,7 +8,7 @@ export class DesktopMenuDescription extends Model {
   }
 
   static get relationMappings() {
-    const { Language } = require("./language");
+    const { Language } = require("./localization/language");
     return {
       desktop_menu: {
         relation: Model.BelongsToOneRelation,
@@ -103,7 +103,7 @@ export class MobileMenuDescription extends Model {
   }
 
   static get relationMappings() {
-    const { Language } = require("./language");
+    const { Language } = require("./localization/language");
     return {
       mobile_menu: {
         relation: Model.BelongsToOneRelation,

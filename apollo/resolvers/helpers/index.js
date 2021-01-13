@@ -1,4 +1,4 @@
-import { Language } from "../../../database/models/language";
+import { Language } from "../../../database/models/localization/language";
 
 export const getLanguage = async (params) => {
   const validLanguageCodes = await Language.query().select(

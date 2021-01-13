@@ -55,7 +55,7 @@ body .main-wrapper.admin-layout {
         height: 100%;
         transform: translateX(-100%);
       }
-      li {
+      > li {
         &:first-child {
           @media #{$br1199} {
             display: none;

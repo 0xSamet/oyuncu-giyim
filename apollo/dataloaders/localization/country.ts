@@ -1,6 +1,7 @@
 import DataLoader from "dataloader";
-import { CountryDescription } from "../../database/models/country";
-import { tableNames } from "../../database/tableNames";
+import { CountryDescription } from "../../../database/models/localization/country";
+import { Zone } from "../../../database/models/localization/zone";
+import { tableNames } from "../../../database/tableNames";
 
 export const countryDescriptionLoader = new DataLoader(
   async (keys: Array<{ id: number; language: "string" }>) => {

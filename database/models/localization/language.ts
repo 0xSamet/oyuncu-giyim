@@ -1,6 +1,6 @@
 import Joi from "joi";
 import { Model } from "objection";
-import { tableNames } from "../tableNames";
+import { tableNames } from "../../tableNames";
 
 export class Language extends Model {
   static get tableName() {

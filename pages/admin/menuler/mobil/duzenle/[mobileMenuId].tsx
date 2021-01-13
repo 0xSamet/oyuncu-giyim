@@ -18,7 +18,7 @@ import { useRouter } from "next/router";
 import { useDispatch } from "react-redux";
 import produce from "immer";
 import { putAdminRequestError } from "../../../../../store/reducers/admin";
-import { GET_LANGUAGES } from "../../../../../apollo/gql/query/language";
+import { GET_LANGUAGES } from "../../../../../apollo/gql/query/localization/language";
 import { MobileMenu, MobileMenuDescription } from "../../index";
 import { Language } from "../../../ayarlar/yerellestirme/diller";
 import { UPDATE_MOBILE_MENU } from "../../../../../apollo/gql/mutations/menu";

@@ -33,7 +33,7 @@ import produce from "immer";
 
 import { Tab } from "semantic-ui-react";
 import { putAdminRequestError } from "../../../../store/reducers/admin";
-import { GET_LANGUAGES } from "../../../../apollo/gql/query/language";
+import { GET_LANGUAGES } from "../../../../apollo/gql/query/localization/language";
 import { Category, CategoryDescription } from "../index";
 import { Language } from "../../ayarlar/yerellestirme/diller";
 import Editor from "../../../../components/Editor";

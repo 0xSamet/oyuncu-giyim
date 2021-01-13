@@ -311,4 +311,41 @@ exports.seed = async function (knex) {
       slug: "/",
     },
   ]);
+
+  await knex(tableNames.country).insert([
+    {
+      sort_order: 0,
+    },
+  ]);
+
+  await knex(tableNames.country_description).insert([
+    {
+      country_id: 1,
+      language_id: 1,
+      name: "Türkiye",
+    },
+    {
+      country_id: 1,
+      language_id: 2,
+      name: "Turkey",
+    },
+  ]);
+
+  await knex(tableNames.zone).insert([
+    {
+      country_id: 1,
+      name: "İstanbul",
+      sort_order: 0,
+    },
+    {
+      country_id: 1,
+      name: "Sivas",
+      sort_order: 1,
+    },
+    {
+      country_id: 1,
+      name: "Sakarya",
+      sort_order: 2,
+    },
+  ]);
 };

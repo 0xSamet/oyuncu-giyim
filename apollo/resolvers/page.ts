@@ -1,6 +1,6 @@
 import { UserInputError, ValidationError } from "apollo-server-micro";
 import { CategoryDescription } from "../../database/models/category";
-import { Language } from "../../database/models/language";
+import { Language } from "../../database/models/localization/language";
 import {
   addPageValidate,
   deletePageValidate,

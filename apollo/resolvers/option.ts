@@ -1,5 +1,5 @@
 import { UserInputError, ValidationError } from "apollo-server-micro";
-import { Language } from "../../database/models/language";
+import { Language } from "../../database/models/localization/language";
 import {
   addOptionValidate,
   Option,

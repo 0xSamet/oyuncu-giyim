@@ -16,6 +16,7 @@ const tableNames = {
   country_description: "country_description",
   zone: "zone",
   geo_zone: "geo_zone",
+  zone_geo_zone: "zone_geo_zone",
 };
 
 module.exports = {

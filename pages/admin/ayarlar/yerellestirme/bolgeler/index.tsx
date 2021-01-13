@@ -31,65 +31,65 @@ import { GET_PAGES_ADMIN } from "../../../../../apollo/gql/query/page";
 import { DELETE_PAGE } from "../../../../../apollo/gql/mutations/page";
 import { GET_COUNTRIES_ADMIN } from "../../../../../apollo/gql/query/localization/country";
 import { DELETE_COUNTRY } from "../../../../../apollo/gql/mutations/localization/country";
+import { GET_GEO_ZONES_ADMIN } from "../../../../../apollo/gql/query/localization/geo_zone";
+import { DELETE_GEO_ZONE } from "../../../../../apollo/gql/mutations/localization/geo_zone";
 
-export interface CountryDescription {
-  name: string;
-  language: string;
+export interface ZonesType {
+  id?: number | string;
+  country_id: number | string;
+  zone_id: number | string;
 }
 
-export interface Country {
+export interface GeoZone {
   id: ReactText;
-  description: CountryDescription[] | null;
-  status: boolean;
+  name: string;
+  description: string;
   sort_order: number;
+  zones: ZonesType[] | undefined[] | null;
 }
 
-interface CountryRowType {
-  country: Country;
+interface GeoZoneRowType {
+  geoZone: GeoZone;
 }
 
 export default function AdminDashboard() {
-  const [countries, setCountries] = useState([]);
+  const [geoZones, setGeoZones] = useState([]);
   const dispatch = useDispatch();
 
-  const [getCountries, { data, loading, error }] = useLazyQuery(
-    GET_COUNTRIES_ADMIN,
+  const [getGeoZones, { data, loading, error }] = useLazyQuery(
+    GET_GEO_ZONES_ADMIN,
     {
       fetchPolicy: "no-cache",
     }
   );
 
   const [
-    deleteCountryRun,
+    deleteGeoZoneRun,
     {
-      loading: deleteCountryLoading,
-      error: deleteCountryError,
-      data: deleteCountryResponse,
+      loading: deleteGeoZoneLoading,
+      error: deleteGeoZoneError,
+      data: deleteGeoZoneResponse,
     },
-  ] = useMutation(DELETE_COUNTRY);
+  ] = useMutation(DELETE_GEO_ZONE);
 
   useEffect(() => {
-    getCountries();
+    getGeoZones();
   }, []);
 
   useEffect(() => {
-    if (data && data.countriesOnAdmin) {
-      setCountries(data.countriesOnAdmin);
+    if (data && data.geoZonesOnAdmin) {
+      setGeoZones(data.geoZonesOnAdmin);
     }
   }, [data]);
 
-  const CountryRow: React.FC<CountryRowType> = ({ country }) => {
-    const { name } = country.description.find(
-      (description) => description.language === "tr"
-    );
-
+  const GeoZoneRow: React.FC<GeoZoneRowType> = ({ geoZone }) => {
     return (
-      <Table.Row key={country.id}>
-        <Table.Cell>{name}</Table.Cell>
-        <Table.Cell textAlign="center">{country.sort_order}</Table.Cell>
+      <Table.Row key={geoZone.id}>
+        <Table.Cell>{geoZone.name}</Table.Cell>
+        <Table.Cell textAlign="center">{geoZone.sort_order}</Table.Cell>
         <Table.Cell singleLine>
           <Link
-            href={`/admin/ayarlar/yerellestirme/ulkeler/duzenle/${country.id}`}
+            href={`/admin/ayarlar/yerellestirme/bolgeler/duzenle/${geoZone.id}`}
           >
             <a>
               <Button icon labelPosition="left" size="tiny" color="teal">
@@ -102,19 +102,19 @@ export default function AdminDashboard() {
             icon="trash"
             size="tiny"
             color="red"
-            onClick={() => handleDeleteCountry(country.id)}
+            onClick={() => handleDeleteGeoZone(geoZone.id)}
           ></Button>
         </Table.Cell>
       </Table.Row>
     );
   };
 
-  const handleDeleteCountry = async (countryId) => {
+  const handleDeleteGeoZone = async (geoZoneId) => {
     try {
-      await deleteCountryRun({
+      await deleteGeoZoneRun({
         variables: {
           input: {
-            id: countryId,
+            id: geoZoneId,
           },
         },
       });
@@ -123,10 +123,10 @@ export default function AdminDashboard() {
       dispatch(putAdminRequestError(err.message));
     }
 
-    getCountries();
+    getGeoZones();
   };
 
-  if (loading || deleteCountryLoading) {
+  if (loading || deleteGeoZoneLoading) {
     return (
       <Segment className="page-loader">
         <Dimmer active>
@@ -139,7 +139,7 @@ export default function AdminDashboard() {
   return (
     <SEO
       seo={{
-        meta_title: "Ülkeler - Oyuncu Giyim",
+        meta_title: "Bölgeler - Oyuncu Giyim",
         meta_description: "",
         meta_keyword: "",
       }}
@@ -153,11 +153,11 @@ export default function AdminDashboard() {
           <Table.Header>
             <Table.Row>
               <Table.HeaderCell colSpan="3" textAlign="right">
-                <Link href="/admin/ayarlar/yerellestirme/ulkeler/ekle">
+                <Link href="/admin/ayarlar/yerellestirme/bolgeler/ekle">
                   <a>
                     <Button icon labelPosition="left" size="tiny" color="blue">
                       <Icon name="add square" />
-                      Ülke Ekle
+                      Bölge Ekle
                     </Button>
                   </a>
                 </Link>
@@ -168,7 +168,7 @@ export default function AdminDashboard() {
         <Table celled compact className="admin-results-table">
           <Table.Header>
             <Table.Row>
-              <Table.HeaderCell>Ülkeler</Table.HeaderCell>
+              <Table.HeaderCell>Bölgeler</Table.HeaderCell>
               <Table.HeaderCell collapsing textAlign="center">
                 Sıralama
               </Table.HeaderCell>
@@ -179,16 +179,16 @@ export default function AdminDashboard() {
           </Table.Header>
 
           <Table.Body>
-            {countries && countries.length > 0 ? (
-              [...countries]
+            {geoZones && geoZones.length > 0 ? (
+              [...geoZones]
                 .sort((a, b) => a.sort_order - b.sort_order)
-                .map((country) => {
-                  return <CountryRow key={country.id} country={country} />;
+                .map((geoZone) => {
+                  return <GeoZoneRow key={geoZone.id} geoZone={geoZone} />;
                 })
             ) : (
               <Table.Row>
                 <Table.HeaderCell colSpan="3" textAlign="center">
-                  Ülke Bulunamadı
+                  Bölge Bulunamadı
                 </Table.HeaderCell>
               </Table.Row>
             )}

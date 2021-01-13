@@ -11,8 +11,8 @@ import SEO from "../../../../../components/Seo";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useLazyQuery, useMutation } from "@apollo/client";
-import { GET_LANGUAGES } from "../../../../../apollo/gql/query/language";
-import { DELETE_LANGUAGE } from "../../../../../apollo/gql/mutations/language";
+import { GET_LANGUAGES } from "../../../../../apollo/gql/query/localization/language";
+import { DELETE_LANGUAGE } from "../../../../../apollo/gql/mutations/localization/language";
 import { putAdminRequestError } from "../../../../../store/reducers/admin";
 
 export interface Language {

@@ -49,14 +49,7 @@ function LeftMenuListItemV2({ menu, menus, setMenus }) {
   });
 
   return (
-    <li
-      className={clsx({
-        active:
-          (Array.isArray(menu.index)
-            ? menu.index[menu.index.length - 1]
-            : menu.index) === indexFromStore,
-      })}
-    >
+    <li>
       <Link href={menu.link}>
         <a
           onClick={(e) => {

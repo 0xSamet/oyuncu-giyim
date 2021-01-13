@@ -8,7 +8,7 @@ export class PageDescription extends Model {
   }
 
   static get relationMappings() {
-    const { Language } = require("./language");
+    const { Language } = require("./localization/language");
     return {
       page: {
         relation: Model.BelongsToOneRelation,

@@ -8,7 +8,7 @@ export class CategoryDescription extends Model {
   }
 
   static get relationMappings() {
-    const { Language } = require("./language");
+    const { Language } = require("./localization/language");
     return {
       category: {
         relation: Model.BelongsToOneRelation,

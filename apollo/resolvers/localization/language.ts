@@ -4,7 +4,7 @@ import {
   deleteLanguageValidate,
   Language,
   updateLanguageValidate,
-} from "../../database/models/language";
+} from "../../../database/models/localization/language";
 
 export default {
   Query: {
