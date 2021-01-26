@@ -8,7 +8,7 @@ import {
   CountryDescription,
   updateCountryValidate,
 } from "../../../database/models/localization/country";
-import { tableNames } from "../../../database/tableNames";
+import tableNames from "../../../database/tableNames";
 import { getLanguage } from "../helpers";
 
 // resolver lar yapılcak

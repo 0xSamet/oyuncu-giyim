@@ -1,7 +1,6 @@
 import Joi from "joi";
 import { Model } from "objection";
-import { tableNames } from "../../tableNames";
-import { Country } from "./country";
+import tableNames from "../../tableNames";
 
 export class GeoZone extends Model {
   static get tableName() {

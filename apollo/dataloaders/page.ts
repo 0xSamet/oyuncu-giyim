@@ -1,6 +1,6 @@
 import DataLoader from "dataloader";
 import { PageDescription } from "../../database/models/page";
-import { tableNames } from "../../database/tableNames";
+import tableNames from "../../database/tableNames";
 
 export const pageDescriptionLoader = new DataLoader(
   async (keys: Array<{ id: number; language: "string" }>) => {

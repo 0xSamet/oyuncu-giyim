@@ -1,5 +1,5 @@
 const Knex = require("knex");
-const { tableNames } = require("../tableNames");
+const tableNames = require("../tableNames");
 
 /**
  * @param {Knex} knex
@@ -346,6 +346,21 @@ exports.seed = async function (knex) {
       country_id: 1,
       name: "Sakarya",
       sort_order: 2,
+    },
+  ]);
+
+  await knex(tableNames.geo_zone).insert([
+    {
+      name: "Türkiye Bölgesi",
+      sort_order: 0,
+    },
+  ]);
+
+  await knex(tableNames.zone_geo_zone).insert([
+    {
+      country_id: 1,
+      zone_id: 0,
+      geo_zone_id: 1,
     },
   ]);
 };

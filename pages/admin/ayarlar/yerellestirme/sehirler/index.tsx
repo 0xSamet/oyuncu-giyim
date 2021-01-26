@@ -17,6 +17,7 @@ import { DELETE_COUNTRY } from "../../../../../apollo/gql/mutations/localization
 import { Country } from "../ulkeler";
 import { GET_ZONES_ADMIN } from "../../../../../apollo/gql/query/localization/zone";
 import { DELETE_ZONE } from "../../../../../apollo/gql/mutations/localization/zone";
+import { changeDesktopMenuIndex } from "../../../../../store/reducers/menu";
 
 export interface Zone {
   id: ReactText;
@@ -50,6 +51,7 @@ export default function AdminDashboard() {
 
   useEffect(() => {
     getZones();
+    dispatch(changeDesktopMenuIndex(13));
   }, []);
 
   useEffect(() => {

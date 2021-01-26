@@ -1,7 +1,7 @@
 import DataLoader from "dataloader";
 //import db from "../../database/connect";
 import { Category, CategoryDescription } from "../../database/models/category";
-import { tableNames } from "../../database/tableNames";
+import tableNames from "../../database/tableNames";
 
 export function getParentCategories(categories, category, result = []) {
   const parent = categories.find((a) => a.id == category.parent_id);

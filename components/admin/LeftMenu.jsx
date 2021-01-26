@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import clsx from "clsx";
 import Link from "next/link";
 import { useDispatch, useSelector } from "react-redux";
@@ -6,7 +6,7 @@ import { useSpring, animated } from "react-spring";
 import { toggleIconMode } from "../../store/reducers/theme";
 import produce from "immer";
 
-function LeftMenuListItemV2({ menu, menus, setMenus }) {
+function LeftMenuListItem({ menu, menus, setMenus }) {
   const {
     menu: {
       desktopMenu: { index: indexFromStore },
@@ -28,7 +28,8 @@ function LeftMenuListItemV2({ menu, menus, setMenus }) {
             if (
               subSubMenu.submenu &&
               subSubMenu.submenu.length > 0 &&
-              subSubMenu.isActive
+              subSubMenu.isActive &&
+              subMenu.isActive
             ) {
               total += subSubMenu.submenu.length;
             }
@@ -49,7 +50,11 @@ function LeftMenuListItemV2({ menu, menus, setMenus }) {
   });
 
   return (
-    <li>
+    <li
+      className={clsx({
+        active: menu.pageIndex === indexFromStore,
+      })}
+    >
       <Link href={menu.link}>
         <a
           onClick={(e) => {
@@ -113,7 +118,8 @@ function LeftMenuListItemV2({ menu, menus, setMenus }) {
         <animated.ul style={props} className="submenu">
           {menu.submenu.map((menu) => {
             return (
-              <LeftMenuListItemV2
+              <LeftMenuListItem
+                key={menu.index}
                 index={
                   Array.isArray(menu.index)
                     ? menu.index[menu.index.length - 1]
@@ -133,9 +139,17 @@ function LeftMenuListItemV2({ menu, menus, setMenus }) {
 
 export default function LeftMenu() {
   const dispatch = useDispatch();
+  const {
+    menu: {
+      desktopMenu: { index: indexFromStore },
+    },
+    theme: { iconMode },
+  } = useSelector((state) => state);
+  const [firstLoad, setFirstLoad] = useState(false);
   const [menus, setMenus] = useState([
     {
       index: 0,
+      pageIndex: 0,
       text: "Dashboard",
       link: "/admin/dashboard",
       icon: "/static/icons/admin/dashboard.svg",
@@ -143,6 +157,7 @@ export default function LeftMenu() {
     },
     {
       index: 1,
+      pageIndex: 1,
       text: "Siparişler",
       link: "/admin/siparisler",
       icon: "/static/icons/admin/orders.svg",
@@ -151,6 +166,7 @@ export default function LeftMenu() {
 
     {
       index: 2,
+      pageIndex: 2,
       text: "Müşteriler",
       link: "/admin/musteriler",
       icon: "/static/icons/admin/customers.svg",
@@ -162,6 +178,7 @@ export default function LeftMenu() {
     },
     {
       index: 4,
+      pageIndex: 4,
       text: "Ürünler",
       link: "/admin/urunler",
       icon: "/static/icons/sweat.svg",
@@ -169,6 +186,7 @@ export default function LeftMenu() {
     },
     {
       index: 5,
+      pageIndex: 5,
       text: "Kategoriler",
       link: "/admin/kategoriler",
       icon: "/static/icons/categories.svg",
@@ -176,6 +194,7 @@ export default function LeftMenu() {
     },
     {
       index: 6,
+      pageIndex: 6,
       text: "Seçenekler",
       link: "/admin/secenekler",
       icon: "/static/icons/admin/options.svg",
@@ -187,6 +206,7 @@ export default function LeftMenu() {
     },
     {
       index: 8,
+      pageIndex: 8,
       text: "Menüler",
       link: "/admin/menuler",
       icon: "/static/icons/admin/hamburger.svg",
@@ -194,6 +214,7 @@ export default function LeftMenu() {
     },
     {
       index: 9,
+      pageIndex: 9,
       text: "Sayfalar",
       link: "/admin/sayfalar",
       icon: "/static/icons/admin/pages.svg",
@@ -201,6 +222,7 @@ export default function LeftMenu() {
     },
     {
       index: 10,
+      pageIndex: 10,
       text: "Ayarlar",
       link: "/admin/ayarlar",
       icon: "/static/icons/settings.svg",
@@ -215,6 +237,7 @@ export default function LeftMenu() {
           submenu: [
             {
               index: [10, 0, 0],
+              pageIndex: 11,
               text: "Diller",
               link: "/admin/ayarlar/yerellestirme/diller",
               icon: "/static/icons/admin/language.svg",
@@ -222,6 +245,7 @@ export default function LeftMenu() {
             },
             {
               index: [10, 0, 1],
+              pageIndex: 12,
               text: "Ülkeler",
               link: "/admin/ayarlar/yerellestirme/ulkeler",
               icon: "/static/icons/admin/world.svg",
@@ -229,6 +253,7 @@ export default function LeftMenu() {
             },
             {
               index: [10, 0, 2],
+              pageIndex: 13,
               text: "Şehirler",
               link: "/admin/ayarlar/yerellestirme/sehirler",
               icon: "/static/icons/admin/world.svg",
@@ -236,6 +261,7 @@ export default function LeftMenu() {
             },
             {
               index: [10, 0, 3],
+              pageIndex: 14,
               text: "Bölgeler",
               link: "/admin/ayarlar/yerellestirme/bolgeler",
               icon: "/static/icons/admin/world.svg",
@@ -250,6 +276,7 @@ export default function LeftMenu() {
               submenu: [
                 {
                   index: [10, 0, 4, 0],
+                  pageIndex: 15,
                   text: "Vergi Sınıfları",
                   link: "/admin/ayarlar/yerellestirme/vergiler/vergi-siniflari",
                   icon: "/static/icons/admin/tax.svg",
@@ -257,6 +284,7 @@ export default function LeftMenu() {
                 },
                 {
                   index: [10, 0, 4, 1],
+                  pageIndex: 16,
                   text: "Vergi Oranları",
                   link: "/admin/ayarlar/yerellestirme/vergiler/vergi-oranlari",
                   icon: "/static/icons/admin/tax.svg",
@@ -269,6 +297,55 @@ export default function LeftMenu() {
       ],
     },
   ]);
+
+  const handleDeep = (menusForF, result = []) => {
+    menusForF.forEach((menu) => {
+      if (menu.submenu && menu.submenu.length > 0) {
+        //console.log(`Working for ${menu.text}`);
+        const tryFound = menu.submenu.find((subMenu) => {
+          if (subMenu.pageIndex) {
+            return subMenu.pageIndex === indexFromStore;
+          } else {
+            return false;
+          }
+        });
+        if (tryFound) {
+          //console.log("buldum", tryFound);
+          let indexesStrings = [];
+          tryFound.index.forEach((_, index) => {
+            const getIndexes = tryFound.index.slice(0, index + 1);
+            let handleString = "";
+            getIndexes.forEach((realIndex, currentIndex) => {
+              handleString += `[${realIndex}]${
+                currentIndex + 1 != getIndexes.length ? ".submenu" : ""
+              }`;
+            });
+            indexesStrings.push(handleString);
+          });
+          //console.log("indexes ready", indexesStrings);
+
+          setMenus(
+            produce(menus, (draft) => {
+              indexesStrings.forEach((index) => {
+                eval(`draft${index}.isActive = true;`);
+              });
+            })
+          );
+          setFirstLoad(true);
+        } else {
+          return handleDeep(menu.submenu, result);
+        }
+      }
+    });
+  };
+
+  useEffect(() => {
+    if (indexFromStore !== -1) {
+      if (!firstLoad) {
+        handleDeep([...menus]);
+      }
+    }
+  }, [indexFromStore]);
 
   const handleIconMode = () => {
     return dispatch(toggleIconMode());
@@ -285,25 +362,18 @@ export default function LeftMenu() {
         </a>
       </li>
       {menus.map((menu) => {
+        const menuIndex = Array.isArray(menu.index)
+          ? menu.index[menu.index.length - 1]
+          : menu.index;
         if (menu.divider) {
           return (
-            <LeftMenuListItemV2
-              index={
-                Array.isArray(menu.index)
-                  ? menu.index[menu.index.length - 1]
-                  : menu.index
-              }
-              menu={menu}
-            />
+            <LeftMenuListItem key={menu.index} index={menuIndex} menu={menu} />
           );
         } else {
           return (
-            <LeftMenuListItemV2
-              index={
-                Array.isArray(menu.index)
-                  ? menu.index[menu.index.length - 1]
-                  : menu.index
-              }
+            <LeftMenuListItem
+              key={menu.index}
+              index={menuIndex}
               menu={menu}
               menus={menus}
               setMenus={setMenus}

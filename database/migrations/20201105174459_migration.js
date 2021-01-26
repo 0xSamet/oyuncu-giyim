@@ -1,5 +1,5 @@
 const Knex = require("knex");
-const { tableNames } = require("../tableNames");
+const tableNames = require("../tableNames");
 
 /**
  * @param {Knex} knex
@@ -247,6 +247,41 @@ exports.up = async function (knex) {
         .inTable(tableNames.geo_zone)
         .onDelete("cascade")
         .notNullable();
+    })
+    .createTable(tableNames.tax_rate, (table) => {
+      table.increments();
+      table
+        .integer("geo_zone_id")
+        .references("id")
+        .inTable(tableNames.geo_zone)
+        .onDelete("cascade")
+        .notNullable();
+      table.string("name").notNullable().defaultTo("");
+      table.float("rate").notNullable().defaultTo(0);
+      table.string("type").notNullable().defaultTo("P");
+      table.integer("sort_order");
+    })
+    .createTable(tableNames.tax_class, (table) => {
+      table.increments();
+      table.string("name").notNullable().defaultTo("");
+      table.text("description").defaultTo("");
+      table.integer("sort_order");
+    })
+    .createTable(tableNames.tax_rule, (table) => {
+      table.increments();
+      table
+        .integer("tax_class_id")
+        .references("id")
+        .inTable(tableNames.tax_class)
+        .onDelete("cascade")
+        .notNullable();
+      table
+        .integer("tax_rate_id")
+        .references("id")
+        .inTable(tableNames.tax_rate)
+        .onDelete("cascade")
+        .notNullable();
+      table.integer("priority");
     });
 };
 
@@ -276,7 +311,10 @@ exports.down = async function (knex) {
   await knex.schema.dropTableIfExists(tableNames.option_description);
   await knex.schema.dropTableIfExists(tableNames.option);
 
-  //clear country / zone / geo_zone / zone_geo_zone
+  //clear country / zone / geo_zone / zone_geo_zone // taxes
+  await knex.schema.dropTableIfExists(tableNames.tax_rule);
+  await knex.schema.dropTableIfExists(tableNames.tax_class);
+  await knex.schema.dropTableIfExists(tableNames.tax_rate);
   await knex.schema.dropTableIfExists(tableNames.zone_geo_zone);
   await knex.schema.dropTableIfExists(tableNames.geo_zone);
   await knex.schema.dropTableIfExists(tableNames.zone);

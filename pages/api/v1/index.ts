@@ -28,6 +28,7 @@ import {
 } from "../../../apollo/dataloaders/localization/country";
 import { zoneCountryAdminLoader } from "../../../apollo/dataloaders/localization/zone";
 import { geoZoneZonesAdminLoader } from "../../../apollo/dataloaders/localization/geo_zone";
+import { taxClassTaxRuleAdminLoader } from "../../../apollo/dataloaders/localization/tax_class";
 
 const apolloServer = new ApolloServer({
   schema,
@@ -54,6 +55,7 @@ const apolloServer = new ApolloServer({
         countryDescriptionAdminLoader,
         zoneCountryAdminLoader,
         geoZoneZonesAdminLoader,
+        taxClassTaxRuleAdminLoader,
       },
     };
   },

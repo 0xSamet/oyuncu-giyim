@@ -83,6 +83,12 @@ export default {
       }
       let { id, name, sort_order, status, country_id } = validatedZone;
 
+      const isZoneExists: any = await Zone.query().where("id", id).first();
+
+      if (!isZoneExists) {
+        throw new ValidationError(`Şehir Bulunamadı.`);
+      }
+
       const isCountryExists: any = await Country.query()
         .where("id", country_id)
         .first();

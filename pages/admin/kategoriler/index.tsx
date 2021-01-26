@@ -27,6 +27,7 @@ import { useLazyQuery, useMutation } from "@apollo/client";
 import Link from "next/link";
 import { useDispatch } from "react-redux";
 import { putAdminRequestError } from "../../../store/reducers/admin";
+import { changeDesktopMenuIndex } from "../../../store/reducers/menu";
 
 export interface CategoryDescription {
   name: string;
@@ -75,10 +76,7 @@ export default function AdminDashboard() {
 
   useEffect(() => {
     getCategories();
-
-    return () => {
-      setCategories([]);
-    };
+    dispatch(changeDesktopMenuIndex(5));
   }, []);
 
   useEffect(() => {

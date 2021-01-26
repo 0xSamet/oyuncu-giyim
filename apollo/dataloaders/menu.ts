@@ -4,7 +4,7 @@ import {
   DesktopMenuDescription,
   MobileMenuDescription,
 } from "../../database/models/menu";
-import { tableNames } from "../../database/tableNames";
+import tableNames from "../../database/tableNames";
 
 export const desktopMenuDescriptionLoader = new DataLoader(
   async (keys: Array<{ id: number; language: "string" }>) => {

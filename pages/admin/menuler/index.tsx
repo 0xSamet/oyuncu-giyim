@@ -28,6 +28,7 @@ import {
 import arrayMove from "array-move";
 import { useDispatch } from "react-redux";
 import { putAdminRequestError } from "../../../store/reducers/admin";
+import { changeDesktopMenuIndex } from "../../../store/reducers/menu";
 
 export interface DesktopMenuDescription {
   name: string;
@@ -126,6 +127,7 @@ export default function AdminMenus() {
   useEffect(() => {
     getDesktopMenu();
     getMobileMenu();
+    dispatch(changeDesktopMenuIndex(8));
   }, []);
 
   useEffect(() => {

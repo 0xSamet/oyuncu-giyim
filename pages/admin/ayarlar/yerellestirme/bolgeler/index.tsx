@@ -33,6 +33,7 @@ import { GET_COUNTRIES_ADMIN } from "../../../../../apollo/gql/query/localizatio
 import { DELETE_COUNTRY } from "../../../../../apollo/gql/mutations/localization/country";
 import { GET_GEO_ZONES_ADMIN } from "../../../../../apollo/gql/query/localization/geo_zone";
 import { DELETE_GEO_ZONE } from "../../../../../apollo/gql/mutations/localization/geo_zone";
+import { changeDesktopMenuIndex } from "../../../../../store/reducers/menu";
 
 export interface ZonesType {
   id?: number | string;
@@ -74,6 +75,7 @@ export default function AdminDashboard() {
 
   useEffect(() => {
     getGeoZones();
+    dispatch(changeDesktopMenuIndex(14));
   }, []);
 
   useEffect(() => {

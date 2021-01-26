@@ -4,7 +4,7 @@ import {
   OptionValue,
   OptionValueDescription,
 } from "../../database/models/options";
-import { tableNames } from "../../database/tableNames";
+import tableNames from "../../database/tableNames";
 
 export const optionDescriptionAdminLoader = new DataLoader(
   async (keys: Array<{ id: number }>) => {

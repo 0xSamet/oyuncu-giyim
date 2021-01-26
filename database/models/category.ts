@@ -1,5 +1,5 @@
 import { Model } from "objection";
-import { tableNames } from "../tableNames";
+import tableNames from "../tableNames";
 import Joi from "joi";
 
 export class CategoryDescription extends Model {

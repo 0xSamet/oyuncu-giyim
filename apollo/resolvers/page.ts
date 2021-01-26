@@ -8,7 +8,7 @@ import {
   PageDescription,
   updatePageValidate,
 } from "../../database/models/page";
-import { tableNames } from "../../database/tableNames";
+import tableNames from "../../database/tableNames";
 import { getLanguage } from "./helpers";
 
 export default {

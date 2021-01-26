@@ -9,7 +9,7 @@ import {
   updateOptionValidate,
   deleteOptionValidate,
 } from "../../database/models/options";
-import { tableNames } from "../../database/tableNames";
+import tableNames from "../../database/tableNames";
 import { getLanguage } from "./helpers";
 
 export default {

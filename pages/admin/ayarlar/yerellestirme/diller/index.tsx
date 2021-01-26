@@ -14,6 +14,7 @@ import { useLazyQuery, useMutation } from "@apollo/client";
 import { GET_LANGUAGES } from "../../../../../apollo/gql/query/localization/language";
 import { DELETE_LANGUAGE } from "../../../../../apollo/gql/mutations/localization/language";
 import { putAdminRequestError } from "../../../../../store/reducers/admin";
+import { changeDesktopMenuIndex } from "../../../../../store/reducers/menu";
 
 export interface Language {
   id: string;
@@ -46,10 +47,7 @@ export default function AdminSettingsLanguages() {
 
   useEffect(() => {
     getLanguages();
-
-    return () => {
-      setLanguages([]);
-    };
+    dispatch(changeDesktopMenuIndex(11));
   }, []);
 
   useEffect(() => {

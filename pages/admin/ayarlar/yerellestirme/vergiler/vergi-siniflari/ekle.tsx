@@ -1,4 +1,4 @@
-import SEO from "../../../../../components/Seo";
+import SEO from "../../../../../../components/Seo";
 import {
   Button,
   Checkbox,
@@ -21,79 +21,71 @@ import { useLazyQuery, useMutation } from "@apollo/client";
 import { useRouter } from "next/router";
 import { useDispatch } from "react-redux";
 import produce from "immer";
-import { putAdminRequestError } from "../../../../../store/reducers/admin";
-import { GET_COUNTRIES_ADMIN } from "../../../../../apollo/gql/query/localization/country";
-import { GET_ZONES_ADMIN_FOR_OPTION } from "../../../../../apollo/gql/query/localization/zone";
-import { ADD_GEO_ZONE } from "../../../../../apollo/gql/mutations/localization/geo_zone";
-import { GeoZone } from ".";
+import { putAdminRequestError } from "../../../../../../store/reducers/admin";
+import { GET_COUNTRIES_ADMIN } from "../../../../../../apollo/gql/query/localization/country";
+import { GET_ZONES_ADMIN_FOR_OPTION } from "../../../../../../apollo/gql/query/localization/zone";
+import { ADD_GEO_ZONE } from "../../../../../../apollo/gql/mutations/localization/geo_zone";
+import { GeoZone } from "../../bolgeler";
+import { GET_TAX_RATES_ADMIN } from "../../../../../../apollo/gql/query/localization/tax_rate";
+import { ADD_TAX_CLASS } from "../../../../../../apollo/gql/mutations/localization/tax_class";
+import { GET_TAX_CLASS_ADMIN } from "../../../../../../apollo/gql/query/localization/tax_class";
+import { TaxClass, TaxRule } from ".";
 
 export default function AddPage() {
-  const [sampleZone] = useState({
+  const [sampleTaxRule] = useState<TaxRule>({
     id: null,
-    country_id: null,
-    zone_id: null,
+    tax_rate_id: null,
+    priority: 0,
   });
-  const [fields, setFields] = useState({
+  const [fields, setFields] = useState<TaxClass>({
     id: null,
     name: "",
     description: "",
     sort_order: null,
-    zones: [],
+    tax_rules: [],
   });
-  const [countries, setCountries] = useState([]);
-  const [zones, setZones] = useState([]);
+
+  const [taxRates, setTaxRates] = useState([]);
   const router = useRouter();
   const dispatch = useDispatch();
 
   const [
-    getCountries,
-    { data: countriesData, loading: countriesLoading, error: countriesError },
-  ] = useLazyQuery(GET_COUNTRIES_ADMIN, {
+    getTaxRates,
+    { data: taxRatesData, loading: taxRatesLoading, error: taxRatesError },
+  ] = useLazyQuery(GET_TAX_RATES_ADMIN, {
     fetchPolicy: "no-cache",
   });
 
   const [
-    getZones,
-    { data: zonesData, loading: zonesLoading, error: zonesError },
-  ] = useLazyQuery(GET_ZONES_ADMIN_FOR_OPTION, {
-    fetchPolicy: "no-cache",
-  });
-
-  const [
-    addGeoZoneRun,
+    addTaxClassRun,
     {
-      loading: addGeoZoneLoading,
-      error: addGeoZoneError,
-      data: addGeoZoneResponse,
+      loading: addTaxClassLoading,
+      error: addTaxClassError,
+      data: addTaxClassResponse,
     },
-  ] = useMutation(ADD_GEO_ZONE);
+  ] = useMutation(ADD_TAX_CLASS);
 
   useEffect(() => {
-    getCountries();
-    getZones();
+    getTaxRates();
   }, []);
 
   useEffect(() => {
-    if (countriesData && countriesData.countriesOnAdmin) {
-      setCountries(countriesData.countriesOnAdmin);
+    if (taxRatesData && taxRatesData.taxRatesOnAdmin) {
+      setTaxRates(
+        taxRatesData.taxRatesOnAdmin.sort((a, b) => a.sort_order - b.sort_order)
+      );
     }
-  }, [countriesData]);
-
-  useEffect(() => {
-    if (zonesData && zonesData.zonesOnAdmin) {
-      setZones(zonesData.zonesOnAdmin);
-    }
-  }, [zonesData]);
+  }, [taxRatesData]);
 
   useEffect(() => {
     if (
-      addGeoZoneResponse &&
-      addGeoZoneResponse.addGeoZone &&
-      addGeoZoneResponse.addGeoZone.id
+      addTaxClassResponse &&
+      addTaxClassResponse.addTaxClass &&
+      addTaxClassResponse.addTaxClass.id
     ) {
-      router.push("/admin/ayarlar/yerellestirme/bolgeler");
+      router.push("/admin/ayarlar/yerellestirme/vergiler/vergi-siniflari");
     }
-  }, [addGeoZoneResponse]);
+  }, [addTaxClassResponse]);
 
   const handleFormSubmit = async () => {
     let sortOrder;
@@ -108,16 +100,16 @@ export default function AddPage() {
     }
 
     try {
-      await addGeoZoneRun({
+      await addTaxClassRun({
         variables: {
           input: {
             name: fields.name,
             description: fields.description,
             sort_order: sortOrder,
-            zones: fields.zones.map((z) => {
+            tax_rules: fields.tax_rules.map((z) => {
               return {
-                zone_id: Number(z.zone_id),
-                country_id: Number(z.country_id),
+                tax_rate_id: Number(z.tax_rate_id),
+                priority: Number(z.priority),
               };
             }),
           },
@@ -137,71 +129,49 @@ export default function AddPage() {
     );
   };
 
-  const getCountriesForOption = useMemo(() => {
-    if (countries.length < 1) {
-      console.log("direct return");
-      return [];
+  const handletaxRateInputChange = (e, taxRateId) => {
+    const findIndex = fields.tax_rules.findIndex(
+      (taxRate) => taxRate.id === taxRateId
+    );
+
+    if (findIndex || findIndex === 0) {
+      return setFields(
+        produce(fields, (draft) => {
+          draft.tax_rules[findIndex][e.target.name] = e.target.value;
+        })
+      );
     }
-
-    return countries.map((country) => {
-      const countryName = country.description.find((description) => {
-        return description.language === "tr";
-      }).name;
-      return {
-        key: country.id,
-        value: country.id,
-        text: countryName,
-      };
-    });
-  }, [countries]);
-
-  const getZonesForOptionMemo = useMemo(() => {
-    if (zones.length < 1) {
-      console.log("direct return");
-      return [];
-    }
-
-    const formatZones = zones.map((zone) => {
-      return {
-        key: zone.id,
-        value: zone.id,
-        text: zone.name,
-        country_id: zone.country.id,
-      };
-    });
-
-    return [
-      {
-        key: "0",
-        value: "0",
-        text: "Tüm Şehirler",
-      },
-      ...formatZones,
-    ];
-  }, [zones]);
-
-  const getZonesForOption = (countryId) => {
-    return getZonesForOptionMemo.filter((zone: any) => {
-      return zone.country_id === countryId || zone.key == 0;
-    });
   };
 
-  const addNewZoneToForm = () => {
-    if (countries.length > 0) {
+  const getTaxRatesForOption = useMemo(() => {
+    if (taxRates.length < 1) {
+      return [];
+    }
+
+    return taxRates.map((taxRate) => {
+      return {
+        key: taxRate.id,
+        value: taxRate.id,
+        text: taxRate.name,
+      };
+    });
+  }, [taxRates]);
+
+  const addNewTaxRateToForm = () => {
+    if (taxRates.length > 0) {
       setFields({
         ...fields,
-        zones: [
-          ...fields.zones,
+        tax_rules: [
+          ...fields.tax_rules,
           {
-            ...sampleZone,
-            id: String(fields.zones.length + 1),
-            country_id: countries[0].id,
-            zone_id: "0",
+            ...sampleTaxRule,
+            id: String(fields.tax_rules.length + 1),
+            tax_rate_id: taxRates[0].id,
           },
         ],
       });
     } else {
-      dispatch(putAdminRequestError("Ülke Bulunamadı"));
+      dispatch(putAdminRequestError("Vergi Oranı Bulunamadı"));
     }
   };
 
@@ -225,7 +195,7 @@ export default function AddPage() {
               />
             </Form.Field>
             <Form.Field>
-              <label>Bölge Adı</label>
+              <label>Vergi Sınıfı Adı</label>
               <input
                 type="text"
                 name="name"
@@ -234,7 +204,7 @@ export default function AddPage() {
               />
             </Form.Field>
             <Form.Field>
-              <label>Bölge Açıklaması</label>
+              <label>Vergi Sınıfı Açıklaması</label>
               <textarea
                 name="description"
                 rows={3}
@@ -247,13 +217,13 @@ export default function AddPage() {
       },
     },
     {
-      menuItem: "Bölgeler",
+      menuItem: "Vergi Oranları",
       render: () => {
         return (
           <Tab.Pane attached={false}>
-            {fields.zones.map((zone) => {
+            {fields.tax_rules.map((taxRate) => {
               return (
-                <Segment raised key={zone.id}>
+                <Segment raised key={taxRate.id}>
                   <Form.Field
                     style={{
                       display: "flex",
@@ -267,55 +237,45 @@ export default function AddPage() {
                       circular
                       style={{ cursor: "pointer" }}
                       onClick={() => {
-                        const currentZoneId = zone.id;
+                        const currentTaxRateId = taxRate.id;
                         setFields({
                           ...fields,
-                          zones: fields.zones.filter((zone) => {
-                            return zone.id !== currentZoneId;
+                          tax_rules: fields.tax_rules.filter((taxRate) => {
+                            return taxRate.id !== currentTaxRateId;
                           }),
                         });
                       }}
                     />
                   </Form.Field>
                   <Form.Field>
-                    <label>Ülke</label>
+                    <label>Vergi Oranı</label>
                     <Select
-                      options={getCountriesForOption}
-                      value={zone.country_id}
+                      options={getTaxRatesForOption}
+                      value={taxRate.tax_rate_id}
                       onChange={(_e, { value }: { value: string }) => {
                         setFields(
                           produce(fields, (draft) => {
-                            const zoneId = zone.id;
-                            const findIndex = draft.zones.findIndex(
-                              (zone) => zone.id === zoneId
+                            const taxRateId = taxRate.id;
+                            const findIndex = draft.tax_rules.findIndex(
+                              (taxRate) => taxRate.id === taxRateId
                             );
-
-                            draft.zones[findIndex].country_id = value;
-                            draft.zones[findIndex].zone_id = "0";
+                            draft.tax_rules[findIndex].tax_rate_id = value;
                           })
                         );
                       }}
                     />
                   </Form.Field>
                   <Form.Field>
-                    <label>Şehir</label>
-                    <Select
-                      options={getZonesForOption(zone.country_id)}
-                      value={zone.zone_id}
-                      onChange={(_e, { value }: { value: string }) => {
-                        setFields(
-                          produce(fields, (draft) => {
-                            const zoneId = zone.id;
-                            const findIndex = draft.zones.findIndex(
-                              (zone) => zone.id === zoneId
-                            );
-
-                            if (findIndex) {
-                              draft.zones[findIndex].zone_id = value;
-                            }
-                          })
-                        );
-                      }}
+                    <label>Öncelik</label>
+                    <input
+                      type="text"
+                      name="priority"
+                      value={
+                        taxRate.priority || taxRate.priority == 0
+                          ? taxRate.priority
+                          : ""
+                      }
+                      onChange={(e) => handletaxRateInputChange(e, taxRate.id)}
                     />
                   </Form.Field>
                 </Segment>
@@ -323,8 +283,13 @@ export default function AddPage() {
             })}
 
             <Segment raised textAlign="center" size="mini">
-              <Button as="div" onClick={addNewZoneToForm} primary size="tiny">
-                Bölge Ekle
+              <Button
+                as="div"
+                onClick={addNewTaxRateToForm}
+                primary
+                size="tiny"
+              >
+                Vergi Oranı Ekle
               </Button>
             </Segment>
           </Tab.Pane>
@@ -333,7 +298,7 @@ export default function AddPage() {
     },
   ];
 
-  if (addGeoZoneLoading || countriesLoading || zonesLoading) {
+  if (addTaxClassLoading || taxRatesLoading) {
     return (
       <Segment className="page-loader">
         <Dimmer active>
@@ -346,12 +311,13 @@ export default function AddPage() {
   return (
     <SEO
       seo={{
-        meta_title: "Bölge Ekle - Oyuncu Giyim",
+        meta_title: "Vergi Sınıfı Ekle - Oyuncu Giyim",
         meta_description: "",
         meta_keyword: "",
       }}
     >
-      <section className="admin-geo-zones-add-page admin-sub-page">
+      <section className="admin-tax-classes-add-page admin-sub-page">
+        <pre>{JSON.stringify(fields, null, 2)}</pre>
         <Form
           onSubmit={(e) => {
             e.preventDefault();
@@ -368,7 +334,7 @@ export default function AddPage() {
             color="blue"
           >
             <Icon name="add square" />
-            Bölge Ekle
+            Vergi Sınıfı Ekle
           </Button>
         </Form>
       </section>

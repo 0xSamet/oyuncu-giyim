@@ -1,13 +1,13 @@
 import Joi from "joi";
 import { Model } from "objection";
-import { tableNames } from "../../tableNames";
-import { Country } from "./country";
+import tableNames from "../../tableNames";
 
 export class Zone extends Model {
   static get tableName() {
     return tableNames.zone;
   }
   static get relationMappings() {
+    const { Country } = require("./country");
     return {
       country: {
         relation: Model.BelongsToOneRelation,

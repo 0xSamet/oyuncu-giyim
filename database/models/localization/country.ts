@@ -1,7 +1,6 @@
 import Joi from "joi";
 import { Model } from "objection";
-import { tableNames } from "../../tableNames";
-import { Zone } from "./zone";
+import tableNames from "../../tableNames";
 
 export class CountryDescription extends Model {
   static get tableName() {
@@ -37,6 +36,7 @@ export class Country extends Model {
   }
 
   static get relationMappings() {
+    const { Zone } = require("./zone");
     return {
       country_description: {
         relation: Model.HasManyRelation,

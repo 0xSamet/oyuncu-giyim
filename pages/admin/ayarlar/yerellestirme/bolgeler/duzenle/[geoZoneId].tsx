@@ -396,7 +396,6 @@ export default function UpdateGeoZonePage() {
       }}
     >
       <section className="admin-geo-zones-update-page admin-sub-page">
-        <pre>{JSON.stringify(fields, null, 2)}</pre>
         <Form
           onSubmit={(e) => {
             e.preventDefault();

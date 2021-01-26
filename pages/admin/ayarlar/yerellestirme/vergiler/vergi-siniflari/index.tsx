@@ -1,98 +1,81 @@
-import { GetStaticProps } from "next";
-import SEO from "../../../components/Seo";
+import SEO from "../../../../../../components/Seo";
 import {
   Icon,
-  Label,
-  Menu,
   Table,
   Button,
   Segment,
   Dimmer,
   Loader,
 } from "semantic-ui-react";
-import {
-  Fragment,
-  ReactText,
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
-import {
-  GET_CATEGORIES,
-  GET_CATEGORIES_ADMIN,
-} from "../../../apollo/gql/query/category";
-import { DELETE_CATEGORY } from "../../../apollo/gql/mutations/category";
+import { ReactText, useEffect, useState } from "react";
 import { useLazyQuery, useMutation } from "@apollo/client";
 import Link from "next/link";
 import { useDispatch } from "react-redux";
-import { putAdminRequestError } from "../../../store/reducers/admin";
-import { GET_PAGES_ADMIN } from "../../../apollo/gql/query/page";
-import { DELETE_PAGE } from "../../../apollo/gql/mutations/page";
-import { changeDesktopMenuIndex } from "../../../store/reducers/menu";
+import { putAdminRequestError } from "../../../../../../store/reducers/admin";
+import { DELETE_COUNTRY } from "../../../../../../apollo/gql/mutations/localization/country";
+import { changeDesktopMenuIndex } from "../../../../../../store/reducers/menu";
+import { GET_TAX_CLASSES_ADMIN } from "../../../../../../apollo/gql/query/localization/tax_class";
+import { DELETE_TAX_CLASS } from "../../../../../../apollo/gql/mutations/localization/tax_class";
 
-export interface PageDescription {
+export interface TaxRule {
+  id: ReactText;
+  tax_class_id?: string | number;
+  tax_rate_id: string | number;
+  priority: string | number;
+}
+
+export interface TaxClass {
+  id: ReactText;
   name: string;
   description: string;
-  meta_title: string;
-  meta_description: string;
-  meta_keywords: string;
-  slug: string;
-  language: string;
-}
-
-export interface Page {
-  id: ReactText;
-  description: PageDescription[] | null;
-  status: boolean;
   sort_order: number;
-  desktop_menu_id: number | string;
-  mobile_menu_id: number | string;
+  tax_rules: TaxRule[];
 }
 
-interface PageRowType {
-  page: Page;
+interface TaxClassRowType {
+  taxClass: TaxClass;
 }
 
 export default function AdminDashboard() {
-  const [pages, setPages] = useState([]);
+  const [taxClasses, setTaxClasses] = useState([]);
   const dispatch = useDispatch();
 
-  const [getPages, { data, loading, error }] = useLazyQuery(GET_PAGES_ADMIN, {
-    fetchPolicy: "no-cache",
-  });
+  const [getTaxClasses, { data, loading, error }] = useLazyQuery(
+    GET_TAX_CLASSES_ADMIN,
+    {
+      fetchPolicy: "no-cache",
+    }
+  );
 
   const [
-    deletePageRun,
+    deleteTaxClassRun,
     {
-      loading: deletePageLoading,
-      error: deletePageError,
-      data: deletePageResponse,
+      loading: deleteTaxClassLoading,
+      error: deleteTaxClassError,
+      data: deleteTaxClassResponse,
     },
-  ] = useMutation(DELETE_PAGE);
+  ] = useMutation(DELETE_TAX_CLASS);
 
   useEffect(() => {
-    getPages();
-    dispatch(changeDesktopMenuIndex(9));
+    getTaxClasses();
+    dispatch(changeDesktopMenuIndex(15));
   }, []);
 
   useEffect(() => {
-    if (data && data.pagesOnAdmin) {
-      setPages(data.pagesOnAdmin);
+    if (data && data.taxClassesOnAdmin) {
+      setTaxClasses(data.taxClassesOnAdmin);
     }
   }, [data]);
 
-  const PageRow: React.FC<PageRowType> = ({ page }) => {
-    const { name } = page.description.find(
-      (description) => description.language === "tr"
-    );
-
+  const TaxClassRow: React.FC<TaxClassRowType> = ({ taxClass }) => {
     return (
-      <Table.Row key={page.id}>
-        <Table.Cell>{name}</Table.Cell>
-        <Table.Cell textAlign="center">{page.sort_order}</Table.Cell>
+      <Table.Row key={taxClass.id}>
+        <Table.Cell>{taxClass.name}</Table.Cell>
+        <Table.Cell textAlign="center">{taxClass.sort_order}</Table.Cell>
         <Table.Cell singleLine>
-          <Link href={`/admin/sayfalar/duzenle/${page.id}`}>
+          <Link
+            href={`/admin/ayarlar/yerellestirme/vergiler/vergi-siniflari/duzenle/${taxClass.id}`}
+          >
             <a>
               <Button icon labelPosition="left" size="tiny" color="teal">
                 <Icon name="edit" />
@@ -104,19 +87,19 @@ export default function AdminDashboard() {
             icon="trash"
             size="tiny"
             color="red"
-            onClick={() => handleDeletePage(page.id)}
+            onClick={() => handleDeleteTaxClass(taxClass.id)}
           ></Button>
         </Table.Cell>
       </Table.Row>
     );
   };
 
-  const handleDeletePage = async (pageId) => {
+  const handleDeleteTaxClass = async (taxClassId) => {
     try {
-      await deletePageRun({
+      await deleteTaxClassRun({
         variables: {
           input: {
-            id: pageId,
+            id: taxClassId,
           },
         },
       });
@@ -125,10 +108,10 @@ export default function AdminDashboard() {
       dispatch(putAdminRequestError(err.message));
     }
 
-    getPages();
+    getTaxClasses();
   };
 
-  if (loading || deletePageLoading) {
+  if (loading || deleteTaxClassLoading) {
     return (
       <Segment className="page-loader">
         <Dimmer active>
@@ -141,12 +124,12 @@ export default function AdminDashboard() {
   return (
     <SEO
       seo={{
-        meta_title: "Sayfalar - Oyuncu Giyim",
+        meta_title: "Vergi Sınıfları - Oyuncu Giyim",
         meta_description: "",
         meta_keyword: "",
       }}
     >
-      <section className="admin-pages-page">
+      <section className="admin-tax-classes-page">
         <Table
           celled
           compact
@@ -155,11 +138,11 @@ export default function AdminDashboard() {
           <Table.Header>
             <Table.Row>
               <Table.HeaderCell colSpan="3" textAlign="right">
-                <Link href="/admin/sayfalar/ekle">
+                <Link href="/admin/ayarlar/yerellestirme/vergiler/vergi-siniflari/ekle">
                   <a>
                     <Button icon labelPosition="left" size="tiny" color="blue">
                       <Icon name="add square" />
-                      Sayfa Ekle
+                      Vergi Sınıfı Ekle
                     </Button>
                   </a>
                 </Link>
@@ -170,7 +153,7 @@ export default function AdminDashboard() {
         <Table celled compact className="admin-results-table">
           <Table.Header>
             <Table.Row>
-              <Table.HeaderCell>Sayfalar</Table.HeaderCell>
+              <Table.HeaderCell>Vergi Sınıfları</Table.HeaderCell>
               <Table.HeaderCell collapsing textAlign="center">
                 Sıralama
               </Table.HeaderCell>
@@ -181,16 +164,16 @@ export default function AdminDashboard() {
           </Table.Header>
 
           <Table.Body>
-            {pages && pages.length > 0 ? (
-              [...pages]
+            {taxClasses && taxClasses.length > 0 ? (
+              [...taxClasses]
                 .sort((a, b) => a.sort_order - b.sort_order)
-                .map((page) => {
-                  return <PageRow key={page.id} page={page} />;
+                .map((taxClass) => {
+                  return <TaxClassRow key={taxClass.id} taxClass={taxClass} />;
                 })
             ) : (
               <Table.Row>
                 <Table.HeaderCell colSpan="3" textAlign="center">
-                  Sayfa Bulunamadı
+                  Vergi Sınıfı Bulunamadı
                 </Table.HeaderCell>
               </Table.Row>
             )}

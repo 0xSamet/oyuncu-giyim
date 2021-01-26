@@ -14,6 +14,7 @@ import { useDispatch } from "react-redux";
 import { putAdminRequestError } from "../../../store/reducers/admin";
 import { GET_OPTIONS_ADMIN_JUST_NAMES } from "../../../apollo/gql/query/option";
 import { DELETE_OPTION } from "../../../apollo/gql/mutations/option";
+import { changeDesktopMenuIndex } from "../../../store/reducers/menu";
 
 export interface OptionType {
   name: string;
@@ -118,6 +119,7 @@ export default function AdminDashboard() {
 
   useEffect(() => {
     getOptions();
+    dispatch(changeDesktopMenuIndex(4));
   }, []);
 
   useEffect(() => {

@@ -8,7 +8,7 @@ import {
 } from "../../database/models/category";
 import { Language } from "../../database/models/localization/language";
 import { PageDescription } from "../../database/models/page";
-import { tableNames } from "../../database/tableNames";
+import tableNames from "../../database/tableNames";
 import { getParentCategories } from "../dataloaders/category";
 import { getLanguage } from "./helpers";
 

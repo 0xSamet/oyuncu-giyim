@@ -4,7 +4,7 @@ import {
   CountryDescription,
 } from "../../../database/models/localization/country";
 import { ZoneGeoZone } from "../../../database/models/localization/zone_geo_zone";
-import { tableNames } from "../../../database/tableNames";
+import tableNames from "../../../database/tableNames";
 
 export const geoZoneZonesAdminLoader = new DataLoader(
   async (keys: Array<{ id: number }>) => {

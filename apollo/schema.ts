@@ -13,6 +13,8 @@ import optionTypes from "./types/option";
 import countryTypes from "./types/localization/country";
 import zoneTypes from "./types/localization/zone";
 import geoZoneTypes from "./types/localization/geo_zone";
+import taxRateTypes from "./types/localization/tax_rate";
+import taxClassTypes from "./types/localization/tax_class";
 
 import menuResolver from "./resolvers/menu";
 import pageResolver from "./resolvers/page";
@@ -23,6 +25,8 @@ import optionResolver from "./resolvers/option";
 import countryResolver from "./resolvers/localization/country";
 import zoneResolver from "./resolvers/localization/zone";
 import geoZoneResolver from "./resolvers/localization/geo_zone";
+import taxRateResolver from "./resolvers/localization/tax_rate";
+import taxClassResolver from "./resolvers/localization/tax_class";
 
 const typeDefs = [
   menuTypes,
@@ -33,6 +37,8 @@ const typeDefs = [
   countryTypes,
   zoneTypes,
   geoZoneTypes,
+  taxRateTypes,
+  taxClassTypes,
 ];
 
 const resolvers = [
@@ -44,6 +50,8 @@ const resolvers = [
   countryResolver,
   zoneResolver,
   geoZoneResolver,
+  taxRateResolver,
+  taxClassResolver,
 ];
 
 export const schema = makeExecutableSchema({

@@ -28,7 +28,7 @@ import { Language } from "../ayarlar/yerellestirme/diller";
 import { ADD_OPTION } from "../../../apollo/gql/mutations/option";
 
 export default function AddOptionPage() {
-  const [optionTypes, setOptionTypes] = useState<OptionType[] | undefined[]>([
+  const [optionTypes] = useState<OptionType[] | undefined[]>([
     {
       name: "select",
       sort_order: 0,

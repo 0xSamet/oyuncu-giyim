@@ -1,5 +1,5 @@
 import { GetStaticProps } from "next";
-import SEO from "../../../../../components/Seo";
+import SEO from "../../../../../../components/Seo";
 import {
   Icon,
   Label,
@@ -21,44 +21,62 @@ import {
 import {
   GET_CATEGORIES,
   GET_CATEGORIES_ADMIN,
-} from "../../../../../apollo/gql/query/category";
-import { DELETE_CATEGORY } from "../../../../../apollo/gql/mutations/category";
+} from "../../../../../../apollo/gql/query/category";
+import { DELETE_CATEGORY } from "../../../../../../apollo/gql/mutations/category";
 import { useLazyQuery, useMutation } from "@apollo/client";
 import Link from "next/link";
 import { useDispatch } from "react-redux";
-import { putAdminRequestError } from "../../../../../store/reducers/admin";
-import { GET_PAGES_ADMIN } from "../../../../../apollo/gql/query/page";
-import { DELETE_PAGE } from "../../../../../apollo/gql/mutations/page";
-import { GET_COUNTRIES_ADMIN } from "../../../../../apollo/gql/query/localization/country";
-import { DELETE_COUNTRY } from "../../../../../apollo/gql/mutations/localization/country";
-import { changeDesktopMenuIndex } from "../../../../../store/reducers/menu";
+import { putAdminRequestError } from "../../../../../../store/reducers/admin";
+import { GET_PAGES_ADMIN } from "../../../../../../apollo/gql/query/page";
+import { DELETE_PAGE } from "../../../../../../apollo/gql/mutations/page";
+import { GET_COUNTRIES_ADMIN } from "../../../../../../apollo/gql/query/localization/country";
+import { DELETE_COUNTRY } from "../../../../../../apollo/gql/mutations/localization/country";
+import { GET_TAX_RATES_ADMIN } from "../../../../../../apollo/gql/query/localization/tax_rate";
+import { GET_GEO_ZONES_ADMIN } from "../../../../../../apollo/gql/query/localization/geo_zone";
+import { changeDesktopMenuIndex } from "../../../../../../store/reducers/menu";
 
-export interface CountryDescription {
-  name: string;
-  language: string;
-}
-
-export interface Country {
+export interface TaxRate {
   id: ReactText;
-  description: CountryDescription[] | null;
-  status: boolean;
+  name: string;
+  rate: number;
+  type: string;
+  geo_zone_id: string | number;
   sort_order: number;
 }
 
-interface CountryRowType {
-  country: Country;
+interface TaxRateRowType {
+  taxRate: TaxRate;
 }
 
+export const taxRateTypes = [
+  {
+    name: "Yüzde Oran",
+    value: "P",
+  },
+  {
+    name: "Sabit Oran",
+    value: "F",
+  },
+];
+
 export default function AdminDashboard() {
-  const [countries, setCountries] = useState([]);
+  const [taxRates, setTaxRates] = useState([]);
+  const [geoZones, setGeoZones] = useState([]);
   const dispatch = useDispatch();
 
-  const [getCountries, { data, loading, error }] = useLazyQuery(
-    GET_COUNTRIES_ADMIN,
+  const [getTaxRates, { data, loading, error }] = useLazyQuery(
+    GET_TAX_RATES_ADMIN,
     {
       fetchPolicy: "no-cache",
     }
   );
+
+  const [
+    getGeoZones,
+    { data: geoZonesData, loading: geoZonesLoading, error: geoZonesError },
+  ] = useLazyQuery(GET_GEO_ZONES_ADMIN, {
+    fetchPolicy: "no-cache",
+  });
 
   const [
     deleteCountryRun,
@@ -70,28 +88,49 @@ export default function AdminDashboard() {
   ] = useMutation(DELETE_COUNTRY);
 
   useEffect(() => {
-    getCountries();
-    dispatch(changeDesktopMenuIndex(12));
+    getTaxRates();
+    getGeoZones();
+    dispatch(changeDesktopMenuIndex(16));
   }, []);
 
   useEffect(() => {
-    if (data && data.countriesOnAdmin) {
-      setCountries(data.countriesOnAdmin);
+    if (geoZonesData && geoZonesData.geoZonesOnAdmin) {
+      setGeoZones(geoZonesData.geoZonesOnAdmin);
+    }
+  }, [geoZonesData]);
+
+  useEffect(() => {
+    if (data && data.taxRatesOnAdmin) {
+      setTaxRates(data.taxRatesOnAdmin);
     }
   }, [data]);
 
-  const CountryRow: React.FC<CountryRowType> = ({ country }) => {
-    const { name } = country.description.find(
-      (description) => description.language === "tr"
-    );
+  const TaxRateRow: React.FC<TaxRateRowType> = ({ taxRate }) => {
+    const taxRateTypeName = taxRateTypes.find(
+      (taxRateType) => taxRateType.value === taxRate.type
+    ).name;
+
+    let geoZoneName = taxRate.geo_zone_id;
+
+    if (geoZones && geoZones.length > 0) {
+      const findGeoZone = geoZones.find(
+        (geoZone) => geoZone.id == taxRate.geo_zone_id
+      );
+      if (findGeoZone) {
+        geoZoneName = findGeoZone.name;
+      }
+    }
 
     return (
-      <Table.Row key={country.id}>
-        <Table.Cell>{name}</Table.Cell>
-        <Table.Cell textAlign="center">{country.sort_order}</Table.Cell>
+      <Table.Row key={taxRate.id}>
+        <Table.Cell>{taxRate.name}</Table.Cell>
+        <Table.Cell textAlign="center">{geoZoneName}</Table.Cell>
+        <Table.Cell textAlign="center">{taxRateTypeName}</Table.Cell>
+        <Table.Cell textAlign="center">{taxRate.rate}</Table.Cell>
+        <Table.Cell textAlign="center">{taxRate.sort_order}</Table.Cell>
         <Table.Cell singleLine>
           <Link
-            href={`/admin/ayarlar/yerellestirme/ulkeler/duzenle/${country.id}`}
+            href={`/admin/ayarlar/yerellestirme/vergiler/vergi-oranlari/duzenle/${taxRate.id}`}
           >
             <a>
               <Button icon labelPosition="left" size="tiny" color="teal">
@@ -104,7 +143,7 @@ export default function AdminDashboard() {
             icon="trash"
             size="tiny"
             color="red"
-            onClick={() => handleDeleteCountry(country.id)}
+            onClick={() => handleDeleteCountry(taxRate.id)}
           ></Button>
         </Table.Cell>
       </Table.Row>
@@ -125,10 +164,10 @@ export default function AdminDashboard() {
       dispatch(putAdminRequestError(err.message));
     }
 
-    getCountries();
+    getTaxRates();
   };
 
-  if (loading || deleteCountryLoading) {
+  if (loading || deleteCountryLoading || geoZonesLoading) {
     return (
       <Segment className="page-loader">
         <Dimmer active>
@@ -155,11 +194,11 @@ export default function AdminDashboard() {
           <Table.Header>
             <Table.Row>
               <Table.HeaderCell colSpan="3" textAlign="right">
-                <Link href="/admin/ayarlar/yerellestirme/ulkeler/ekle">
+                <Link href="/admin/ayarlar/yerellestirme/vergiler/vergi-oranlari/ekle">
                   <a>
                     <Button icon labelPosition="left" size="tiny" color="blue">
                       <Icon name="add square" />
-                      Ülke Ekle
+                      Vergi Oranı Ekle
                     </Button>
                   </a>
                 </Link>
@@ -170,7 +209,12 @@ export default function AdminDashboard() {
         <Table celled compact className="admin-results-table">
           <Table.Header>
             <Table.Row>
-              <Table.HeaderCell>Ülkeler</Table.HeaderCell>
+              <Table.HeaderCell>Vergi Sınıfları</Table.HeaderCell>
+              <Table.HeaderCell textAlign="center">Bölge</Table.HeaderCell>
+              <Table.HeaderCell textAlign="center">Vergi Tipi</Table.HeaderCell>
+              <Table.HeaderCell textAlign="center">
+                Vergi Oranı
+              </Table.HeaderCell>
               <Table.HeaderCell collapsing textAlign="center">
                 Sıralama
               </Table.HeaderCell>
@@ -181,16 +225,16 @@ export default function AdminDashboard() {
           </Table.Header>
 
           <Table.Body>
-            {countries && countries.length > 0 ? (
-              [...countries]
+            {taxRates && taxRates.length > 0 ? (
+              [...taxRates]
                 .sort((a, b) => a.sort_order - b.sort_order)
-                .map((country) => {
-                  return <CountryRow key={country.id} country={country} />;
+                .map((taxRate) => {
+                  return <TaxRateRow key={taxRate.id} taxRate={taxRate} />;
                 })
             ) : (
               <Table.Row>
-                <Table.HeaderCell colSpan="3" textAlign="center">
-                  Ülke Bulunamadı
+                <Table.HeaderCell colSpan="6" textAlign="center">
+                  Vergi Oranı Bulunamadı
                 </Table.HeaderCell>
               </Table.Row>
             )}
@@ -198,7 +242,7 @@ export default function AdminDashboard() {
 
           <Table.Footer>
             <Table.Row>
-              <Table.HeaderCell colSpan="3" textAlign="right">
+              <Table.HeaderCell colSpan="6" textAlign="right">
                 {/* <Menu floated="right" pagination>
                   <Menu.Item as="a" icon>
                     <Icon name="chevron left" />

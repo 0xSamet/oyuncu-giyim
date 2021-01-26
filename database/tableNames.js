@@ -1,4 +1,4 @@
-const tableNames = {
+module.exports = {
   language: "language",
   category: "category",
   category_description: "category_description",
@@ -17,8 +17,7 @@ const tableNames = {
   zone: "zone",
   geo_zone: "geo_zone",
   zone_geo_zone: "zone_geo_zone",
-};
-
-module.exports = {
-  tableNames,
+  tax_rate: "tax_rate",
+  tax_class: "tax_class",
+  tax_rule: "tax_rule",
 };

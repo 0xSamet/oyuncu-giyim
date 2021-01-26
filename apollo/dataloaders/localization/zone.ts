@@ -3,7 +3,7 @@ import {
   Country,
   CountryDescription,
 } from "../../../database/models/localization/country";
-import { tableNames } from "../../../database/tableNames";
+import tableNames from "../../../database/tableNames";
 
 export const zoneCountryAdminLoader = new DataLoader(
   async (keys: Array<{ id: number; country_id: number }>) => {
