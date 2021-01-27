@@ -9,7 +9,8 @@
     "migrate": "knex migrate:latest",
     "rollback": "knex migrate:rollback",
     "seed": "knex seed:run",
-    "dbres": "knex migrate:rollback && knex migrate:latest && knex seed:run"
+    "dbres": "knex migrate:rollback && knex migrate:latest && knex seed:run",
+    "gitPush": "git add . && git commit -m 'progress' && git push -u origin main"
   },
   "dependencies": {
     "@apollo/client": "^3.2.5",

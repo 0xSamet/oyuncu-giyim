@@ -363,4 +363,23 @@ exports.seed = async function (knex) {
       geo_zone_id: 1,
     },
   ]);
+
+  await knex(tableNames.stock_status).insert([
+    {
+      language_id: 1,
+      name: "Stokta Yok",
+    },
+    {
+      language_id: 1,
+      name: "2-3 Gün İçinde Stokta",
+    },
+    {
+      language_id: 1,
+      name: "Stokta",
+    },
+    {
+      language_id: 1,
+      name: "Ön Sipariş",
+    },
+  ]);
 };

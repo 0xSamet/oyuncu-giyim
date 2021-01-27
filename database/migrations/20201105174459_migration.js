@@ -282,6 +282,56 @@ exports.up = async function (knex) {
         .onDelete("cascade")
         .notNullable();
       table.integer("priority");
+    })
+    .createTable(tableNames.stock_status, (table) => {
+      table.increments();
+      table
+        .integer("language_id")
+        .references("id")
+        .inTable(tableNames.language)
+        .onDelete("cascade")
+        .notNullable();
+      table.string("name").notNullable().defaultTo("");
+    })
+    .createTable(tableNames.order_status, (table) => {
+      table.increments();
+      table
+        .integer("language_id")
+        .references("id")
+        .inTable(tableNames.language)
+        .onDelete("cascade")
+        .notNullable();
+      table.string("name").notNullable().defaultTo("");
+    })
+    .createTable(tableNames.return_status, (table) => {
+      table.increments();
+      table
+        .integer("language_id")
+        .references("id")
+        .inTable(tableNames.language)
+        .onDelete("cascade")
+        .notNullable();
+      table.string("name").notNullable().defaultTo("");
+    })
+    .createTable(tableNames.return_action, (table) => {
+      table.increments();
+      table
+        .integer("language_id")
+        .references("id")
+        .inTable(tableNames.language)
+        .onDelete("cascade")
+        .notNullable();
+      table.string("name").notNullable().defaultTo("");
+    })
+    .createTable(tableNames.return_reason, (table) => {
+      table.increments();
+      table
+        .integer("language_id")
+        .references("id")
+        .inTable(tableNames.language)
+        .onDelete("cascade")
+        .notNullable();
+      table.string("name").notNullable().defaultTo("");
     });
 };
 
@@ -320,6 +370,13 @@ exports.down = async function (knex) {
   await knex.schema.dropTableIfExists(tableNames.zone);
   await knex.schema.dropTableIfExists(tableNames.country_description);
   await knex.schema.dropTableIfExists(tableNames.country);
+
+  //clear status tables
+  await knex.schema.dropTableIfExists(tableNames.stock_status);
+  await knex.schema.dropTableIfExists(tableNames.order_status);
+  await knex.schema.dropTableIfExists(tableNames.return_status);
+  await knex.schema.dropTableIfExists(tableNames.return_action);
+  await knex.schema.dropTableIfExists(tableNames.return_reason);
 
   //clear language
   await knex.schema.dropTableIfExists(tableNames.language);

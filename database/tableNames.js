@@ -20,4 +20,9 @@ module.exports = {
   tax_rate: "tax_rate",
   tax_class: "tax_class",
   tax_rule: "tax_rule",
+  stock_status: "stock_status",
+  order_status: "order_status",
+  return_status: "return_status",
+  return_action: "return_action",
+  return_reason: "return_reason",
 };
