@@ -48,6 +48,7 @@ body .main-wrapper.admin-layout {
       flex: 0 0;
     }
     .main-menu {
+      background-color: #0a2238;
       @media #{$br1199} {
         padding-top: 25px;
         top: 0;
@@ -55,7 +56,72 @@ body .main-wrapper.admin-layout {
         height: 100%;
         transform: translateX(-100%);
       }
+      &::-webkit-scrollbar {
+        width: 0;
+      }
+      li {
+        .active-border-left {
+          position: absolute;
+          left: 0;
+          top: 0;
+          width: 0px;
+          height: 100%;
+          background: #fff;
+          border-top-right-radius: 5px;
+          border-bottom-right-radius: 5px;
+          transition: width 0.3s ease;
+        }
+        &.active {
+          a {
+            background: none !important;
+          }
+          .active-border-left {
+            width: 7px;
+          }
+        }
+        a {
+          &:hover {
+            background-color: #31485a;
+            .main-menu-icon-wrapper {
+              img {
+                filter: invert(86%) sepia(15%) saturate(185%) hue-rotate(171deg)
+                  brightness(91%) contrast(93%);
+              }
+            }
+            .main-menu-text-wrapper {
+              color: #bec8d4;
+            }
+          }
+          .main-menu-text-wrapper {
+            font-size: 11px;
+            text-transform: uppercase;
+            color: #a2aebb;
+          }
+          .main-menu-icon-wrapper {
+            img {
+              filter: invert(72%) sepia(11%) saturate(318%) hue-rotate(171deg)
+                brightness(93%) contrast(94%);
+            }
+          }
+          .submenu-icon {
+            filter: invert(72%) sepia(11%) saturate(318%) hue-rotate(171deg)
+              brightness(93%) contrast(94%);
+          }
+        }
+      }
       > li {
+        .submenu {
+          background-color: #12293e;
+          > li {
+            > .submenu {
+              > li {
+                > .submenu {
+                  background-color: #18334c;
+                }
+              }
+            }
+          }
+        }
         &:first-child {
           @media #{$br1199} {
             display: none;
@@ -72,6 +138,7 @@ body .main-wrapper.admin-layout {
       max-width: none;
     }
     .page-loader {
+      border: none;
       position: absolute;
       top: 71.5px;
       left: 0;

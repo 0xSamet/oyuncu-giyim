@@ -100,6 +100,7 @@ function LeftMenuListItem({ menu, menus, setMenus }) {
               }}
             >
               <img
+                className="submenu-icon"
                 src={"/static/icons/arrow.svg"}
                 style={{
                   transform: `${
@@ -111,6 +112,7 @@ function LeftMenuListItem({ menu, menus, setMenus }) {
               />
             </span>
           )}
+          <span className="active-border-left"></span>
         </a>
       </Link>
 
@@ -232,7 +234,7 @@ export default function LeftMenu() {
           index: [10, 0],
           text: "Yerelleştirme",
           link: "",
-          icon: "/static/icons/admin/language.svg",
+          icon: "/static/icons/admin/localization.svg",
           isActive: false,
           submenu: [
             {
@@ -245,6 +247,38 @@ export default function LeftMenu() {
             },
             {
               index: [10, 0, 1],
+              pageIndex: 11,
+              text: "Para Birimleri",
+              link: "/admin/ayarlar/yerellestirme/diller",
+              icon: "/static/icons/admin/piggy-bank.svg",
+              isActive: false,
+            },
+            {
+              index: [10, 0, 2],
+              pageIndex: 11,
+              text: "Stok Durumları",
+              link: "/admin/ayarlar/yerellestirme/diller",
+              icon: "/static/icons/admin/language.svg",
+              isActive: false,
+            },
+            {
+              index: [10, 0, 3],
+              pageIndex: 11,
+              text: "Sipariş Durumları",
+              link: "/admin/ayarlar/yerellestirme/diller",
+              icon: "/static/icons/admin/language.svg",
+              isActive: false,
+            },
+            {
+              index: [10, 0, 4],
+              pageIndex: 11,
+              text: "Ürün İadeleri",
+              link: "/admin/ayarlar/yerellestirme/diller",
+              icon: "/static/icons/admin/language.svg",
+              isActive: false,
+            },
+            {
+              index: [10, 0, 5],
               pageIndex: 12,
               text: "Ülkeler",
               link: "/admin/ayarlar/yerellestirme/ulkeler",
@@ -252,7 +286,7 @@ export default function LeftMenu() {
               isActive: false,
             },
             {
-              index: [10, 0, 2],
+              index: [10, 0, 6],
               pageIndex: 13,
               text: "Şehirler",
               link: "/admin/ayarlar/yerellestirme/sehirler",
@@ -260,7 +294,7 @@ export default function LeftMenu() {
               isActive: false,
             },
             {
-              index: [10, 0, 3],
+              index: [10, 0, 7],
               pageIndex: 14,
               text: "Bölgeler",
               link: "/admin/ayarlar/yerellestirme/bolgeler",
@@ -268,14 +302,14 @@ export default function LeftMenu() {
               isActive: false,
             },
             {
-              index: [10, 0, 4],
+              index: [10, 0, 8],
               text: "Vergiler",
               link: "/admin/ayarlar/yerellestirme/vergiler",
               icon: "/static/icons/admin/tax.svg",
               isActive: false,
               submenu: [
                 {
-                  index: [10, 0, 4, 0],
+                  index: [10, 0, 8, 0],
                   pageIndex: 15,
                   text: "Vergi Sınıfları",
                   link: "/admin/ayarlar/yerellestirme/vergiler/vergi-siniflari",
@@ -283,7 +317,7 @@ export default function LeftMenu() {
                   isActive: false,
                 },
                 {
-                  index: [10, 0, 4, 1],
+                  index: [10, 0, 8, 1],
                   pageIndex: 16,
                   text: "Vergi Oranları",
                   link: "/admin/ayarlar/yerellestirme/vergiler/vergi-oranlari",

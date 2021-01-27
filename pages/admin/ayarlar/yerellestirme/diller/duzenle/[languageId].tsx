@@ -203,7 +203,11 @@ export default function AdminSettingsAddLanguage() {
             <input
               type="number"
               name="sort_order"
-              value={fields.sort_order || ""}
+              value={
+                fields.sort_order || fields.sort_order == 0
+                  ? fields.sort_order
+                  : ""
+              }
               onChange={handleInputChange}
             />
           </Form.Field>

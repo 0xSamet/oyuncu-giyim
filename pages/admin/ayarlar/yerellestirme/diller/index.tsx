@@ -78,7 +78,9 @@ export default function AdminSettingsLanguages() {
         <Table.Cell>{`${language.name} - ${language.code}`}</Table.Cell>
         <Table.Cell textAlign="center">{language.sort_order}</Table.Cell>
         <Table.Cell singleLine>
-          <Link href={`/admin/ayarlar/diller/duzenle/${language.id}`}>
+          <Link
+            href={`/admin/ayarlar/yerellestirme/diller/duzenle/${language.id}`}
+          >
             <a>
               <Button icon labelPosition="left" size="tiny" color="teal">
                 <Icon name="edit" />
