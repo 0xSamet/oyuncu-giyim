@@ -53,7 +53,6 @@ function LeftMenuListItem({ menu, menus, setMenus }) {
     <li
       className={clsx({
         active: menu.pageIndex === indexFromStore,
-        [`menu-${menu.pageIndex}`]: true,
       })}
     >
       <Link href={menu.link}>
@@ -113,7 +112,7 @@ function LeftMenuListItem({ menu, menus, setMenus }) {
               />
             </span>
           )}
-          {/* <span className="active-border-left"></span> */}
+          <span className="active-border-left"></span>
         </a>
       </Link>
 
@@ -386,22 +385,6 @@ export default function LeftMenu() {
     return dispatch(toggleIconMode());
   };
 
-  const borderTop = useMemo(() => {
-    //console.log("indexFromStore", indexFromStore);
-    if (typeof window === "undefined") return 0;
-
-    const findEl = document.querySelector(
-      `.main-menu li.menu-${indexFromStore}`
-    );
-
-    if (!findEl) {
-      return 0;
-    }
-
-    const getHeight = findEl.offsetTop;
-    return getHeight;
-  }, [indexFromStore]);
-
   return (
     <ul className="main-menu">
       <li>
@@ -432,7 +415,6 @@ export default function LeftMenu() {
           );
         }
       })}
-      <span className="active-border" style={{ top: borderTop }}></span>
     </ul>
   );
 }

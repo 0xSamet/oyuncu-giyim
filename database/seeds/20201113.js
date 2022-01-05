@@ -364,22 +364,72 @@ exports.seed = async function (knex) {
     },
   ]);
 
+  await knex(tableNames.tax_rate).insert([
+    {
+      geo_zone_id: 1,
+      name: "%8 KDV Oranı",
+      rate: 8,
+      type: "P",
+      sort_order: 0,
+    },
+  ]);
+
+  await knex(tableNames.tax_class).insert([
+    {
+      name: "%8 KDV Sınıfı",
+      description: "%8 KDV Sınıfı",
+      sort_order: 0,
+    },
+  ]);
+
+  await knex(tableNames.tax_rule).insert([
+    {
+      tax_class_id: 1,
+      tax_rate_id: 1,
+      priority: 0,
+    },
+  ]);
+
   await knex(tableNames.stock_status).insert([
     {
+      stock_status_id: 1,
       language_id: 1,
       name: "Stokta Yok",
     },
     {
+      stock_status_id: 1,
+      language_id: 2,
+      name: "Out Of Stock",
+    },
+    {
+      stock_status_id: 2,
       language_id: 1,
       name: "2-3 Gün İçinde Stokta",
     },
     {
+      stock_status_id: 2,
+      language_id: 2,
+      name: "In Stock in 2-3 day",
+    },
+    {
+      stock_status_id: 3,
       language_id: 1,
       name: "Stokta",
     },
     {
+      stock_status_id: 3,
+      language_id: 2,
+      name: "Stokta",
+    },
+    {
+      stock_status_id: 4,
       language_id: 1,
       name: "Ön Sipariş",
+    },
+    {
+      stock_status_id: 4,
+      language_id: 2,
+      name: "Pre-order",
     },
   ]);
 };

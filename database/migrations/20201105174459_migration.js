@@ -9,8 +9,8 @@ exports.up = async function (knex) {
     .createTable(tableNames.language, (table) => {
       table.increments();
       table.string("name").notNullable();
-      table.string("code").unique();
-      table.string("flag_code");
+      table.string("code").unique().notNullable();
+      table.string("flag_code").notNullable().defaultTo;
       table.integer("sort_order");
       table.boolean("status").defaultTo(true);
       table.boolean("is_default").defaultTo(false);
@@ -285,6 +285,7 @@ exports.up = async function (knex) {
     })
     .createTable(tableNames.stock_status, (table) => {
       table.increments();
+      table.integer("stock_status_id").notNullable();
       table
         .integer("language_id")
         .references("id")
